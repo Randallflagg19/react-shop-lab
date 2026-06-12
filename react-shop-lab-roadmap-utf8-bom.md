@@ -1,0 +1,1422 @@
+﻿# React Shop Lab — roadmap проекта для тренировки React Hooks + TypeScript
+
+## Цель проекта
+
+Сделать небольшой учебный интернет-магазин на **Vite + React + TypeScript**, используя открытое API с товарами.  
+Проект нужен не ради красивого портфолио, а как тренировочная площадка для собеседований и ручного кодинга.
+
+Главная цель:
+
+> Научиться уверенно писать React-код руками: `useState`, `useEffect`, `useRef`, `useMemo`, `useCallback`, `React.memo`, custom hooks, controlled inputs, immutable updates, derived state, работа с API, loading/error/empty states.
+
+---
+
+## Базовый стек
+
+- Vite
+- React
+- TypeScript
+- CSS Modules или обычный CSS
+- DummyJSON Products API
+- Без Redux на первом этапе
+- Без React Query на первом этапе
+- Без UI-библиотек на первом этапе
+
+Почему без Redux/React Query сначала:
+
+> Сейчас важно понять базовый React. Если сразу взять готовые библиотеки, они закроют за тебя часть проблем, которые тебе нужно руками прочувствовать.
+
+---
+
+## API
+
+Базовое API:
+
+```txt
+https://dummyjson.com/products
+```
+
+Полезные endpoints:
+
+```txt
+GET /products
+GET /products/:id
+GET /products/search?q=phone
+GET /products/categories
+GET /products/category/:category
+```
+
+На старте можно использовать только:
+
+```txt
+https://dummyjson.com/products
+```
+
+И уже на клиенте делать поиск, фильтры и сортировку.
+
+---
+
+## Что должен уметь проект в финале
+
+Минимальная версия:
+
+- загружать товары с API;
+- показывать loading/error/empty states;
+- отображать список товаров;
+- фильтровать по поиску;
+- фильтровать по категории;
+- сортировать по цене/рейтингу;
+- добавлять товары в корзину;
+- удалять товары из корзины;
+- менять количество товара;
+- считать итоговую сумму;
+- добавлять товары в избранное;
+- открывать карточку товара;
+- использовать `useRef` для фокуса/скролла;
+- использовать `useMemo` там, где есть derived data;
+- использовать `useCallback` вместе с `React.memo`;
+- вынести часть логики в custom hooks.
+
+---
+
+# Структура проекта
+
+Не надо делать идеальную FSD-архитектуру сразу. Но структура должна быть понятной.
+
+```txt
+src/
+  app/
+    App.tsx
+    App.css
+
+  shared/
+    api/
+      productsApi.ts
+    types/
+      product.ts
+    ui/
+      Loader.tsx
+      ErrorMessage.tsx
+      EmptyState.tsx
+
+  entities/
+    product/
+      ProductCard.tsx
+      ProductList.tsx
+      ProductDetails.tsx
+
+  features/
+    filters/
+      ProductFilters.tsx
+    cart/
+      Cart.tsx
+      CartItem.tsx
+      useCart.ts
+    favorites/
+      useFavorites.ts
+
+  hooks/
+    useProducts.ts
+    useDebounce.ts
+    useDocumentTitle.ts
+    usePrevious.ts
+```
+
+Если пока тяжело, можно начать проще:
+
+```txt
+src/
+  App.tsx
+  types.ts
+  api.ts
+  components/
+  hooks/
+```
+
+---
+
+# День 1 проекта — setup + первая загрузка товаров
+
+## Цель
+
+Создать проект и загрузить товары через `useEffect`.
+
+## Что сделать
+
+1. Создать проект:
+
+```bash
+yarn create vite react-shop-lab --template react-ts
+cd react-shop-lab
+yarn
+yarn dev
+```
+
+2. Почистить стартовый шаблон Vite.
+
+3. Создать типы:
+
+```ts
+export type Product = {
+  id: number;
+  title: string;
+  description: string;
+  price: number;
+  discountPercentage: number;
+  rating: number;
+  stock: number;
+  brand?: string;
+  category: string;
+  thumbnail: string;
+  images: string[];
+};
+```
+
+4. Создать тип ответа API:
+
+```ts
+export type ProductsResponse = {
+  products: Product[];
+  total: number;
+  skip: number;
+  limit: number;
+};
+```
+
+5. В `App.tsx` сделать state:
+
+```ts
+const [products, setProducts] = useState<Product[]>([]);
+const [isLoading, setIsLoading] = useState(false);
+const [error, setError] = useState<string | null>(null);
+```
+
+6. В `useEffect` загрузить товары.
+
+7. Показать:
+
+- loading;
+- error;
+- список товаров;
+- empty state.
+
+## Что тренируется
+
+- `useEffect`
+- async внутри effect
+- dependency array
+- `useState`
+- loading/error state
+- TypeScript типы API
+
+## Вопросы для самопроверки
+
+- Почему callback `useEffect` не должен быть `async` напрямую?
+- Почему dependency array здесь пустой?
+- Что произойдёт в React StrictMode в dev-режиме?
+- Где лучше хранить `products`: state или derived state?
+- Почему `error` лучше хранить отдельно?
+
+## Зачёт этапа
+
+Этап зачтён, если:
+
+- товары загружаются;
+- при загрузке виден loading;
+- при ошибке видна ошибка;
+- список отображается через `map`;
+- у карточек есть `key={product.id}`.
+
+---
+
+# День 2 проекта — AbortController + useEffect глубже
+
+## Цель
+
+Понять cleanup в `useEffect` и отмену запроса.
+
+## Что сделать
+
+1. Внутри `useEffect` создать:
+
+```ts
+const controller = new AbortController();
+```
+
+2. Передать `signal` в `fetch`:
+
+```ts
+fetch(url, { signal: controller.signal });
+```
+
+3. В cleanup вызвать:
+
+```ts
+return () => {
+  controller.abort();
+};
+```
+
+4. В `catch` отдельно обработать `AbortError`.
+
+## Что тренируется
+
+- cleanup function
+- `AbortController`
+- race conditions
+- размонтирование компонента
+- изменение зависимостей effect
+
+## Что важно понять
+
+Cleanup вызывается:
+
+1. при размонтировании компонента;
+2. перед следующим запуском эффекта, если зависимости изменились.
+
+## Собеседовательский ответ
+
+> `AbortController` позволяет отменить fetch-запрос. В `useEffect` я создаю controller, передаю `controller.signal` в fetch, а в cleanup вызываю `controller.abort()`. Это помогает не обновлять state после размонтирования компонента и защищает от ситуации, когда старый запрос возвращается позже нового.
+
+## Зачёт этапа
+
+Этап зачтён, если ты можешь словами объяснить:
+
+- что делает `signal`;
+- что делает `abort`;
+- когда вызывается cleanup;
+- почему не надо считать `AbortError` обычной ошибкой сервера.
+
+---
+
+# День 3 проекта — ProductCard + ProductList
+
+## Цель
+
+Разбить UI на компоненты и потренировать props.
+
+## Что сделать
+
+1. Создать `ProductCard`.
+
+Props:
+
+```ts
+type ProductCardProps = {
+  product: Product;
+};
+```
+
+2. Создать `ProductList`.
+
+Props:
+
+```ts
+type ProductListProps = {
+  products: Product[];
+};
+```
+
+3. Отображать:
+
+- картинку;
+- title;
+- price;
+- category;
+- rating;
+- stock.
+
+4. Использовать `key={product.id}`.
+
+## Что тренируется
+
+- props typing
+- composition
+- `map`
+- `key`
+- базовая декомпозиция компонентов
+
+## Вопросы для самопроверки
+
+- Почему `key` должен быть `product.id`, а не `index`?
+- Что будет, если список отсортировать, а key будет index?
+- Чем `ProductCard` отличается от `ProductList` по ответственности?
+- Нужно ли хранить ProductCard в state? Почему нет?
+
+## Зачёт этапа
+
+Этап зачтён, если список разбит на компоненты, код читаемый, props типизированы.
+
+---
+
+# День 4 проекта — поиск и controlled input
+
+## Цель
+
+Сделать поиск товаров по названию.
+
+## Что сделать
+
+1. Создать state:
+
+```ts
+const [search, setSearch] = useState('');
+```
+
+2. Создать input:
+
+```tsx
+<input
+  value={search}
+  onChange={(event) => setSearch(event.target.value)}
+/>
+```
+
+3. Создать derived data:
+
+```ts
+const filteredProducts = products.filter((product) =>
+  product.title.toLowerCase().includes(search.toLowerCase())
+);
+```
+
+4. Передавать в список `filteredProducts`.
+
+5. Если ничего не найдено — показать empty state.
+
+## Что тренируется
+
+- controlled input
+- `useState`
+- derived state
+- filter
+- empty state
+
+## Вопросы для самопроверки
+
+- Что такое controlled component?
+- Где хранится значение input?
+- Почему `filteredProducts` не нужно хранить в `useState`?
+- Что такое derived state?
+- Что будет, если хранить `filteredProducts` отдельно?
+
+## Зачёт этапа
+
+Этап зачтён, если поиск работает без учёта регистра, а `filteredProducts` не хранится в отдельном state.
+
+---
+
+# День 5 проекта — категории и сортировка
+
+## Цель
+
+Добавить фильтр по категории и сортировку.
+
+## Что сделать
+
+State:
+
+```ts
+const [category, setCategory] = useState('all');
+const [sortBy, setSortBy] = useState<'default' | 'price-asc' | 'price-desc' | 'rating-desc'>('default');
+```
+
+Фильтры:
+
+- `all`;
+- конкретная категория.
+
+Сортировка:
+
+- default;
+- price ascending;
+- price descending;
+- rating descending.
+
+## Что тренируется
+
+- controlled select
+- derived state
+- filter + sort
+- аккуратная работа с массивами
+
+## Важный момент
+
+`sort` мутирует массив.
+
+Плохо:
+
+```ts
+products.sort(...)
+```
+
+Хорошо:
+
+```ts
+[...products].sort(...)
+```
+
+## Вопросы для самопроверки
+
+- Почему нельзя сортировать `products` напрямую?
+- Почему `sort` опасен для state?
+- Где здесь derived state?
+- Какой порядок: сначала filter, потом sort или наоборот?
+
+## Зачёт этапа
+
+Этап зачтён, если фильтрация и сортировка работают, а исходный массив не мутируется.
+
+---
+
+# День 6 проекта — useMemo
+
+## Цель
+
+Понять `useMemo` на реальной derived data.
+
+## Что сделать
+
+Обернуть вычисление filtered/sorted products:
+
+```ts
+const visibleProducts = useMemo(() => {
+  return products
+    .filter(...)
+    .sort(...);
+}, [products, search, category, sortBy]);
+```
+
+## Что тренируется
+
+- `useMemo`
+- dependencies
+- derived state
+- мемоизация вычислений
+
+## Главное понимание
+
+`useMemo` не отменяет ререндер компонента.
+
+Он только кеширует результат вычисления между рендерами, если зависимости не изменились.
+
+## Когда useMemo уместен
+
+- список большой;
+- вычисление тяжёлое;
+- результат передаётся в memoized child;
+- нужна стабильная ссылка на массив.
+
+## Когда useMemo лишний
+
+- список маленький;
+- вычисление дешёвое;
+- код становится сложнее без пользы.
+
+## Вопросы для самопроверки
+
+- Чем `useMemo` отличается от `useState`?
+- Почему `visibleProducts` не надо хранить в state?
+- Что будет, если забыть `category` в dependencies?
+- Почему `useMemo` не предотвращает сам ререндер?
+
+## Зачёт этапа
+
+Этап зачтён, если ты можешь объяснить `useMemo` без фразы “он предотвращает ререндер”.
+
+---
+
+# День 7 проекта — корзина
+
+## Цель
+
+Сделать корзину и прокачать immutable updates.
+
+## Типы
+
+```ts
+export type CartItem = {
+  product: Product;
+  quantity: number;
+};
+```
+
+## Что сделать
+
+Функции:
+
+- `addToCart(product)`
+- `removeFromCart(productId)`
+- `increaseQuantity(productId)`
+- `decreaseQuantity(productId)`
+- `clearCart()`
+
+## Паттерны
+
+Add:
+
+```ts
+setCartItems((prev) => [...prev, newItem]);
+```
+
+Update:
+
+```ts
+setCartItems((prev) =>
+  prev.map((item) =>
+    item.product.id === productId
+      ? { ...item, quantity: item.quantity + 1 }
+      : item
+  )
+);
+```
+
+Delete:
+
+```ts
+setCartItems((prev) =>
+  prev.filter((item) => item.product.id !== productId)
+);
+```
+
+## Derived data
+
+```ts
+const totalPrice = cartItems.reduce(...);
+const totalCount = cartItems.reduce(...);
+```
+
+## Что тренируется
+
+- immutable update
+- spread
+- map
+- filter
+- reduce
+- derived state
+- callbacks через props
+
+## Вопросы для самопроверки
+
+- Почему нельзя делать `cartItems.push()`?
+- Почему нельзя делать `item.quantity++`?
+- Почему totalPrice не надо хранить в state?
+- Что делать, если quantity становится 0?
+
+## Зачёт этапа
+
+Этап зачтён, если корзина работает и нет прямых мутаций state.
+
+---
+
+# День 8 проекта — custom hook useCart
+
+## Цель
+
+Вынести логику корзины в custom hook.
+
+## Что сделать
+
+Создать:
+
+```ts
+function useCart() {
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+
+  // functions
+
+  return {
+    cartItems,
+    addToCart,
+    removeFromCart,
+    increaseQuantity,
+    decreaseQuantity,
+    clearCart,
+    totalPrice,
+    totalCount,
+  };
+}
+```
+
+## Что тренируется
+
+- custom hooks
+- инкапсуляция логики
+- возвращаемый API hook
+- derived values внутри hook
+
+## Вопросы для самопроверки
+
+- Почему это hook?
+- Почему имя должно начинаться с `use`?
+- Можно ли вызывать hook внутри условия?
+- Что возвращает hook: JSX или данные/логику?
+
+## Зачёт этапа
+
+Этап зачтён, если `App` стал чище, а логика корзины живёт в `useCart`.
+
+---
+
+# День 9 проекта — favorites + React.memo + useCallback
+
+## Цель
+
+Понять связку `React.memo` и `useCallback`.
+
+## Что сделать
+
+1. Добавить favoriteIds:
+
+```ts
+const [favoriteIds, setFavoriteIds] = useState<number[]>([]);
+```
+
+2. Создать `toggleFavorite(productId)`.
+
+3. Добавить кнопку heart в `ProductCard`.
+
+4. Обернуть `ProductCard` в `React.memo`.
+
+5. Передавать handlers через `useCallback`.
+
+## Пример
+
+```ts
+const handleToggleFavorite = useCallback((productId: number) => {
+  setFavoriteIds((prev) =>
+    prev.includes(productId)
+      ? prev.filter((id) => id !== productId)
+      : [...prev, productId]
+  );
+}, []);
+```
+
+## Что тренируется
+
+- `React.memo`
+- `useCallback`
+- reference equality
+- callbacks через props
+- массив id вместо массива объектов
+
+## Важная мысль
+
+`React.memo` помогает пропустить ререндер дочернего компонента, если props поверхностно не изменились.
+
+`useCallback` помогает сохранить стабильную ссылку на функцию.
+
+## Вопросы для самопроверки
+
+- Почему функция без `useCallback` создаётся заново на каждом рендере?
+- Как это ломает пользу от `React.memo`?
+- Почему `React.memo` не всегда нужен?
+- Что лучше хранить в favorites: products или ids?
+
+## Зачёт этапа
+
+Этап зачтён, если ты можешь объяснить:
+
+```txt
+React.memo сравнивает props.
+Функция — это prop.
+Новая функция = новая ссылка.
+useCallback сохраняет ссылку.
+```
+
+---
+
+# День 10 проекта — useRef
+
+## Цель
+
+Использовать `useRef` в реальных сценариях.
+
+## Что сделать
+
+Сценарий 1. Фокус на поиск:
+
+```ts
+const searchInputRef = useRef<HTMLInputElement | null>(null);
+
+function focusSearch() {
+  searchInputRef.current?.focus();
+}
+```
+
+Сценарий 2. Скролл к каталогу:
+
+```ts
+const catalogRef = useRef<HTMLDivElement | null>(null);
+
+function scrollToCatalog() {
+  catalogRef.current?.scrollIntoView({ behavior: 'smooth' });
+}
+```
+
+Сценарий 3. Хранение timer id для debounce:
+
+```ts
+const timerRef = useRef<number | null>(null);
+```
+
+## Что тренируется
+
+- DOM refs
+- `.current`
+- значение без ререндера
+- focus
+- scroll
+- timer
+
+## Главное понимание
+
+`useRef` хранит значение между рендерами, но изменение `.current` не вызывает ререндер.
+
+## Вопросы для самопроверки
+
+- Чем `useRef` отличается от `useState`?
+- Почему изменение `.current` не ререндерит компонент?
+- Когда useRef нужен для DOM?
+- Когда useRef нужен не для DOM?
+
+## Зачёт этапа
+
+Этап зачтён, если ты использовал `useRef` минимум в двух сценариях и можешь объяснить разницу с `useState`.
+
+---
+
+# День 11 проекта — useDebounce custom hook
+
+## Цель
+
+Сделать debounce для поиска.
+
+## Что сделать
+
+Создать hook:
+
+```ts
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const timerId = window.setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      window.clearTimeout(timerId);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+}
+```
+
+Использовать:
+
+```ts
+const debouncedSearch = useDebounce(search, 300);
+```
+
+И фильтровать по `debouncedSearch`.
+
+## Что тренируется
+
+- custom hook
+- `useEffect`
+- cleanup
+- timer
+- generic TypeScript
+- dependencies
+
+## Вопросы для самопроверки
+
+- Почему нужен cleanup?
+- Что будет, если не вызвать clearTimeout?
+- Почему hook generic?
+- Чем debounce отличается от throttle?
+
+## Зачёт этапа
+
+Этап зачтён, если поиск обновляется с задержкой, а ты можешь объяснить cleanup.
+
+---
+
+# День 12 проекта — useReducer
+
+## Цель
+
+Понять `useReducer` на корзине.
+
+## Когда useReducer уместен
+
+`useReducer` полезен, когда:
+
+- состояние сложное;
+- много вариантов обновления;
+- next state зависит от previous state;
+- логика обновлений разрастается.
+
+## Что сделать
+
+Переписать корзину с `useState` на `useReducer`.
+
+Actions:
+
+```ts
+type CartAction =
+  | { type: 'add'; product: Product }
+  | { type: 'remove'; productId: number }
+  | { type: 'increase'; productId: number }
+  | { type: 'decrease'; productId: number }
+  | { type: 'clear' };
+```
+
+Reducer:
+
+```ts
+function cartReducer(state: CartItem[], action: CartAction): CartItem[] {
+  switch (action.type) {
+    case 'add':
+      // ...
+    default:
+      return state;
+  }
+}
+```
+
+## Что тренируется
+
+- `useReducer`
+- discriminated unions
+- reducer pattern
+- чистые функции
+- сложный state
+
+## Вопросы для самопроверки
+
+- Чем `useReducer` отличается от `useState`?
+- Когда `useReducer` лучше?
+- Почему reducer должен быть pure function?
+- Что такое discriminated union?
+
+## Зачёт этапа
+
+Этап зачтён, если корзина работает через reducer, а actions типизированы.
+
+---
+
+# День 13 проекта — useContext
+
+## Цель
+
+Понять Context на корзине или теме.
+
+## Что сделать
+
+Вариант 1:
+
+- CartContext
+- CartProvider
+- useCartContext
+
+Вариант 2:
+
+- ThemeContext
+- переключение light/dark
+
+Лучше взять CartContext, потому что он практичнее.
+
+## Что тренируется
+
+- `createContext`
+- Provider
+- custom hook для доступа к context
+- проблема лишних ререндеров
+
+## Важная проблема
+
+Если в один context положить слишком много:
+
+```ts
+{
+  user,
+  theme,
+  language,
+  cart,
+  filters,
+  login,
+  logout
+}
+```
+
+то изменение одной части может перерендерить много потребителей.
+
+## Как улучшать
+
+- разделять contexts;
+- memoize value;
+- не класть всё в один “global context”;
+- использовать state manager, если state сложный.
+
+## Вопросы для самопроверки
+
+- Когда Context подходит?
+- Почему Context не всегда замена Redux/Zustand?
+- В чём проблема большого Context?
+- Почему value лучше мемоизировать?
+
+## Зачёт этапа
+
+Этап зачтён, если ты сделал Provider и можешь объяснить проблему лишних ререндеров.
+
+---
+
+# День 14 проекта — useId
+
+## Цель
+
+Понять неочевидный, но полезный hook `useId`.
+
+## Где использовать
+
+Для связи label и input:
+
+```tsx
+const id = useId();
+
+<label htmlFor={id}>Search</label>
+<input id={id} />
+```
+
+## Что тренируется
+
+- accessibility
+- stable id
+- forms
+- label/input связь
+
+## Важно
+
+`useId` не нужен для `key` в списках.
+
+Плохо:
+
+```tsx
+<ProductCard key={useId()} />
+```
+
+Нельзя так использовать.
+
+## Вопросы для самопроверки
+
+- Зачем нужен `useId`?
+- Почему он полезен для accessibility?
+- Почему его нельзя использовать вместо key в списках?
+
+## Зачёт этапа
+
+Этап зачтён, если формы имеют label/input связь через `useId`.
+
+---
+
+# День 15 проекта — useDeferredValue
+
+## Цель
+
+Познакомиться с менее очевидным hook для плавного UI.
+
+## Сценарий
+
+Есть search input и большой список товаров.
+
+```ts
+const deferredSearch = useDeferredValue(search);
+```
+
+Input остаётся отзывчивым, а тяжёлая фильтрация может немного отставать.
+
+## Что тренируется
+
+- concurrent rendering concept
+- отзывчивый UI
+- отличие от debounce
+
+## Важно
+
+`useDeferredValue` — не debounce.
+
+Debounce ждёт паузу перед обновлением значения.
+
+`useDeferredValue` позволяет React отложить менее приоритетное обновление.
+
+## Вопросы для самопроверки
+
+- Чем `useDeferredValue` отличается от debounce?
+- Почему input может оставаться отзывчивым?
+- В каких задачах это полезно?
+
+## Зачёт этапа
+
+Этап зачтён, если ты можешь объяснить разницу между debounce и deferred value.
+
+---
+
+# День 16 проекта — useTransition
+
+## Цель
+
+Познакомиться с `useTransition`.
+
+## Сценарий
+
+При изменении категории или сортировки обновление списка пометить как transition.
+
+```ts
+const [isPending, startTransition] = useTransition();
+
+function handleCategoryChange(category: string) {
+  startTransition(() => {
+    setCategory(category);
+  });
+}
+```
+
+## Что тренируется
+
+- low-priority updates
+- `isPending`
+- отличие срочных и несрочных обновлений
+
+## Важно
+
+Не надо использовать `useTransition` везде.
+
+Он полезен, когда есть тяжёлое обновление UI, которое не должно блокировать ввод/клик.
+
+## Вопросы для самопроверки
+
+- Что делает `startTransition`?
+- Чем transition отличается от обычного setState?
+- Что показывает `isPending`?
+- Когда hook лишний?
+
+## Зачёт этапа
+
+Этап зачтён, если ты сделал простой пример и можешь объяснить, зачем он нужен.
+
+---
+
+# День 17 проекта — useLayoutEffect
+
+## Цель
+
+Понять отличие `useEffect` от `useLayoutEffect`.
+
+## Сценарий
+
+Измерить высоту элемента после рендера:
+
+```ts
+const cardRef = useRef<HTMLDivElement | null>(null);
+const [height, setHeight] = useState(0);
+
+useLayoutEffect(() => {
+  if (!cardRef.current) return;
+
+  setHeight(cardRef.current.getBoundingClientRect().height);
+}, []);
+```
+
+## Важно
+
+`useLayoutEffect` запускается синхронно после изменений DOM, но до отрисовки браузером.
+
+Использовать редко:
+
+- измерение DOM;
+- предотвращение visual flicker;
+- layout calculations.
+
+## Вопросы для самопроверки
+
+- Чем `useLayoutEffect` отличается от `useEffect`?
+- Почему его не надо использовать везде?
+- Когда он может быть полезен?
+
+## Зачёт этапа
+
+Этап зачтён, если ты сделал измерение DOM и можешь объяснить, почему обычный `useEffect` чаще предпочтительнее.
+
+---
+
+# День 18 проекта — useImperativeHandle + forwardRef
+
+## Цель
+
+Познакомиться с редким, но полезным паттерном.
+
+## Сценарий
+
+Создать компонент SearchInput, у которого родитель может вызвать:
+
+```ts
+searchInputRef.current?.focus();
+searchInputRef.current?.clear();
+```
+
+## Что тренируется
+
+- `forwardRef`
+- `useImperativeHandle`
+- controlled imperative API
+- ref typing
+
+## Важно
+
+Это редкий hook. Его не надо использовать часто.
+
+Он нужен, когда дочерний компонент должен открыть наружу ограниченный imperative API.
+
+## Вопросы для самопроверки
+
+- Зачем нужен `useImperativeHandle`?
+- Почему это не основной способ общения компонентов?
+- Чем это отличается от props callbacks?
+
+## Зачёт этапа
+
+Этап зачтён, если ты сделал `focus()` и `clear()` через ref.
+
+---
+
+# День 19 проекта — useSyncExternalStore
+
+## Цель
+
+Познакомиться с hook для подписки на внешние store.
+
+## Простой сценарий
+
+Сделать tiny external store для online/offline статуса или localStorage.
+
+Пример задачи:
+
+- хранить cart в localStorage;
+- подписываться на изменения storage между вкладками.
+
+## Важно
+
+Это advanced hook. Для обычного приложения он редко нужен напрямую.
+
+Но полезно знать:
+
+> `useSyncExternalStore` нужен для безопасной подписки React-компонента на внешний источник данных.
+
+## Вопросы для самопроверки
+
+- Что такое внешний store?
+- Почему обычного useEffect иногда недостаточно?
+- Где это используется на практике? Например, внутри state managers.
+
+## Зачёт этапа
+
+Этап зачтён, если ты понял назначение hook, даже если реализация будет простой.
+
+---
+
+# День 20 проекта — useOptimistic / optimistic UI concept
+
+## Цель
+
+Понять optimistic UI на примере лайка/избранного.
+
+## Важно
+
+Если используешь стабильный React без server actions, можно просто реализовать optimistic update руками через `useState`.
+
+Если доступен `useOptimistic`, можно сделать экспериментально, но не обязательно.
+
+## Сценарий
+
+Нажал favorite:
+
+1. UI сразу показывает heart filled.
+2. Запрос на fake API отправился.
+3. Если успех — оставляем.
+4. Если ошибка — rollback.
+
+## Что тренируется
+
+- optimistic update
+- rollback
+- pending state
+- double click protection
+- реальный PR-review навык
+
+## Вопросы для самопроверки
+
+- Что такое optimistic update?
+- Почему нужен rollback?
+- Почему нужна защита от быстрых кликов?
+- Как не дать счётчику уйти ниже 0?
+
+## Зачёт этапа
+
+Этап зачтён, если ты можешь объяснить optimistic update на примере лайка.
+
+---
+
+# День 21 проекта — финальная упаковка
+
+## Цель
+
+Довести проект до состояния учебного showcase.
+
+## Что сделать
+
+- README;
+- список hooks, которые использованы;
+- скриншоты;
+- деплой на Vercel;
+- описание архитектуры;
+- список изученных тем;
+- “что бы улучшил дальше”.
+
+## README структура
+
+```md
+# React Shop Lab
+
+Учебный проект для тренировки React Hooks, TypeScript и работы с API.
+
+## Stack
+
+- React
+- TypeScript
+- Vite
+- DummyJSON API
+
+## Features
+
+- Products loading
+- Search
+- Filters
+- Sorting
+- Cart
+- Favorites
+- Loading/error/empty states
+- Custom hooks
+- Memoization
+- AbortController
+
+## Hooks practiced
+
+- useState
+- useEffect
+- useRef
+- useMemo
+- useCallback
+- useReducer
+- useContext
+- useId
+- useDeferredValue
+- useTransition
+- useLayoutEffect
+- useImperativeHandle
+- useSyncExternalStore
+
+## What I learned
+
+...
+```
+
+## Зачёт этапа
+
+Этап зачтён, если проект можно показать и использовать как тренировочный материал для собеседования.
+
+---
+
+# Главные собеседовательные формулы
+
+## useState
+
+> `useState` хранит состояние компонента. При изменении state компонент ререндерится.
+
+## useEffect
+
+> `useEffect` нужен для синхронизации компонента с внешним миром: API, подписки, таймеры, DOM events.
+
+## useRef
+
+> `useRef` хранит значение между рендерами, но изменение `.current` не вызывает ререндер. Часто используется для DOM-ссылок, таймеров и mutable values.
+
+## useMemo
+
+> `useMemo` кеширует результат вычисления между рендерами, если зависимости не изменились. Он не предотвращает сам ререндер.
+
+## useCallback
+
+> `useCallback` сохраняет стабильную ссылку на функцию между рендерами, если зависимости не изменились.
+
+## React.memo
+
+> `React.memo` может пропустить повторный вызов дочернего компонента, если его props поверхностно не изменились.
+
+## Derived state
+
+> Derived state — это значение, которое можно вычислить из существующего state/props. Его лучше не хранить отдельно.
+
+## Immutable update
+
+> State нельзя мутировать напрямую. Нужно создавать новые массивы/объекты через spread, map, filter.
+
+## key
+
+> `key` нужен React для стабильной идентичности элемента в списке. В динамических списках лучше использовать id, а не index.
+
+---
+
+# Как работать с Codex/Cursor
+
+Правила:
+
+1. Не просить “напиши всё за меня”.
+2. Просить roadmap.
+3. Просить наводящие вопросы.
+4. Просить объяснить ошибку.
+5. Просить review твоего кода.
+6. Просить не делать auto-edit.
+7. Сначала писать самому.
+8. После каждой задачи объяснять код словами.
+
+Хороший prompt:
+
+```txt
+Я тренирую React live coding. Не пиши код за меня и не меняй файлы автоматически. Задавай наводящие вопросы, проверяй мой код, указывай на ошибки и проси меня объяснить решение. Готовое решение показывай только если я прямо попрошу.
+```
+
+---
+
+# Критерии готовности после проекта
+
+Ты готов использовать проект для собеседований, если можешь без подсказок объяснить:
+
+- как загружаются товары;
+- зачем нужен `useEffect`;
+- как работает cleanup;
+- что делает `AbortController`;
+- где controlled inputs;
+- где derived state;
+- почему фильтр не хранится в state;
+- где `useMemo`;
+- почему `useMemo` не отменяет ререндер;
+- где `useCallback`;
+- зачем нужен `React.memo`;
+- почему нельзя мутировать cart;
+- почему key — id;
+- что можно было бы улучшить;
+- как бы ты заменил ручной fetch на React Query;
+- как бы подключил настоящий backend.
