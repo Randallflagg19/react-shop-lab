@@ -19,7 +19,7 @@ Next.js здесь используется как оболочка для ма�
 - React 19
 - TypeScript в strict mode
 - Tailwind CSS 4
-- DummyJSON Products API
+- Platzi Fake Store API
 - Без Redux на первом этапе
 - Без React Query на первом этапе
 - Без UI-библиотек на первом этапе
@@ -40,7 +40,7 @@ Server Components используем для:
 - статической оболочки страницы;
 - metadata;
 - серверной загрузки данных в отдельном сравнительном упражнении;
-- страницы товара `products/[id]/page.tsx`.
+- страницы товара `products/[slug]/page.tsx`.
 
 Client Components используем там, где нужны:
 
@@ -59,7 +59,7 @@ Client Components используем там, где нужны:
 - `loading.tsx` — route-level loading UI для навигации и streaming;
 - `error.tsx` — route error boundary; этот файл является Client Component;
 - `not-found.tsx` — UI для отсутствующего ресурса;
-- `products/[id]/page.tsx` — динамический маршрут товара.
+- `products/[slug]/page.tsx` — динамический маршрут товара.
 
 Локальные состояния `isLoading` и `error` внутри `ProductsCatalog` не заменяем этими файлами: они описывают состояние клиентского запроса после монтирования компонента.
 
@@ -70,7 +70,7 @@ Client Components используем там, где нужны:
 Базовое API:
 
 ```txt
-https://dummyjson.com/products
+https://api.escuelajs.co/api/v1/products
 ```
 
 Полезные endpoints:
@@ -78,18 +78,50 @@ https://dummyjson.com/products
 ```txt
 GET /products
 GET /products/:id
-GET /products/search?q=phone
-GET /products/categories
-GET /products/category/:category
+GET /products/slug/:slug
+GET /products?offset=0&limit=10
+GET /products?title=shirt
+GET /products?price_min=10&price_max=100
+GET /products?categoryId=1
+GET /products?categorySlug=clothes
+GET /categories
 ```
 
 На старте можно использовать только:
 
 ```txt
-https://dummyjson.com/products
+https://api.escuelajs.co/api/v1/products
 ```
 
 И уже на клиенте делать поиск, фильтры и сортировку.
+
+Почему Platzi Fake Store:
+
+- данные ближе к реальному e-commerce: товары, категории, users, JWT auth;
+- у товара есть вложенная категория и массив изображений;
+- есть pagination, фильтрация по title/category/price и CRUD;
+- позже можно добавить auth или server-side фильтры как отдельные advanced-этапы.
+
+На первых этапах не используем серверные фильтры API, даже если они доступны. Сначала тренируем controlled inputs, derived state, `filter`, `sort` и `useMemo` руками на клиенте.
+
+---
+
+## Текущий прогресс
+
+Сейчас мы находимся на **Дне 1 — Products API + useEffect**.
+
+Уже сделано:
+
+- roadmap адаптирован под Next.js App Router;
+- базовый skeleton проекта создан;
+- стартовый UI `create-next-app` убран;
+- подготовлены пустые файлы для `types.ts`, `ProductsCatalog.tsx` и `products.ts`.
+
+Следующий шаг:
+
+> Создать типы `ProductCategory` и `Product` в `src/entities/product/model/types.ts`.
+
+После этого переходим к `fetchProducts`.
 
 ---
 
@@ -102,7 +134,7 @@ https://dummyjson.com/products
 - отображать список товаров;
 - фильтровать по поиску;
 - фильтровать по категории;
-- сортировать по цене/рейтингу;
+- сортировать по цене/названию;
 - добавлять товары в корзину;
 - удалять товары из корзины;
 - менять количество товара;
@@ -227,45 +259,39 @@ npm run dev
 4. Создать типы товара в `src/entities/product/model/types.ts`:
 
 ```ts
+export type ProductCategory = {
+  id: number;
+  name: string;
+  image: string;
+  slug: string;
+};
+
 export type Product = {
   id: number;
   title: string;
-  description: string;
+  slug: string;
   price: number;
-  discountPercentage: number;
-  rating: number;
-  stock: number;
-  brand?: string;
-  category: string;
-  thumbnail: string;
+  description: string;
+  category: ProductCategory;
   images: string[];
+  creationAt: string;
+  updatedAt: string;
 };
 ```
 
-5. Создать тип ответа API:
-
-```ts
-export type ProductsResponse = {
-  products: Product[];
-  total: number;
-  skip: number;
-  limit: number;
-};
-```
-
-6. Создать `fetchProducts` в `src/shared/api/products.ts`.
+5. Создать `fetchProducts` в `src/shared/api/products.ts`.
 
 Функция должна:
 
 - принимать необязательный `AbortSignal`;
 - выполнять `fetch`;
 - проверять `response.ok`;
-- возвращать `Promise<ProductsResponse>`;
+- возвращать `Promise<Product[]>`;
 - не содержать React state и JSX.
 
-7. Создать Client Component `ProductsCatalog.tsx` с директивой `'use client'`.
+6. Создать Client Component `ProductsCatalog.tsx` с директивой `'use client'`.
 
-8. В `ProductsCatalog` создать state:
+7. В `ProductsCatalog` создать state:
 
 ```ts
 const [products, setProducts] = useState<Product[]>([]);
@@ -273,16 +299,16 @@ const [isLoading, setIsLoading] = useState(false);
 const [error, setError] = useState<string | null>(null);
 ```
 
-9. В `useEffect` загрузить товары через `fetchProducts`.
+8. В `useEffect` загрузить товары через `fetchProducts`.
 
-10. Показать четыре взаимоисключающих состояния:
+9. Показать четыре взаимоисключающих состояния:
 
 - loading;
 - error;
 - список товаров;
 - empty state.
 
-11. Оставить `src/app/page.tsx` Server Component и отрендерить в нём `<ProductsCatalog />`.
+10. Оставить `src/app/page.tsx` Server Component и отрендерить в нём `<ProductsCatalog />`.
 
 ## Что тренируется
 
@@ -294,9 +320,12 @@ const [error, setError] = useState<string | null>(null);
 - `useState`
 - loading/error state
 - TypeScript типы API
+- вложенные объекты в типах
 
 ## Вопросы для самопроверки
 
+- Почему `category` — объект, а не строка?
+- Почему `ProductCategory` лучше вынести в отдельный тип?
 - Почему callback `useEffect` не должен быть `async` напрямую?
 - Почему dependency array здесь пустой?
 - Почему `ProductsCatalog`, а не весь `page.tsx`, является Client Component?
@@ -305,6 +334,7 @@ const [error, setError] = useState<string | null>(null);
 - Где лучше хранить `products`: state или derived state?
 - Почему `error` лучше хранить отдельно?
 - Почему `fetchProducts` не должен вызывать `setProducts`?
+- Почему `fetchProducts` возвращает `Product[]`, а не весь `Response` из `fetch`?
 - Чем локальный loading state отличается от route-level `loading.tsx`?
 
 ## Зачёт этапа
@@ -390,13 +420,13 @@ Cleanup вызывается:
 2. Вызвать ту же API-функцию на сервере без `useEffect`.
 3. Сравнить подходы:
 
-| Client fetch через `useEffect` | Server fetch в App Router |
-| --- | --- |
-| Нужен Client Component | Можно оставить Server Component |
-| Есть client loading/error state | Можно использовать `Suspense`, `loading.tsx` и server error boundary |
-| Запрос начинается после гидратации | Данные могут попасть в первоначальный HTML |
-| Удобно изучать lifecycle и cleanup | Меньше client JavaScript |
-| Доступны browser API | Доступны секреты и server-only зависимости |
+| Client fetch через `useEffect`     | Server fetch в App Router                                            |
+| ---------------------------------- | -------------------------------------------------------------------- |
+| Нужен Client Component             | Можно оставить Server Component                                      |
+| Есть client loading/error state    | Можно использовать `Suspense`, `loading.tsx` и server error boundary |
+| Запрос начинается после гидратации | Данные могут попасть в первоначальный HTML                           |
+| Удобно изучать lifecycle и cleanup | Меньше client JavaScript                                             |
+| Доступны browser API               | Доступны секреты и server-only зависимости                           |
 
 Важно: это сравнение, а не причина немедленно удалить учебную реализацию через `useEffect`.
 
@@ -474,9 +504,9 @@ type ProductListProps = {
 - картинку;
 - title;
 - price;
-- category;
-- rating;
-- stock.
+- category name;
+- короткое описание;
+- slug или id для будущей ссылки.
 
 4. Использовать `key={product.id}`.
 
@@ -485,7 +515,7 @@ type ProductListProps = {
 6. При переходе на `next/image`:
 
 - указать размеры или использовать `fill`;
-- разрешить домен изображений DummyJSON через `images.remotePatterns` в `next.config.ts`;
+- разрешить домены изображений Platzi API через `images.remotePatterns` в `next.config.ts`;
 - проверить, что layout карточки не прыгает при загрузке изображения.
 
 ## Что тренируется
@@ -515,14 +545,14 @@ type ProductListProps = {
 После появления `ProductCard` можно добавить маршрут:
 
 ```txt
-src/app/products/[id]/page.tsx
+src/app/products/[slug]/page.tsx
 ```
 
 На этом этапе:
 
-- карточка ведёт на `/products/:id` через `next/link`;
+- карточка ведёт на `/products/:slug` через `next/link`;
 - `page.tsx` получает динамический `params`;
-- конкретный товар загружается в Server Component;
+- конкретный товар загружается в Server Component через `/products/slug/:slug`;
 - отсутствующий товар обрабатывается как not found;
 - интерактивная кнопка «Добавить в корзину» остаётся отдельным Client Component.
 
@@ -543,23 +573,20 @@ src/app/products/[id]/page.tsx
 1. Создать state:
 
 ```ts
-const [search, setSearch] = useState('');
+const [search, setSearch] = useState("");
 ```
 
 2. Создать input:
 
 ```tsx
-<input
-  value={search}
-  onChange={(event) => setSearch(event.target.value)}
-/>
+<input value={search} onChange={(event) => setSearch(event.target.value)} />
 ```
 
 3. Создать derived data:
 
 ```ts
 const filteredProducts = products.filter((product) =>
-  product.title.toLowerCase().includes(search.toLowerCase())
+  product.title.toLowerCase().includes(search.toLowerCase()),
 );
 ```
 
@@ -600,8 +627,10 @@ const filteredProducts = products.filter((product) =>
 State:
 
 ```ts
-const [category, setCategory] = useState('all');
-const [sortBy, setSortBy] = useState<'default' | 'price-asc' | 'price-desc' | 'rating-desc'>('default');
+const [category, setCategory] = useState("all");
+const [sortBy, setSortBy] = useState<
+  "default" | "price-asc" | "price-desc" | "title-asc"
+>("default");
 ```
 
 Фильтры:
@@ -614,7 +643,17 @@ const [sortBy, setSortBy] = useState<'default' | 'price-asc' | 'price-desc' | 'r
 - default;
 - price ascending;
 - price descending;
-- rating descending.
+- title ascending.
+
+Для Platzi API категория товара — объект, поэтому фильтр делаем не по `product.category`, а по одному из полей:
+
+```ts
+product.category.id;
+product.category.slug;
+product.category.name;
+```
+
+На старте проще хранить в state `categorySlug`, потому что это читаемое значение для UI.
 
 ## Что тренируется
 
@@ -645,6 +684,7 @@ products.sort(...)
 - Почему `sort` опасен для state?
 - Где здесь derived state?
 - Какой порядок: сначала filter, потом sort или наоборот?
+- Чем отличается фильтрация по `category.name`, `category.id` и `category.slug`?
 
 ## Зачёт этапа
 
@@ -749,17 +789,15 @@ setCartItems((prev) =>
   prev.map((item) =>
     item.product.id === productId
       ? { ...item, quantity: item.quantity + 1 }
-      : item
-  )
+      : item,
+  ),
 );
 ```
 
 Delete:
 
 ```ts
-setCartItems((prev) =>
-  prev.filter((item) => item.product.id !== productId)
-);
+setCartItems((prev) => prev.filter((item) => item.product.id !== productId));
 ```
 
 ## Derived data
@@ -870,7 +908,7 @@ const handleToggleFavorite = useCallback((productId: number) => {
   setFavoriteIds((prev) =>
     prev.includes(productId)
       ? prev.filter((id) => id !== productId)
-      : [...prev, productId]
+      : [...prev, productId],
   );
 }, []);
 ```
@@ -933,7 +971,7 @@ function focusSearch() {
 const catalogRef = useRef<HTMLDivElement | null>(null);
 
 function scrollToCatalog() {
-  catalogRef.current?.scrollIntoView({ behavior: 'smooth' });
+  catalogRef.current?.scrollIntoView({ behavior: "smooth" });
 }
 ```
 
@@ -1050,11 +1088,11 @@ Actions:
 
 ```ts
 type CartAction =
-  | { type: 'add'; product: Product }
-  | { type: 'remove'; productId: number }
-  | { type: 'increase'; productId: number }
-  | { type: 'decrease'; productId: number }
-  | { type: 'clear' };
+  | { type: "add"; product: Product }
+  | { type: "remove"; productId: number }
+  | { type: "increase"; productId: number }
+  | { type: "decrease"; productId: number }
+  | { type: "clear" };
 ```
 
 Reducer:
@@ -1062,8 +1100,8 @@ Reducer:
 ```ts
 function cartReducer(state: CartItem[], action: CartAction): CartItem[] {
   switch (action.type) {
-    case 'add':
-      // ...
+    case "add":
+    // ...
     default:
       return state;
   }
@@ -1130,13 +1168,7 @@ Provider нужно размещать настолько глубоко в де
 
 ```ts
 {
-  user,
-  theme,
-  language,
-  cart,
-  filters,
-  login,
-  logout
+  (user, theme, language, cart, filters, login, logout);
 }
 ```
 
@@ -1467,6 +1499,24 @@ Server Actions не обязательны для понимания конце�
 
 ---
 
+## Advanced-этап — возможности Platzi Fake Store
+
+Этот этап не нужен для базовой тренировки hooks, но хорошо подходит после основной версии магазина.
+
+Что можно попробовать:
+
+- server-side pagination через `limit` и `offset`;
+- server-side filters через `title`, `categorySlug`, `price_min`, `price_max`;
+- страницу товара по `slug`, а не только по `id`;
+- related products через `/products/:id/related`;
+- JWT auth: login, profile, refresh token;
+- users как учебный модуль для protected UI;
+- сравнение REST и GraphQL подходов.
+
+Важно: не добавлять auth, GraphQL и file upload раньше времени. Сначала каталог, фильтры, корзина и hooks.
+
+---
+
 # День 21 проекта — финальная упаковка
 
 ## Цель
@@ -1496,7 +1546,7 @@ Server Actions не обязательны для понимания конце�
 - React
 - TypeScript
 - Tailwind CSS
-- DummyJSON API
+- Platzi Fake Store API
 
 ## Features
 
