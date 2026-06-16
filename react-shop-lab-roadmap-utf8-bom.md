@@ -1,22 +1,24 @@
-﻿# React Shop Lab — roadmap проекта для тренировки React Hooks + TypeScript
+﻿# React Shop Lab — roadmap проекта для тренировки React Hooks + TypeScript в Next.js
 
 ## Цель проекта
 
-Сделать небольшой учебный интернет-магазин на **Vite + React + TypeScript**, используя открытое API с товарами.  
+Сделать небольшой учебный интернет-магазин на **Next.js App Router + React + TypeScript**, используя открытое API с товарами.
 Проект нужен не ради красивого портфолио, а как тренировочная площадка для собеседований и ручного кодинга.
 
 Главная цель:
 
 > Научиться уверенно писать React-код руками: `useState`, `useEffect`, `useRef`, `useMemo`, `useCallback`, `React.memo`, custom hooks, controlled inputs, immutable updates, derived state, работа с API, loading/error/empty states.
 
+Next.js здесь используется как оболочка для маршрутизации, деплоя и знакомства с Server Components. Он не должен забирать основную учебную задачу: понять клиентский React и его hooks.
+
 ---
 
 ## Базовый стек
 
-- Vite
-- React
-- TypeScript
-- CSS Modules или обычный CSS
+- Next.js 16 с App Router
+- React 19
+- TypeScript в strict mode
+- Tailwind CSS 4
 - DummyJSON Products API
 - Без Redux на первом этапе
 - Без React Query на первом этапе
@@ -25,6 +27,41 @@
 Почему без Redux/React Query сначала:
 
 > Сейчас важно понять базовый React. Если сразу взять готовые библиотеки, они закроют за тебя часть проблем, которые тебе нужно руками прочувствовать.
+
+---
+
+## Учебная граница Next.js и React
+
+В App Router `page.tsx` и `layout.tsx` по умолчанию являются Server Components.
+
+Server Components используем для:
+
+- маршрутов и layouts;
+- статической оболочки страницы;
+- metadata;
+- серверной загрузки данных в отдельном сравнительном упражнении;
+- страницы товара `products/[id]/page.tsx`.
+
+Client Components используем там, где нужны:
+
+- `useState`, `useEffect` и другие client hooks;
+- обработчики `onClick`, `onChange`;
+- controlled inputs;
+- `window`, `document`, `localStorage`;
+- интерактивная корзина, фильтры и избранное.
+
+Не надо ставить `'use client'` в `layout.tsx` или во всём `page.tsx` только ради одного интерактивного блока. Лучше создать узкую клиентскую границу, например `ProductsCatalog.tsx`.
+
+Первую загрузку товаров намеренно делаем через `useEffect` в Client Component. Для production-приложения Next.js часто естественнее загрузить данные в Server Component, но тогда мы не потренируем lifecycle эффекта, cleanup и `AbortController`. Позже сравним оба подхода.
+
+Специальные файлы App Router вводим только когда появляется соответствующий сценарий:
+
+- `loading.tsx` — route-level loading UI для навигации и streaming;
+- `error.tsx` — route error boundary; этот файл является Client Component;
+- `not-found.tsx` — UI для отсутствующего ресурса;
+- `products/[id]/page.tsx` — динамический маршрут товара.
+
+Локальные состояния `isLoading` и `error` внутри `ProductsCatalog` не заменяем этими файлами: они описывают состояние клиентского запроса после монтирования компонента.
 
 ---
 
@@ -75,25 +112,29 @@ https://dummyjson.com/products
 - использовать `useRef` для фокуса/скролла;
 - использовать `useMemo` там, где есть derived data;
 - использовать `useCallback` вместе с `React.memo`;
-- вынести часть логики в custom hooks.
+- вынести часть логики в custom hooks;
+- понимать, почему конкретный компонент является Server или Client Component;
+- сравнить клиентскую загрузку через `useEffect` с серверной загрузкой в App Router.
 
 ---
 
 # Структура проекта
 
-Не надо делать идеальную FSD-архитектуру сразу. Но структура должна быть понятной.
+Не надо делать идеальную FSD-архитектуру сразу. Структура должна расти вместе с задачами, а не появиться целиком в первый день.
 
 ```txt
 src/
   app/
-    App.tsx
-    App.css
+    globals.css
+    layout.tsx
+    page.tsx
+    products/
+      [id]/
+        page.tsx
 
   shared/
     api/
-      productsApi.ts
-    types/
-      product.ts
+      products.ts
     ui/
       Loader.tsx
       ErrorMessage.tsx
@@ -101,60 +142,89 @@ src/
 
   entities/
     product/
-      ProductCard.tsx
-      ProductList.tsx
-      ProductDetails.tsx
+      model/
+        types.ts
+      ui/
+        ProductCard.tsx
+        ProductList.tsx
+        ProductDetails.tsx
 
   features/
-    filters/
-      ProductFilters.tsx
+    products-catalog/
+      ui/
+        ProductsCatalog.tsx
+      model/
+        useProducts.ts
+    product-filters/
+      ui/
+        ProductFilters.tsx
     cart/
-      Cart.tsx
-      CartItem.tsx
-      useCart.ts
+      model/
+        useCart.ts
+        cartReducer.ts
+      ui/
+        Cart.tsx
+        CartItem.tsx
     favorites/
-      useFavorites.ts
+      model/
+        useFavorites.ts
 
   hooks/
-    useProducts.ts
     useDebounce.ts
-    useDocumentTitle.ts
     usePrevious.ts
 ```
 
-Если пока тяжело, можно начать проще:
+Правила:
+
+- `src/app` отвечает прежде всего за маршруты, layouts и сборку страницы;
+- `entities/product` содержит модель и UI товара;
+- `features` содержит пользовательские сценарии;
+- `shared` содержит переиспользуемые API-функции и простой UI;
+- feature-specific hooks храним рядом с feature;
+- в общий `hooks` выносим только действительно общие hooks.
+
+На первом этапе начинаем проще и создаём папки только по необходимости:
 
 ```txt
 src/
-  App.tsx
-  types.ts
-  api.ts
-  components/
-  hooks/
+  app/
+    layout.tsx
+    page.tsx
+    globals.css
+  entities/
+    product/
+      model/
+        types.ts
+  features/
+    products-catalog/
+      ui/
+        ProductsCatalog.tsx
+  shared/
+    api/
+      products.ts
 ```
 
 ---
 
-# День 1 проекта — setup + первая загрузка товаров
+# День 1 проекта — Products API + useEffect
 
 ## Цель
 
-Создать проект и загрузить товары через `useEffect`.
+Понять границу Server/Client Components и загрузить товары через `useEffect`.
 
 ## Что сделать
 
-1. Создать проект:
+1. Убедиться, что проект запускается через:
 
 ```bash
-yarn create vite react-shop-lab --template react-ts
-cd react-shop-lab
-yarn
-yarn dev
+npm run dev
 ```
 
-2. Почистить стартовый шаблон Vite.
+2. Изучить текущие `src/app/page.tsx` и `src/app/layout.tsx`.
 
-3. Создать типы:
+3. Почистить стартовый UI `create-next-app`, не меняя архитектуру заранее.
+
+4. Создать типы товара в `src/entities/product/model/types.ts`:
 
 ```ts
 export type Product = {
@@ -172,7 +242,7 @@ export type Product = {
 };
 ```
 
-4. Создать тип ответа API:
+5. Создать тип ответа API:
 
 ```ts
 export type ProductsResponse = {
@@ -183,7 +253,19 @@ export type ProductsResponse = {
 };
 ```
 
-5. В `App.tsx` сделать state:
+6. Создать `fetchProducts` в `src/shared/api/products.ts`.
+
+Функция должна:
+
+- принимать необязательный `AbortSignal`;
+- выполнять `fetch`;
+- проверять `response.ok`;
+- возвращать `Promise<ProductsResponse>`;
+- не содержать React state и JSX.
+
+7. Создать Client Component `ProductsCatalog.tsx` с директивой `'use client'`.
+
+8. В `ProductsCatalog` создать state:
 
 ```ts
 const [products, setProducts] = useState<Product[]>([]);
@@ -191,17 +273,21 @@ const [isLoading, setIsLoading] = useState(false);
 const [error, setError] = useState<string | null>(null);
 ```
 
-6. В `useEffect` загрузить товары.
+9. В `useEffect` загрузить товары через `fetchProducts`.
 
-7. Показать:
+10. Показать четыре взаимоисключающих состояния:
 
 - loading;
 - error;
 - список товаров;
 - empty state.
 
+11. Оставить `src/app/page.tsx` Server Component и отрендерить в нём `<ProductsCatalog />`.
+
 ## Что тренируется
 
+- граница Server/Client Components
+- директива `'use client'`
 - `useEffect`
 - async внутри effect
 - dependency array
@@ -213,19 +299,26 @@ const [error, setError] = useState<string | null>(null);
 
 - Почему callback `useEffect` не должен быть `async` напрямую?
 - Почему dependency array здесь пустой?
-- Что произойдёт в React StrictMode в dev-режиме?
+- Почему `ProductsCatalog`, а не весь `page.tsx`, является Client Component?
+- Что произойдёт с effect в React Strict Mode в development?
+- Почему в App Router Strict Mode включён по умолчанию?
 - Где лучше хранить `products`: state или derived state?
 - Почему `error` лучше хранить отдельно?
+- Почему `fetchProducts` не должен вызывать `setProducts`?
+- Чем локальный loading state отличается от route-level `loading.tsx`?
 
 ## Зачёт этапа
 
 Этап зачтён, если:
 
+- `page.tsx` остаётся Server Component;
+- `'use client'` находится в `ProductsCatalog.tsx`;
 - товары загружаются;
 - при загрузке виден loading;
 - при ошибке видна ошибка;
 - список отображается через `map`;
-- у карточек есть `key={product.id}`.
+- у элементов есть `key={product.id}`;
+- ты можешь словами объяснить, почему этот fetch сделан на клиенте намеренно.
 
 ---
 
@@ -276,7 +369,7 @@ Cleanup вызывается:
 
 ## Собеседовательский ответ
 
-> `AbortController` позволяет отменить fetch-запрос. В `useEffect` я создаю controller, передаю `controller.signal` в fetch, а в cleanup вызываю `controller.abort()`. Это помогает не обновлять state после размонтирования компонента и защищает от ситуации, когда старый запрос возвращается позже нового.
+> `AbortController` позволяет отменить fetch-запрос. В `useEffect` я создаю controller, передаю `controller.signal` в fetch, а в cleanup вызываю `controller.abort()`. Это освобождает ненужную сетевую работу и защищает от race condition, когда устаревший запрос завершается после более нового. `AbortError` является ожидаемым результатом отмены, поэтому его не нужно показывать пользователю как ошибку сервера.
 
 ## Зачёт этапа
 
@@ -286,6 +379,65 @@ Cleanup вызывается:
 - что делает `abort`;
 - когда вызывается cleanup;
 - почему не надо считать `AbortError` обычной ошибкой сервера.
+
+---
+
+## Контрольная точка — client fetch и server fetch
+
+После закрепления `useEffect` сделать небольшой сравнительный эксперимент, не переписывая основной каталог:
+
+1. Создать временную серверную страницу или серверный компонент.
+2. Вызвать ту же API-функцию на сервере без `useEffect`.
+3. Сравнить подходы:
+
+| Client fetch через `useEffect` | Server fetch в App Router |
+| --- | --- |
+| Нужен Client Component | Можно оставить Server Component |
+| Есть client loading/error state | Можно использовать `Suspense`, `loading.tsx` и server error boundary |
+| Запрос начинается после гидратации | Данные могут попасть в первоначальный HTML |
+| Удобно изучать lifecycle и cleanup | Меньше client JavaScript |
+| Доступны browser API | Доступны секреты и server-only зависимости |
+
+Важно: это сравнение, а не причина немедленно удалить учебную реализацию через `useEffect`.
+
+В Next.js 16 нельзя автоматически считать любой server `fetch` закешированным. Перед выбором cache/revalidation поведения нужно сверяться с локальной документацией установленной версии.
+
+Вопрос для собеседования:
+
+> Почему в Next.js ты загрузил товары через `useEffect`, если можно было сделать это на сервере?
+
+Ожидаемый ответ:
+
+> Это осознанный учебный выбор для практики client lifecycle, loading/error state, cleanup и `AbortController`. В production я бы выбирал между server и client fetch по требованиям к интерактивности, свежести данных, SEO, кешированию и доступу к browser API.
+
+---
+
+## Рефакторинг после понимания механики — useProducts
+
+Только после того как загрузка написана и объяснена руками, вынести её в:
+
+```txt
+src/features/products-catalog/model/useProducts.ts
+```
+
+Hook должен вернуть понятный API:
+
+```ts
+{
+  products,
+  isLoading,
+  error,
+}
+```
+
+Не надо сразу делать универсальный `useFetch<T>`. Такой hook быстро обрастает параметрами, кешированием и политиками повторных запросов. Пока полезнее предметный `useProducts`, название и API которого отражают конкретную задачу.
+
+Вопросы:
+
+- Что именно стало переиспользуемым после выделения hook?
+- Почему API-функция и custom hook находятся на разных уровнях?
+- Почему hook может использовать React state, а `fetchProducts` не должен?
+- Когда абстракция `useFetch` стала бы оправданной?
 
 ---
 
@@ -328,6 +480,14 @@ type ProductListProps = {
 
 4. Использовать `key={product.id}`.
 
+5. Для первого прохода допустимо использовать обычный `<img>`, чтобы не отвлекаться от React.
+
+6. При переходе на `next/image`:
+
+- указать размеры или использовать `fill`;
+- разрешить домен изображений DummyJSON через `images.remotePatterns` в `next.config.ts`;
+- проверить, что layout карточки не прыгает при загрузке изображения.
+
 ## Что тренируется
 
 - props typing
@@ -342,10 +502,33 @@ type ProductListProps = {
 - Что будет, если список отсортировать, а key будет index?
 - Чем `ProductCard` отличается от `ProductList` по ответственности?
 - Нужно ли хранить ProductCard в state? Почему нет?
+- Зачем `next/image` нужны размеры удалённого изображения?
 
 ## Зачёт этапа
 
 Этап зачтён, если список разбит на компоненты, код читаемый, props типизированы.
+
+---
+
+## Дополнительный этап App Router — страница товара
+
+После появления `ProductCard` можно добавить маршрут:
+
+```txt
+src/app/products/[id]/page.tsx
+```
+
+На этом этапе:
+
+- карточка ведёт на `/products/:id` через `next/link`;
+- `page.tsx` получает динамический `params`;
+- конкретный товар загружается в Server Component;
+- отсутствующий товар обрабатывается как not found;
+- интерактивная кнопка «Добавить в корзину» остаётся отдельным Client Component.
+
+Перед реализацией нужно прочитать локальную документацию установленной версии Next.js о dynamic routes: сигнатура `params` могла измениться по сравнению со старыми примерами.
+
+Это упражнение не заменяет клиентский каталог. Оно показывает композицию Server и Client Components.
 
 ---
 
@@ -654,7 +837,7 @@ function useCart() {
 
 ## Зачёт этапа
 
-Этап зачтён, если `App` стал чище, а логика корзины живёт в `useCart`.
+Этап зачтён, если компонент, владевший корзиной, стал чище, а логика корзины живёт в `useCart`.
 
 ---
 
@@ -929,12 +1112,17 @@ function cartReducer(state: CartItem[], action: CartAction): CartItem[] {
 
 Лучше взять CartContext, потому что он практичнее.
 
+В App Router сам `CartProvider` будет Client Component. Его можно подключить из серверного `layout.tsx`, передав `children`.
+
+Provider нужно размещать настолько глубоко в дереве, насколько позволяет сценарий. Не надо превращать весь root layout в Client Component.
+
 ## Что тренируется
 
 - `createContext`
 - Provider
 - custom hook для доступа к context
 - проблема лишних ререндеров
+- композиция Server Component layout и Client Component provider
 
 ## Важная проблема
 
@@ -967,6 +1155,7 @@ function cartReducer(state: CartItem[], action: CartAction): CartItem[] {
 - Почему Context не всегда замена Redux/Zustand?
 - В чём проблема большого Context?
 - Почему value лучше мемоизировать?
+- Почему `layout.tsx` не обязан иметь `'use client'`, даже если он рендерит `CartProvider`?
 
 ## Зачёт этапа
 
@@ -1152,11 +1341,11 @@ useLayoutEffect(() => {
 
 ---
 
-# День 18 проекта — useImperativeHandle + forwardRef
+# День 18 проекта — useImperativeHandle + ref
 
 ## Цель
 
-Познакомиться с редким, но полезным паттерном.
+Познакомиться с редким, но полезным паттерном и учесть модель refs в React 19.
 
 ## Сценарий
 
@@ -1169,10 +1358,10 @@ searchInputRef.current?.clear();
 
 ## Что тренируется
 
-- `forwardRef`
 - `useImperativeHandle`
 - controlled imperative API
 - ref typing
+- `ref` как prop в React 19
 
 ## Важно
 
@@ -1180,11 +1369,14 @@ searchInputRef.current?.clear();
 
 Он нужен, когда дочерний компонент должен открыть наружу ограниченный imperative API.
 
+В React 19 функциональный компонент может получать `ref` как prop. Для основного упражнения используем современный вариант. `forwardRef` стоит изучить отдельно, чтобы понимать кодовые базы на React 18 и старше, но не делать его обязательным шаблоном для нового кода этого проекта.
+
 ## Вопросы для самопроверки
 
 - Зачем нужен `useImperativeHandle`?
 - Почему это не основной способ общения компонентов?
 - Чем это отличается от props callbacks?
+- Зачем всё ещё нужно узнавать `forwardRef` в существующем коде?
 
 ## Зачёт этапа
 
@@ -1204,8 +1396,8 @@ searchInputRef.current?.clear();
 
 Пример задачи:
 
-- хранить cart в localStorage;
-- подписываться на изменения storage между вкладками.
+- начать с `navigator.onLine`, потому что у него понятная подписка;
+- затем, как усложнение, хранить cart в localStorage и синхронизировать вкладки через событие `storage`.
 
 ## Важно
 
@@ -1215,11 +1407,15 @@ searchInputRef.current?.clear();
 
 > `useSyncExternalStore` нужен для безопасной подписки React-компонента на внешний источник данных.
 
+В Next.js нужно отдельно понять `getServerSnapshot`: Client Components могут участвовать в серверном пререндеринге, где `window`, `navigator` и `localStorage` недоступны.
+
 ## Вопросы для самопроверки
 
 - Что такое внешний store?
 - Почему обычного useEffect иногда недостаточно?
 - Где это используется на практике? Например, внутри state managers.
+- Для чего нужен `getServerSnapshot`?
+- Почему нельзя читать `localStorage` во время серверного рендера?
 
 ## Зачёт этапа
 
@@ -1235,9 +1431,11 @@ searchInputRef.current?.clear();
 
 ## Важно
 
-Если используешь стабильный React без server actions, можно просто реализовать optimistic update руками через `useState`.
+В проекте установлен React 19, поэтому `useOptimistic` доступен.
 
-Если доступен `useOptimistic`, можно сделать экспериментально, но не обязательно.
+Сначала полезно один раз реализовать optimistic update руками через `useState`, чтобы понять rollback. Затем повторить сценарий с `useOptimistic` и сравнить API.
+
+Server Actions не обязательны для понимания концепции: можно использовать имитацию запроса или отдельную API-функцию. Не добавлять server action только ради названия hook.
 
 ## Сценарий
 
@@ -1294,9 +1492,10 @@ searchInputRef.current?.clear();
 
 ## Stack
 
+- Next.js App Router
 - React
 - TypeScript
-- Vite
+- Tailwind CSS
 - DummyJSON API
 
 ## Features
@@ -1311,6 +1510,8 @@ searchInputRef.current?.clear();
 - Custom hooks
 - Memoization
 - AbortController
+- Server and Client Components
+- Dynamic product route
 
 ## Hooks practiced
 
@@ -1332,6 +1533,8 @@ searchInputRef.current?.clear();
 
 ...
 ```
+
+Для title и description страниц использовать Metadata API App Router. `useDocumentTitle` можно оставить как отдельное упражнение на browser effect, но не делать его основным способом управления metadata в Next.js.
 
 ## Зачёт этапа
 
@@ -1377,6 +1580,18 @@ searchInputRef.current?.clear();
 
 > `key` нужен React для стабильной идентичности элемента в списке. В динамических списках лучше использовать id, а не index.
 
+## Server Component
+
+> Server Component выполняется на серверной стороне React-дерева и не отправляет свой компонентный JavaScript в браузер. Он подходит для server-side data access и не может использовать client hooks или browser APIs.
+
+## Client Component
+
+> Client Component объявляется границей `'use client'` и нужен для state, effects, event handlers и browser APIs. Директиву лучше ставить как можно ближе к интерактивному UI.
+
+## Client fetch и Server fetch
+
+> `useEffect` запускает запрос на клиенте после рендера и подходит для изучения lifecycle или данных, зависящих от browser environment. Server fetch позволяет получить данные до отправки UI и уменьшить клиентский JavaScript. Выбор зависит от требований, а не от привычки.
+
 ---
 
 # Как работать с Codex/Cursor
@@ -1419,4 +1634,8 @@ searchInputRef.current?.clear();
 - почему key — id;
 - что можно было бы улучшить;
 - как бы ты заменил ручной fetch на React Query;
-- как бы подключил настоящий backend.
+- как бы подключил настоящий backend;
+- почему каталог сделан Client Component;
+- где Server Component был бы уместнее;
+- чем локальный loading state отличается от `loading.tsx`;
+- почему provider не требует превращать root layout в Client Component.
