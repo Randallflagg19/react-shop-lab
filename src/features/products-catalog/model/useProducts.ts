@@ -23,7 +23,9 @@ export function useProducts() {
         }
         setError("Ошибка при получении списка товаров");
       } finally {
-        setIsLoading(false);
+        if (!controller.signal.aborted) {
+          setIsLoading(false);
+        }
       }
     };
 

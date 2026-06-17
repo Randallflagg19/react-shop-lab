@@ -4,10 +4,10 @@ export const fetchProductBySlug = async (
   slug: string,
 ): Promise<Product | null> => {
   const res = await fetch(
-    `https://api.escuelajs.co/api/v1/products/slug/${slug}`,
+    `https://api.escuelajs.co/api/v1/products/slug/${encodeURIComponent(slug)}`,
   );
 
-  if (res.status === 404) {
+  if (res.status === 400 || res.status === 404) {
     return null;
   }
 
