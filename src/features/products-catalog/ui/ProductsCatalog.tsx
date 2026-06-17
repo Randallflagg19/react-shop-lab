@@ -9,14 +9,14 @@ export function ProductsCatalog() {
   const [search, setSearch] = useState("");
 
   const filteredProducts = products.filter((product) =>
-    product.title.toLowerCase().includes(search.toLowerCase()),
+    product.title.toLowerCase().includes(search.trim().toLowerCase()),
   );
 
   return (
     <>
       {!error && (
         <div className="product-catalog__header">
-          <div className="product-catalog__header-left">
+          <div className="product-catalog__intro">
             <h1>React Shop Lab</h1>
             <p>Practice catalog built with React hooks and Next.js</p>
           </div>
@@ -27,6 +27,15 @@ export function ProductsCatalog() {
             value={search}
             onChange={(e) => setSearch(e.currentTarget.value)}
           />
+        </div>
+      )}
+      {!isLoading && !error && (
+        <div className="product-catalog__meta">
+          <p className="product-catalog__count">
+            {search.trim().length > 0 && filteredProducts.length + " of "}
+            {products.length} products
+          </p>
+          <p className="product-catalog__hint">Search by product title</p>
         </div>
       )}
       {isLoading && <div>Loading...</div>}
