@@ -7,10 +7,22 @@ import { useState } from "react";
 export function ProductsCatalog() {
   const { products, isLoading, error } = useProducts();
   const [search, setSearch] = useState("");
+  const [currentCategory, setCurrentCategory] = useState("all");
 
-  const filteredProducts = products.filter((product) =>
+  const visibleProducts = products.filter((product) =>
     product.title.toLowerCase().includes(search.trim().toLowerCase()),
   );
+
+  const filteredProducts = visibleProducts.filter(
+    (product) =>
+      currentCategory === "all" || currentCategory === product.category.slug,
+  );
+
+  const categories = products.reduce<string[]>((currentArray, currentEl) => {
+    return currentArray.includes(currentEl.category.slug)
+      ? currentArray
+      : [...currentArray, currentEl.category.slug];
+  }, []);
 
   return (
     <>
@@ -32,18 +44,45 @@ export function ProductsCatalog() {
       {!isLoading && !error && (
         <div className="product-catalog__meta">
           <p className="product-catalog__count">
-            {search.trim().length > 0 && filteredProducts.length + " of "}
+            {search.trim().length > 0 && visibleProducts.length + " of "}
             {products.length} products
           </p>
-          <p className="product-catalog__hint">Search by product title</p>
+          <div className="product-catalog__categories">
+            <button
+              onClick={() => setCurrentCategory("all")}
+              className={`product-catalog__category ${
+                currentCategory === "all"
+                  ? "product-catalog__category--active"
+                  : ""
+              }`}
+              type="button"
+            >
+              All
+            </button>
+            {categories.map((category) => (
+              <button
+                onClick={() => setCurrentCategory(category)}
+                className={`product-catalog__category ${
+                  currentCategory === category
+                    ? "product-catalog__category--active"
+                    : ""
+                }`}
+                type="button"
+                key={category}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
         </div>
       )}
       {isLoading && <div>Loading...</div>}
       {error && <div>{error}</div>}
       {!isLoading && products.length === 0 && <p>{"Товары не найдены"}</p>}
-      {!isLoading && products.length > 0 && filteredProducts.length === 0 && (
+      {!isLoading && products.length > 0 && visibleProducts.length === 0 && (
         <p>{"По вашему запросу ничего не найдено"}</p>
       )}
+
       {filteredProducts.length > 0 && (
         <ProductCardList products={filteredProducts} />
       )}

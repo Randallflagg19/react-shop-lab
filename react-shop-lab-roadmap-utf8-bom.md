@@ -108,20 +108,36 @@ https://api.escuelajs.co/api/v1/products
 
 ## Текущий прогресс
 
-Сейчас мы находимся на **Дне 1 — Products API + useEffect**.
+Сейчас мы находимся на **Дне 5 — категории и сортировка**.
 
 Уже сделано:
 
 - roadmap адаптирован под Next.js App Router;
 - базовый skeleton проекта создан;
 - стартовый UI `create-next-app` убран;
-- подготовлены пустые файлы для `types.ts`, `ProductsCatalog.tsx` и `products.ts`.
+- созданы типы `ProductCategory` и `Product`;
+- создан API-слой для списка товаров: `fetchProducts(signal?)`;
+- клиентская загрузка товаров вынесена в `useProducts`;
+- в `useEffect` добавлены `AbortController`, cleanup и обработка `AbortError`;
+- каталог разбит на `ProductsCatalog`, `ProductCardList` и `ProductCard`;
+- карточки товара отображают изображение, цену, название, категорию, описание и slug;
+- для карточек используется `next/image` с `fill`, wrapper-контейнером и fallback-логикой для невалидных изображений API;
+- добавлена динамическая страница товара `src/app/products/[slug]/page.tsx`;
+- страница товара загружает конкретный товар в Server Component через `/products/slug/:slug`;
+- отсутствующий товар обрабатывается через `notFound()`;
+- создан `ProductDetails` для детальной страницы товара;
+- добавлен controlled input для поиска по названию;
+- поиск реализован как derived data: `filteredProducts`, без отдельного state;
+- добавлены состояния loading/error/empty/search-empty;
+- верхняя часть каталога оформлена как catalog header + meta row с количеством результатов.
 
 Следующий шаг:
 
-> Создать типы `ProductCategory` и `Product` в `src/entities/product/model/types.ts`.
+> День 5 — добавить controlled select для категории и controlled select для сортировки. Затем вычислить единый derived массив видимых товаров: поиск + категория + сортировка.
 
-После этого переходим к `fetchProducts`.
+Замечание по API:
+
+> Platzi Fake Store API может быть нестабильным на Vercel или отвечать с задержкой. Для учебного проекта это допустимо, потому что error state уже есть. Для более стабильного демо позже можно добавить limit, fallback/mock data или Next Route Handler как proxy.
 
 ---
 
@@ -161,12 +177,13 @@ src/
     layout.tsx
     page.tsx
     products/
-      [id]/
+      [slug]/
         page.tsx
 
   shared/
     api/
       products.ts
+      productBySlug.ts
     ui/
       Loader.tsx
       ErrorMessage.tsx
@@ -176,9 +193,10 @@ src/
     product/
       model/
         types.ts
+        getProductImageSrc.ts
       ui/
         ProductCard.tsx
-        ProductList.tsx
+        ProductCardList.tsx
         ProductDetails.tsx
 
   features/
@@ -223,18 +241,31 @@ src/
     layout.tsx
     page.tsx
     globals.css
+    products/
+      [slug]/
+        page.tsx
   entities/
     product/
       model/
         types.ts
+        getProductImageSrc.ts
+      ui/
+        ProductCard.tsx
+        ProductCardList.tsx
+        ProductDetails.tsx
   features/
     products-catalog/
+      model/
+        useProducts.ts
       ui/
         ProductsCatalog.tsx
   shared/
     api/
       products.ts
+      productBySlug.ts
 ```
+
+Фактическая структура на текущей точке уже немного опередила ранний план: добавлен динамический маршрут товара, detail view и helper для безопасного выбора изображения из нестабильных данных Platzi API. Папки `product-filters`, `cart`, `favorites`, `shared/ui` и общий `hooks/` пока не создаём заранее.
 
 ---
 
@@ -354,6 +385,8 @@ const [error, setError] = useState<string | null>(null);
 
 # День 2 проекта — AbortController + useEffect глубже
 
+Статус: **завершён**.
+
 ## Цель
 
 Понять cleanup в `useEffect` и отмену запроса.
@@ -444,6 +477,8 @@ Cleanup вызывается:
 
 ## Рефакторинг после понимания механики — useProducts
 
+Статус: **завершён**.
+
 Только после того как загрузка написана и объяснена руками, вынести её в:
 
 ```txt
@@ -473,6 +508,8 @@ Hook должен вернуть понятный API:
 
 # День 3 проекта — ProductCard + ProductList
 
+Статус: **завершён**.
+
 ## Цель
 
 Разбить UI на компоненты и потренировать props.
@@ -489,12 +526,12 @@ type ProductCardProps = {
 };
 ```
 
-2. Создать `ProductList`.
+2. Создать список карточек товара.
 
 Props:
 
 ```ts
-type ProductListProps = {
+type ProductCardListProps = {
   products: Product[];
 };
 ```
@@ -538,9 +575,13 @@ type ProductListProps = {
 
 Этап зачтён, если список разбит на компоненты, код читаемый, props типизированы.
 
+Фактическое имя компонента списка сейчас — `ProductCardList`. Это рабочее имя. В будущем его можно переименовать в `ProductList`, если захочется сделать название менее завязанным на конкретный способ отображения.
+
 ---
 
 ## Дополнительный этап App Router — страница товара
+
+Статус: **завершён в базовой версии**.
 
 После появления `ProductCard` можно добавить маршрут:
 
@@ -560,9 +601,21 @@ src/app/products/[slug]/page.tsx
 
 Это упражнение не заменяет клиентский каталог. Оно показывает композицию Server и Client Components.
 
+Фактически сделано дополнительно:
+
+- основной каталог остался Client Component;
+- страница `products/[slug]` сделана Server Component;
+- `params` в Next.js 16 обрабатывается как `Promise<{ slug: string }>`;
+- товар загружается через `fetchProductBySlug(slug)`;
+- `400`/`404` от Platzi API для отсутствующего slug приводят к `notFound()`;
+- создан `ProductDetails` с крупной картинкой, описанием, slug/id, quantity UI, кнопкой `Add to cart` и ссылкой `Back to catalog`;
+- `Add to cart` пока не подключён к настоящей корзине и будет доработан на этапе cart.
+
 ---
 
 # День 4 проекта — поиск и controlled input
+
+Статус: **завершён**.
 
 ## Цель
 
@@ -614,17 +667,33 @@ const filteredProducts = products.filter((product) =>
 
 Этап зачтён, если поиск работает без учёта регистра, а `filteredProducts` не хранится в отдельном state.
 
+Фактически сделано дополнительно:
+
+- поиск встроен в верхнюю часть каталога;
+- добавлен catalog header: `React Shop Lab`, subtitle и search input;
+- добавлена meta row: `N of M products` при активном поиске и подсказка `Search by product title`;
+- отдельно обработан empty state для пустого API и empty state для пустого результата поиска;
+- `search.trim()` используется при фильтрации, чтобы пробелы не ломали поиск.
+
 ---
 
 # День 5 проекта — категории и сортировка
 
+Статус: **следующий этап**.
+
 ## Цель
 
-Добавить фильтр по категории и сортировку.
+Добавить фильтр по категории и сортировку поверх уже существующего поиска.
 
 ## Что сделать
 
-State:
+Уже есть:
+
+```ts
+const [search, setSearch] = useState("");
+```
+
+Добавить state:
 
 ```ts
 const [category, setCategory] = useState("all");
@@ -654,6 +723,22 @@ product.category.name;
 ```
 
 На старте проще хранить в state `categorySlug`, потому что это читаемое значение для UI.
+
+Порядок для текущей реализации:
+
+1. Сначала оставить текущий поиск как есть.
+2. Добавить derived список категорий из `products`, не храня его в отдельном state.
+3. Добавить controlled select для категории.
+4. Добавить controlled select для сортировки.
+5. Заменить `filteredProducts` на более общее имя, например `visibleProducts`, потому что массив будет учитывать:
+
+```txt
+search + category + sortBy
+```
+
+6. В meta row показывать количество `visibleProducts.length` относительно `products.length`.
+
+Важно: сначала можно написать вычисление прямо в `ProductsCatalog`. В `useMemo` переносим только на следующем дне, когда появится повод обсудить memoization.
 
 ## Что тренируется
 
@@ -685,6 +770,8 @@ products.sort(...)
 - Где здесь derived state?
 - Какой порядок: сначала filter, потом sort или наоборот?
 - Чем отличается фильтрация по `category.name`, `category.id` и `category.slug`?
+- Почему категории не нужно хранить в отдельном `useState`, если их можно вычислить из `products`?
+- Почему после добавления категории имя `filteredProducts` становится менее точным?
 
 ## Зачёт этапа
 
