@@ -9,5 +9,5 @@ export const fetchProducts = async (
   if (!res.ok) {
     throw new Error("Failed to fetch products");
   }
-  return await res.json();
+  return res.json();
 };
