@@ -387,3 +387,26 @@ body {
   background: #164e5a;
   border-color: #2d8998;
 }
+
+.product-catalog__meta {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.product-catalog__filters {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  align-items: center;
+  gap: 18px;
+}
+
+.product-catalog__sort {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 8px;
+}
