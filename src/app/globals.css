@@ -394,10 +394,139 @@ body {
   border-radius: 6px;
 }
 
+@media (min-width: 761px) and (max-width: 1000px) {
+  .page {
+    width: calc(100% - 48px);
+    padding: 28px 0 48px;
+  }
+
+  .product-details {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 28px;
+  }
+
+  .product-details__image-wrap {
+    width: 100%;
+    max-width: none;
+    padding: 12px;
+  }
+
+  .product-details__image {
+    padding: 12px;
+  }
+
+  .product-details__content {
+    min-width: 0;
+    max-width: none;
+    gap: 14px;
+  }
+
+  .product-details__title {
+    font-size: 30px;
+    overflow-wrap: anywhere;
+  }
+
+  .product-details__price {
+    font-size: 26px;
+  }
+
+  .product-details__description {
+    max-height: 180px;
+    padding: 14px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .product-details__meta code {
+    font-size: 13px;
+  }
+
+  .product-details__quantity {
+    width: 100%;
+  }
+
+  .product-details__quantity button,
+  .product-details__quantity span {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
 @media (max-width: 760px) {
   .page {
     width: calc(100% - 32px);
     padding: 24px 0 40px;
+  }
+
+  .product-details {
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+  }
+
+  .product-details__image-wrap {
+    flex: none;
+    width: 100%;
+    max-width: none;
+    padding: 0;
+  }
+
+  .product-details__image {
+    padding: 0;
+  }
+
+  .product-details__content {
+    width: 100%;
+    max-width: none;
+    gap: 16px;
+  }
+
+  .product-details__category {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+
+  .product-details__title {
+    font-size: 30px;
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+  }
+
+  .product-details__price {
+    font-size: 26px;
+  }
+
+  .product-details__description {
+    max-height: 160px;
+    padding: 14px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .product-details__meta {
+    padding-bottom: 14px;
+  }
+
+  .product-details__meta code {
+    font-size: 13px;
+  }
+
+  .product-details__quantity {
+    width: 100%;
+  }
+
+  .product-details__quantity button,
+  .product-details__quantity span {
+    flex: 1;
+    min-width: 0;
+    padding: 13px;
+  }
+
+  .product-details__add-button,
+  .product-details__back-link {
+    min-height: 48px;
+    padding: 14px 16px;
   }
 
   .product-catalog__header {
