@@ -108,7 +108,7 @@ https://api.escuelajs.co/api/v1/products
 
 ## Текущий прогресс
 
-Сейчас мы находимся на **Дне 5 — категории и сортировка**.
+Сейчас мы находимся на **Дне 7 — корзина и immutable updates**.
 
 Уже сделано:
 
@@ -130,10 +130,19 @@ https://api.escuelajs.co/api/v1/products
 - поиск реализован как derived data: `filteredProducts`, без отдельного state;
 - добавлены состояния loading/error/empty/search-empty;
 - верхняя часть каталога оформлена как catalog header + meta row с количеством результатов.
+- добавлены category chips с активным состоянием и фильтрацией по `category.slug`;
+- добавлен controlled select сортировки: default, price asc/desc, title A–Z;
+- поиск, категория и сортировка объединены в единый derived массив `visibleProducts`;
+- `categories` и `visibleProducts` мемоизированы через два независимых `useMemo` с разными dependencies;
+- каталог и страница товара адаптированы для desktop, tablet и mobile;
+- создана feature корзины: тип `CartItem`, компоненты `Cart` и `CartRow`;
+- создан временный маршрут `/cart` с mock-данными для отработки локальной корзины;
+- реализованы immutable-функции добавления, удаления и изменения количества;
+- вычисляются derived-значения `totalCount` и `totalPrice`.
 
 Следующий шаг:
 
-> День 5 — добавить controlled select для категории и controlled select для сортировки. Затем вычислить единый derived массив видимых товаров: поиск + категория + сортировка.
+> Закончить День 7: подключить и проверить `addToCart`, вывести summary с `totalCount`/`totalPrice`, подключить `clearCart` и добавить empty state. После этого перейти к Дню 8 и вынести логику в `useCart`.
 
 Замечание по API:
 
@@ -679,7 +688,9 @@ const filteredProducts = products.filter((product) =>
 
 # День 5 проекта — категории и сортировка
 
-Статус: **следующий этап**.
+Статус: **завершён**.
+
+Фактическая реализация использует category chips вместо category select. Сортировка остаётся controlled select. Итоговый массив учитывает поиск, выбранную категорию и сортировку, а `toSorted()` не мутирует исходные данные.
 
 ## Цель
 
@@ -781,6 +792,13 @@ products.sort(...)
 
 # День 6 проекта — useMemo
 
+Статус: **завершён**.
+
+Фактически добавлены два независимых `useMemo`:
+
+- `categories` зависит только от `products`;
+- `visibleProducts` зависит от `products`, `search`, `currentCategory` и `sortBy`.
+
 ## Цель
 
 Понять `useMemo` на реальной derived data.
@@ -837,6 +855,33 @@ const visibleProducts = useMemo(() => {
 ---
 
 # День 7 проекта — корзина
+
+Статус: **в процессе**.
+
+## Текущее состояние
+
+Готово:
+
+- создан тип `CartItem`;
+- созданы `Cart` и `CartRow`;
+- создан временный маршрут `/cart`;
+- добавлены mock-позиции, чтобы проверять UI до появления общего cart context;
+- работают `removeFromCart`, `increaseQuantity` и `decreaseQuantity`;
+- уменьшение количества с `1` удаляет позицию;
+- реализованы `addToCart` и `clearCart`, но они пока не подключены к UI;
+- `totalCount` и `totalPrice` вычисляются через `reduce`, но summary пока не отображается;
+- прямых мутаций массива и объектов state нет.
+
+Осталось до зачёта:
+
+1. Исправить имя `addToCard` на `addToCart`.
+2. Сделать `addToCart` вызываемым и проверить оба сценария: новый товар и уже существующий товар.
+3. Добавить cart summary с количеством разных товаров, общим количеством единиц и общей ценой.
+4. Подключить кнопку `Clear cart`.
+5. Добавить empty state после удаления всех позиций.
+6. Прогнать lint и TypeScript-проверку.
+
+Важно: настоящая общая корзина между каталогом, страницей товара и `/cart` появится на этапе `CartContext`. Пока `/cart` — локальная учебная реализация с mock-данными.
 
 ## Цель
 

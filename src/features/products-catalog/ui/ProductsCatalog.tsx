@@ -2,7 +2,7 @@
 
 import { ProductCardList } from "@/entities/product/ui/ProductCardList";
 import { useProducts } from "../model/useProducts";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 type SortBy = "default" | "price-asc" | "price-desc" | "title-asc";
 
@@ -12,40 +12,40 @@ export function ProductsCatalog() {
   const [currentCategory, setCurrentCategory] = useState("all");
   const [sortBy, setSortBy] = useState<SortBy>("default");
 
-  const searchFilteredProducts = products.filter((product) =>
-    product.title.toLowerCase().includes(search.trim().toLowerCase()),
-  );
+  const visibleProducts = useMemo(() => {
+    const searchFilteredProducts = products.filter((product) =>
+      product.title.toLowerCase().includes(search.trim().toLowerCase()),
+    );
 
-  const categoryFilteredProducts = searchFilteredProducts.filter(
-    (product) =>
-      currentCategory === "all" || currentCategory === product.category.slug,
-  );
+    const categoryFilteredProducts = searchFilteredProducts.filter(
+      (product) =>
+        currentCategory === "all" || currentCategory === product.category.slug,
+    );
 
-  let visibleProducts = categoryFilteredProducts;
+    switch (sortBy) {
+      case "price-asc":
+        return categoryFilteredProducts.toSorted((a, b) => a.price - b.price);
 
-  switch (sortBy) {
-    case "price-asc":
-      visibleProducts = categoryFilteredProducts.toSorted(
-        (a, b) => a.price - b.price,
-      );
-      break;
-    case "price-desc":
-      visibleProducts = categoryFilteredProducts.toSorted(
-        (a, b) => b.price - a.price,
-      );
-      break;
-    case "title-asc":
-      visibleProducts = categoryFilteredProducts.toSorted((a, b) =>
-        a.title.localeCompare(b.title),
-      );
-      break;
-  }
+      case "price-desc":
+        return categoryFilteredProducts.toSorted((a, b) => b.price - a.price);
 
-  const categories = products.reduce<string[]>((currentArray, currentEl) => {
-    return currentArray.includes(currentEl.category.slug)
-      ? currentArray
-      : [...currentArray, currentEl.category.slug];
-  }, []);
+      case "title-asc":
+        return categoryFilteredProducts.toSorted((a, b) =>
+          a.title.localeCompare(b.title),
+        );
+
+      default:
+        return categoryFilteredProducts;
+    }
+  }, [products, search, currentCategory, sortBy]);
+
+  const categories = useMemo(() => {
+    return products.reduce<string[]>((currentArray, currentEl) => {
+      return currentArray.includes(currentEl.category.slug)
+        ? currentArray
+        : [...currentArray, currentEl.category.slug];
+    }, []);
+  }, [products]);
 
   return (
     <>
