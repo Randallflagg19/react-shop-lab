@@ -1,12 +1,24 @@
 import { Product } from "../model/types";
-import { ProductCard } from "./ProductCard";
+import { ProductCardMemo } from "./ProductCard";
 
-export function ProductCardList({ products }: { products: Product[] }) {
+export function ProductCardList({
+  products,
+  favoriteIds,
+  toggleFavorite,
+}: {
+  products: Product[];
+  favoriteIds: number[];
+  toggleFavorite: (id: number) => void;
+}) {
   return (
     <ul className="product-list">
       {products.map((product) => (
         <li key={product.id}>
-          <ProductCard product={product} />
+          <ProductCardMemo
+            product={product}
+            isFavorite={favoriteIds.includes(product.id)}
+            toggleFavorite={toggleFavorite}
+          />
         </li>
       ))}
     </ul>

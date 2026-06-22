@@ -2,12 +2,24 @@ import Image from "next/image";
 import { getProductImageSrc } from "../model/getProductImageSrc";
 import { Product } from "../model/types";
 import Link from "next/link";
+import React from "react";
 
-export function ProductCard({ product }: { product: Product }) {
+export const ProductCardMemo = React.memo(ProductCard);
+
+function ProductCard({
+  product,
+  isFavorite,
+  toggleFavorite,
+}: {
+  product: Product;
+  isFavorite: boolean;
+  toggleFavorite: (id: number) => void;
+}) {
   const imageSrc = getProductImageSrc(product);
+  console.log("card");
   return (
-    <Link href={`/products/${product.slug}`} className="product-card__link">
-      <article className="product-card">
+    <article className="product-card">
+      <Link href={`/products/${product.slug}`} className="product-card__link">
         <div className="product-card__image-wrap">
           <Image
             src={imageSrc}
@@ -23,7 +35,16 @@ export function ProductCard({ product }: { product: Product }) {
         <p className="product-card__category">{product.category.name}</p>
         <p className="product-card__description">{product.description}</p>
         <p className="product-card__slug">{product.slug}</p>
-      </article>
-    </Link>
+      </Link>
+      <button
+        className="product-card__favorite"
+        type="button"
+        aria-pressed={isFavorite}
+        aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+        onClick={() => toggleFavorite(product.id)}
+      >
+        {isFavorite ? "♥" : "♡"}
+      </button>
+    </article>
   );
 }

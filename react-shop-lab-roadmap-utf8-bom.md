@@ -108,7 +108,7 @@ https://api.escuelajs.co/api/v1/products
 
 ## Текущий прогресс
 
-Сейчас мы находимся на **Дне 7 — корзина и immutable updates**.
+Сейчас мы находимся на **Дне 10 — практическое использование `useRef`**.
 
 Уже сделано:
 
@@ -138,11 +138,16 @@ https://api.escuelajs.co/api/v1/products
 - создана feature корзины: тип `CartItem`, компоненты `Cart` и `CartRow`;
 - создан временный маршрут `/cart` с mock-данными для отработки локальной корзины;
 - реализованы immutable-функции добавления, удаления и изменения количества;
-- вычисляются derived-значения `totalCount` и `totalPrice`.
+- вычисляются derived-значения `totalCount` и `totalPrice`;
+- корзина дополнена summary, очисткой и empty state;
+- логика корзины вынесена в custom hook `useCart`;
+- добавлено избранное на основе массива `favoriteIds`;
+- `ProductCard` мемоизирован через `React.memo`, а обработчик избранного — через `useCallback`;
+- на практике проверено, как стабильная ссылка на callback влияет на ререндеры карточек.
 
 Следующий шаг:
 
-> Закончить День 7: подключить и проверить `addToCart`, вывести summary с `totalCount`/`totalPrice`, подключить `clearCart` и добавить empty state. После этого перейти к Дню 8 и вынести логику в `useCart`.
+> День 10: применить `useRef` для управления фокусом поиска и объяснить отличие ref от state. Хранение timer id будет объединено с debounce на Дне 11.
 
 Замечание по API:
 
@@ -856,9 +861,9 @@ const visibleProducts = useMemo(() => {
 
 # День 7 проекта — корзина
 
-Статус: **в процессе**.
+Статус: **завершён**.
 
-## Текущее состояние
+## Итоговое состояние
 
 Готово:
 
@@ -868,18 +873,10 @@ const visibleProducts = useMemo(() => {
 - добавлены mock-позиции, чтобы проверять UI до появления общего cart context;
 - работают `removeFromCart`, `increaseQuantity` и `decreaseQuantity`;
 - уменьшение количества с `1` удаляет позицию;
-- реализованы `addToCart` и `clearCart`, но они пока не подключены к UI;
-- `totalCount` и `totalPrice` вычисляются через `reduce`, но summary пока не отображается;
+- реализованы и проверены `addToCart` и `clearCart`;
+- `totalCount` и `totalPrice` вычисляются через `reduce` и отображаются в `CartSummary`;
+- добавлен empty state;
 - прямых мутаций массива и объектов state нет.
-
-Осталось до зачёта:
-
-1. Исправить имя `addToCard` на `addToCart`.
-2. Сделать `addToCart` вызываемым и проверить оба сценария: новый товар и уже существующий товар.
-3. Добавить cart summary с количеством разных товаров, общим количеством единиц и общей ценой.
-4. Подключить кнопку `Clear cart`.
-5. Добавить empty state после удаления всех позиций.
-6. Прогнать lint и TypeScript-проверку.
 
 Важно: настоящая общая корзина между каталогом, страницей товара и `/cart` появится на этапе `CartContext`. Пока `/cart` — локальная учебная реализация с mock-данными.
 
@@ -964,6 +961,8 @@ const totalCount = cartItems.reduce(...);
 
 # День 8 проекта — custom hook useCart
 
+Статус: **завершён**.
+
 ## Цель
 
 Вынести логику корзины в custom hook.
@@ -1012,6 +1011,8 @@ function useCart() {
 ---
 
 # День 9 проекта — favorites + React.memo + useCallback
+
+Статус: **завершён**.
 
 ## Цель
 
@@ -1081,13 +1082,15 @@ useCallback сохраняет ссылку.
 
 # День 10 проекта — useRef
 
+Статус: **в процессе**.
+
 ## Цель
 
 Использовать `useRef` в реальных сценариях.
 
 ## Что сделать
 
-Сценарий 1. Фокус на поиск:
+Фокус на поиск:
 
 ```ts
 const searchInputRef = useRef<HTMLInputElement | null>(null);
@@ -1097,30 +1100,12 @@ function focusSearch() {
 }
 ```
 
-Сценарий 2. Скролл к каталогу:
-
-```ts
-const catalogRef = useRef<HTMLDivElement | null>(null);
-
-function scrollToCatalog() {
-  catalogRef.current?.scrollIntoView({ behavior: "smooth" });
-}
-```
-
-Сценарий 3. Хранение timer id для debounce:
-
-```ts
-const timerRef = useRef<number | null>(null);
-```
-
 ## Что тренируется
 
 - DOM refs
 - `.current`
 - значение без ререндера
 - focus
-- scroll
-- timer
 
 ## Главное понимание
 
@@ -1135,7 +1120,7 @@ const timerRef = useRef<number | null>(null);
 
 ## Зачёт этапа
 
-Этап зачтён, если ты использовал `useRef` минимум в двух сценариях и можешь объяснить разницу с `useState`.
+Этап зачтён, если поиск получает фокус через DOM ref и ты можешь объяснить разницу между `useRef` и `useState`.
 
 ---
 
@@ -1147,19 +1132,22 @@ const timerRef = useRef<number | null>(null);
 
 ## Что сделать
 
-Создать hook:
+Создать hook и использовать `useRef` для хранения timer id:
 
 ```ts
 function useDebounce<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState(value);
+  const timerRef = useRef<number | null>(null);
 
   useEffect(() => {
-    const timerId = window.setTimeout(() => {
+    timerRef.current = window.setTimeout(() => {
       setDebouncedValue(value);
     }, delay);
 
     return () => {
-      window.clearTimeout(timerId);
+      if (timerRef.current !== null) {
+        window.clearTimeout(timerRef.current);
+      }
     };
   }, [value, delay]);
 
@@ -1179,6 +1167,7 @@ const debouncedSearch = useDebounce(search, 300);
 
 - custom hook
 - `useEffect`
+- `useRef` для timer id
 - cleanup
 - timer
 - generic TypeScript
