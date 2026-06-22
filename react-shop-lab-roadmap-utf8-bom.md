@@ -108,7 +108,7 @@ https://api.escuelajs.co/api/v1/products
 
 ## Текущий прогресс
 
-Сейчас мы находимся на **Дне 10 — практическое использование `useRef`**.
+Дни 1–12 завершены. Следующий этап — **День 13: общий Cart Context**.
 
 Уже сделано:
 
@@ -143,11 +143,16 @@ https://api.escuelajs.co/api/v1/products
 - логика корзины вынесена в custom hook `useCart`;
 - добавлено избранное на основе массива `favoriteIds`;
 - `ProductCard` мемоизирован через `React.memo`, а обработчик избранного — через `useCallback`;
-- на практике проверено, как стабильная ссылка на callback влияет на ререндеры карточек.
+- на практике проверено, как стабильная ссылка на callback влияет на ререндеры карточек;
+- каталог разделён на `ProductsCatalog`, `CatalogHeader` и `CatalogMeta` без дублирования derived-логики;
+- через `useRef` и `useEffect` реализован автоматический фокус поискового input;
+- создан `useDebounce`, и фильтрация каталога переведена на отложенное поисковое значение;
+- корзина переведена с `useState` на типизированный `useReducer`;
+- reducer обрабатывает add, remove, increase, decrease и clear, а `useCart` возвращает удобный публичный API.
 
 Следующий шаг:
 
-> День 10: применить `useRef` для управления фокусом поиска и объяснить отличие ref от state. Хранение timer id будет объединено с debounce на Дне 11.
+> День 13: создать `CartContext` и сделать одну корзину доступной каталогу, странице товара и маршруту `/cart`.
 
 Замечание по API:
 
@@ -171,7 +176,7 @@ https://api.escuelajs.co/api/v1/products
 - считать итоговую сумму;
 - добавлять товары в избранное;
 - открывать карточку товара;
-- использовать `useRef` для фокуса/скролла;
+- использовать `useRef` для управления фокусом;
 - использовать `useMemo` там, где есть derived data;
 - использовать `useCallback` вместе с `React.memo`;
 - вынести часть логики в custom hooks;
@@ -1082,7 +1087,7 @@ useCallback сохраняет ссылку.
 
 # День 10 проекта — useRef
 
-Статус: **в процессе**.
+Статус: **завершён**.
 
 ## Цель
 
@@ -1126,30 +1131,32 @@ function focusSearch() {
 
 # День 11 проекта — useDebounce custom hook
 
+Статус: **завершён**.
+
 ## Цель
 
 Сделать debounce для поиска.
 
 ## Что сделать
 
-Создать hook и использовать `useRef` для хранения timer id:
+Создать hook для строкового значения поиска и использовать `useRef` для хранения timer id:
 
 ```ts
-function useDebounce<T>(value: T, delay: number): T {
+function useDebounce(value: string) {
   const [debouncedValue, setDebouncedValue] = useState(value);
   const timerRef = useRef<number | null>(null);
 
   useEffect(() => {
     timerRef.current = window.setTimeout(() => {
       setDebouncedValue(value);
-    }, delay);
+    }, 500);
 
     return () => {
       if (timerRef.current !== null) {
         window.clearTimeout(timerRef.current);
       }
     };
-  }, [value, delay]);
+  }, [value]);
 
   return debouncedValue;
 }
@@ -1158,7 +1165,7 @@ function useDebounce<T>(value: T, delay: number): T {
 Использовать:
 
 ```ts
-const debouncedSearch = useDebounce(search, 300);
+const debouncedSearch = useDebounce(search);
 ```
 
 И фильтровать по `debouncedSearch`.
@@ -1170,14 +1177,12 @@ const debouncedSearch = useDebounce(search, 300);
 - `useRef` для timer id
 - cleanup
 - timer
-- generic TypeScript
 - dependencies
 
 ## Вопросы для самопроверки
 
 - Почему нужен cleanup?
 - Что будет, если не вызвать clearTimeout?
-- Почему hook generic?
 - Чем debounce отличается от throttle?
 
 ## Зачёт этапа
@@ -1187,6 +1192,8 @@ const debouncedSearch = useDebounce(search, 300);
 ---
 
 # День 12 проекта — useReducer
+
+Статус: **завершён**.
 
 ## Цель
 
@@ -1250,26 +1257,22 @@ function cartReducer(state: CartItem[], action: CartAction): CartItem[] {
 
 ---
 
-# День 13 проекта — useContext
+# День 13 проекта — Cart Context
+
+Статус: **следующий этап**.
 
 ## Цель
 
-Понять Context на корзине или теме.
+Сделать состояние корзины общим для каталога, страницы товара и маршрута `/cart`.
 
 ## Что сделать
-
-Вариант 1:
 
 - CartContext
 - CartProvider
 - useCartContext
-
-Вариант 2:
-
-- ThemeContext
-- переключение light/dark
-
-Лучше взять CartContext, потому что он практичнее.
+- существующий `useCart` как источник состояния и операций внутри provider
+- подключение настоящей кнопки Add to cart на странице товара
+- чтение той же корзины на маршруте `/cart`
 
 В App Router сам `CartProvider` будет Client Component. Его можно подключить из серверного `layout.tsx`, передав `children`.
 
@@ -1289,7 +1292,7 @@ Provider нужно размещать настолько глубоко в де
 
 ```ts
 {
-  (user, theme, language, cart, filters, login, logout);
+  (user, language, cart, filters, login, logout);
 }
 ```
 

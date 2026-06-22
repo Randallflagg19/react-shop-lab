@@ -11,14 +11,14 @@ type CartProps = {
 
 export function Cart({ initialItems = [] }: CartProps) {
   const {
-    addToCart,
     cartItems,
-    clearCart,
-    decreaseQuantity,
-    increaseQuantity,
-    removeFromCart,
+    addToCart,
     totalCount,
     totalPrice,
+    removeFromCart,
+    increaseQuantity,
+    decreaseQuantity,
+    clearCart,
   } = useCart(initialItems);
 
   return (
@@ -48,9 +48,9 @@ export function Cart({ initialItems = [] }: CartProps) {
               <CartRow
                 key={cartItem.product.id}
                 item={cartItem}
-                onIncrease={increaseQuantity}
-                onDecrease={decreaseQuantity}
-                onRemove={removeFromCart}
+                onIncrease={() => increaseQuantity(cartItem.product.id)}
+                onDecrease={() => decreaseQuantity(cartItem.product.id)}
+                onRemove={() => removeFromCart(cartItem.product.id)}
               />
             ))}
           </div>

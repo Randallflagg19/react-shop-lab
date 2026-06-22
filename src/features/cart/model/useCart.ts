@@ -1,62 +1,86 @@
-import { useState } from "react";
+import { useReducer } from "react";
 import type { CartItem } from "./types";
 import type { Product } from "@/entities/product/model/types";
 
+type CartAction =
+  | { type: "add"; product: Product }
+  | { type: "remove"; productId: number }
+  | { type: "increase"; productId: number }
+  | { type: "decrease"; productId: number }
+  | { type: "clear" };
+
 export function useCart(initialItems: CartItem[] = []) {
-  const [cartItems, setCartItems] = useState<CartItem[]>(initialItems);
+  const [cartItems, dispatch] = useReducer(reducer, initialItems);
 
-  function addToCart(product: Product) {
-    setCartItems((prev) => {
-      const alreadyExist = prev.some((item) => item.product.id === product.id);
+  function reducer(state: CartItem[], action: CartAction) {
+    switch (action.type) {
+      case "add": {
+        const alreadyExist = state.some(
+          (item) => item.product.id === action.product.id,
+        );
 
-      if (!alreadyExist) {
-        return [...prev, { product, quantity: 1 }];
+        if (!alreadyExist) {
+          return [...state, { product: action.product, quantity: 1 }];
+        }
+
+        return state.map((item) =>
+          item.product.id === action.product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item,
+        );
       }
 
-      return prev.map((item) =>
-        item.product.id === product.id
-          ? { ...item, quantity: item.quantity + 1 }
-          : item,
-      );
-    });
+      case "remove":
+        return state.filter((item) => item.product.id !== action.productId);
+
+      case "increase":
+        return state.map((item) =>
+          item.product.id === action.productId
+            ? { ...item, quantity: item.quantity + 1 }
+            : item,
+        );
+
+      case "decrease": {
+        const currentItem = state.find(
+          (item) => item.product.id === action.productId,
+        );
+
+        if (!currentItem) return state;
+
+        if (currentItem.quantity === 1) {
+          return state.filter((item) => item !== currentItem);
+        }
+
+        return state.map((item) =>
+          item.product.id === action.productId
+            ? { ...item, quantity: item.quantity - 1 }
+            : item,
+        );
+      }
+
+      case "clear":
+        return [];
+    }
+  }
+
+  function addToCart(product: Product) {
+    dispatch({ type: "add", product });
   }
 
   function removeFromCart(productId: number) {
-    setCartItems((prev) =>
-      prev.filter((item) => item.product.id !== productId),
-    );
+    dispatch({ type: "remove", productId });
   }
 
   function increaseQuantity(productId: number) {
-    setCartItems((prev) =>
-      prev.map((item) =>
-        item.product.id === productId
-          ? { ...item, quantity: item.quantity + 1 }
-          : item,
-      ),
-    );
+    dispatch({ type: "increase", productId });
   }
 
   function decreaseQuantity(productId: number) {
-    setCartItems((prev) => {
-      const currentItem = prev.find((item) => item.product.id === productId);
-
-      if (!currentItem) return prev;
-
-      if (currentItem.quantity === 1) {
-        return prev.filter((item) => item !== currentItem);
-      }
-
-      return prev.map((item) =>
-        item.product.id === productId
-          ? { ...item, quantity: item.quantity - 1 }
-          : item,
-      );
-    });
+    dispatch({ type: "decrease", productId });
   }
 
   function clearCart() {
-    setCartItems([]);
+    dispatch({ type: "clear" });
   }
 
   const totalPrice = cartItems.reduce((acc, el) => {
@@ -66,14 +90,13 @@ export function useCart(initialItems: CartItem[] = []) {
   const totalCount = cartItems.reduce((acc, el) => acc + el.quantity, 0);
 
   return {
-    addToCart,
     cartItems,
-    clearCart,
-    decreaseQuantity,
-    increaseQuantity,
-    removeFromCart,
-    setCartItems,
     totalPrice,
     totalCount,
+    addToCart,
+    removeFromCart,
+    increaseQuantity,
+    decreaseQuantity,
+    clearCart,
   };
 }
