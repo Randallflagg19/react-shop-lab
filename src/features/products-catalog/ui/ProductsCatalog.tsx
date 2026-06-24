@@ -1,21 +1,23 @@
 "use client";
 
-import { ProductCardList } from "@/entities/product/ui/ProductCardList";
+import { CatalogProductList } from "@/features/products-catalog/ui/CatalogProductList";
 import { useProducts } from "../model/useProducts";
-import { useCallback, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { CatalogHeader } from "./CatalogHeader";
 import { CatalogMeta } from "./CatalogMeta";
 import type { SortBy } from "../model/types";
 import { useDebounce } from "../model/useDebounce";
+import { useFavorites } from "@/features/favorites/model/useFavorites";
 
 export function ProductsCatalog() {
   const { products, isLoading, error } = useProducts();
   const [search, setSearch] = useState("");
   const [currentCategory, setCurrentCategory] = useState("all");
   const [sortBy, setSortBy] = useState<SortBy>("default");
-  const [favoriteIds, setFavoriteIds] = useState<number[]>([]);
 
   const debouncedSearch = useDebounce(search);
+
+  const { favoriteIds, toggleFavorite } = useFavorites();
 
   const visibleProducts = useMemo(() => {
     const searchFilteredProducts = products.filter((product) =>
@@ -45,12 +47,6 @@ export function ProductsCatalog() {
         return categoryFilteredProducts;
     }
   }, [products, debouncedSearch, currentCategory, sortBy]);
-
-  const toggleFavorite = useCallback((id: number) => {
-    setFavoriteIds((prev) => {
-      return prev.includes(id) ? prev.filter((el) => el !== id) : [...prev, id];
-    });
-  }, []);
 
   const categories = useMemo(() => {
     return products.reduce<string[]>((currentArray, currentEl) => {
@@ -85,7 +81,7 @@ export function ProductsCatalog() {
       )}
 
       {visibleProducts.length > 0 && (
-        <ProductCardList
+        <CatalogProductList
           favoriteIds={favoriteIds}
           toggleFavorite={toggleFavorite}
           products={visibleProducts}

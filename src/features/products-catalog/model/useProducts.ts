@@ -1,5 +1,5 @@
 import { Product } from "@/entities/product/model/types";
-import { fetchProducts } from "@/shared/api/products";
+import { fetchProducts } from "@/entities/product/api/products";
 import { useEffect, useState } from "react";
 
 export function useProducts() {

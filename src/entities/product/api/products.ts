@@ -1,4 +1,4 @@
-import { Product } from "@/entities/product/model/types";
+import type { Product } from "../model/types";
 
 export const fetchProducts = async (
   signal?: AbortSignal,

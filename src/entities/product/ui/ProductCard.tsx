@@ -8,15 +8,12 @@ export const ProductCardMemo = React.memo(ProductCard);
 
 function ProductCard({
   product,
-  isFavorite,
-  toggleFavorite,
+  topRightSlot,
 }: {
   product: Product;
-  isFavorite: boolean;
-  toggleFavorite: (id: number) => void;
+  topRightSlot?: React.ReactNode;
 }) {
   const imageSrc = getProductImageSrc(product);
-  console.log("card");
   return (
     <article className="product-card">
       <Link href={`/products/${product.slug}`} className="product-card__link">
@@ -36,15 +33,7 @@ function ProductCard({
         <p className="product-card__description">{product.description}</p>
         <p className="product-card__slug">{product.slug}</p>
       </Link>
-      <button
-        className="product-card__favorite"
-        type="button"
-        aria-pressed={isFavorite}
-        aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
-        onClick={() => toggleFavorite(product.id)}
-      >
-        {isFavorite ? "♥" : "♡"}
-      </button>
+      {topRightSlot}
     </article>
   );
 }
