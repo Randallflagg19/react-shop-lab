@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getProductImageSrc } from "../model/getProductImageSrc";
 import { Product } from "../model/types";
+import { AddProductButton } from "./AddProductButton";
 
 export function ProductDetails({ product }: { product: Product }) {
   const imageSrc = getProductImageSrc(product);
@@ -39,12 +40,13 @@ export function ProductDetails({ product }: { product: Product }) {
           <button type="button">+</button>
         </div>
 
-        <button type="button" className="product-details__add-button">
-          Add to cart
-        </button>
+        <AddProductButton product={product} />
 
         <Link href="/" className="product-details__back-link">
           Back to catalog
+        </Link>
+        <Link href="/cart" className="product-details__back-link">
+          To cart
         </Link>
       </div>
     </section>
