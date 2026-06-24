@@ -13,44 +13,70 @@ export function ProductDetails({
   const imageSrc = getProductImageSrc(product);
 
   return (
-    <section className="product-details">
-      <div className="product-details__image-wrap">
+    <section className="flex items-start gap-12 max-[1000px]:grid max-[1000px]:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] max-[1000px]:gap-7 max-[760px]:flex max-[760px]:w-full max-[760px]:flex-col max-[760px]:gap-6">
+      <div className="relative aspect-square w-full max-w-[620px] flex-[0_1_620px] overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--card)] p-5 max-[1000px]:max-w-none max-[1000px]:p-3 max-[760px]:flex-none max-[760px]:p-0">
         <Image
           src={imageSrc}
           alt={product.title}
           fill
           unoptimized
           sizes="(max-width: 900px) 100vw, 50vw"
-          className="product-details__image"
+          className="object-cover p-5 max-[1000px]:p-3 max-[760px]:p-0"
         />
       </div>
 
-      <div className="product-details__content">
-        <p className="product-details__category">{product.category.name}</p>
-        <h1 className="product-details__title">{product.title}</h1>
-        <p className="product-details__price">${product.price}</p>
+      <div className="flex max-w-[520px] flex-[1_1_420px] flex-col gap-[18px] max-[1000px]:min-w-0 max-[1000px]:max-w-none max-[1000px]:gap-3.5 max-[760px]:w-full max-[760px]:gap-4">
+        <p className="m-0 w-fit rounded-md bg-cyan-400/20 px-3 py-1.5 text-sm text-cyan-300 max-[760px]:px-2.5 max-[760px]:text-[13px]">
+          {product.category.name}
+        </p>
+        <h1 className="m-0 text-4xl leading-[1.1] text-[var(--foreground)] max-[1000px]:text-3xl max-[1000px]:[overflow-wrap:anywhere] max-[760px]:leading-[1.15]">
+          {product.title}
+        </h1>
+        <p className="m-0 text-[28px] font-bold max-[1000px]:text-[26px]">
+          ${product.price}
+        </p>
 
-        <div className="product-details__description">
+        <div className="max-h-[220px] overflow-y-auto rounded-lg border border-[var(--border)] p-4 text-[15px] leading-[1.6] text-[var(--muted)] max-[1000px]:max-h-[180px] max-[1000px]:p-3.5 max-[1000px]:text-sm max-[1000px]:leading-[1.5] max-[760px]:max-h-[160px]">
           {product.description}
         </div>
 
-        <div className="product-details__meta">
-          <span>SLUG / ID</span>
-          <code>{product.slug}</code>
+        <div className="flex flex-col gap-1.5 border-b border-[var(--border)] pb-4 text-[var(--muted)] max-[760px]:pb-3.5">
+          <span className="text-xs font-bold tracking-[0.08em]">SLUG / ID</span>
+          <code className="text-sm [overflow-wrap:anywhere] max-[1000px]:text-[13px]">
+            {product.slug}
+          </code>
         </div>
 
-        <div className="product-details__quantity">
-          <button type="button">-</button>
-          <span>1</span>
-          <button type="button">+</button>
+        <div className="flex w-fit overflow-hidden rounded-lg border border-[var(--border)] max-[1000px]:w-full">
+          <button
+            className="min-w-11 cursor-pointer border-0 bg-transparent p-3 text-center text-[var(--foreground)] max-[1000px]:min-w-0 max-[1000px]:flex-1 max-[760px]:p-[13px]"
+            type="button"
+          >
+            -
+          </button>
+          <span className="min-w-11 border-0 bg-transparent p-3 text-center text-[var(--foreground)] max-[1000px]:min-w-0 max-[1000px]:flex-1 max-[760px]:p-[13px]">
+            1
+          </span>
+          <button
+            className="min-w-11 cursor-pointer border-0 bg-transparent p-3 text-center text-[var(--foreground)] max-[1000px]:min-w-0 max-[1000px]:flex-1 max-[760px]:p-[13px]"
+            type="button"
+          >
+            +
+          </button>
         </div>
 
         {actions}
 
-        <Link href="/" className="product-details__back-link">
+        <Link
+          href="/"
+          className="block w-full rounded-md border border-[var(--border)] px-[18px] py-3.5 text-center text-[var(--foreground)] no-underline max-[760px]:min-h-12 max-[760px]:px-4"
+        >
           Back to catalog
         </Link>
-        <Link href="/cart" className="product-details__back-link">
+        <Link
+          href="/cart"
+          className="block w-full rounded-md border border-[var(--border)] px-[18px] py-3.5 text-center text-[var(--foreground)] no-underline max-[760px]:min-h-12 max-[760px]:px-4"
+        >
           To cart
         </Link>
       </div>

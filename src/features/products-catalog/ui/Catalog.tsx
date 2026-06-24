@@ -9,7 +9,7 @@ import type { SortBy } from "../model/types";
 import { useDebounce } from "../model/useDebounce";
 import { useFavorites } from "@/features/favorites/model/useFavorites";
 
-export function ProductsCatalog() {
+export function Catalog() {
   const { products, isLoading, error } = useProducts();
   const [search, setSearch] = useState("");
   const [currentCategory, setCurrentCategory] = useState("all");

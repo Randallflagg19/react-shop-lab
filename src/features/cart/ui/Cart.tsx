@@ -8,19 +8,21 @@ export function Cart() {
   const cart = useCartContext();
 
   return (
-    <section className="cart">
-      <header className="cart__header">
-        <h1>Cart</h1>
-        <p>
+    <section>
+      <header className="mb-6 border-b border-[var(--border)] pb-5">
+        <h1 className="m-0">Cart</h1>
+        <p className="m-0 mt-2 text-sm text-[var(--muted)]">
           {cart.cartItems.length} products · {cart.totalCount} items
         </p>
       </header>
-      <div className="cart__content">
+      <div className="grid grid-cols-[minmax(0,1fr)_320px] items-start gap-8 max-[900px]:grid-cols-1">
         {cart.cartItems.length === 0 && (
-          <p className="cart__empty">Your cart is empty</p>
+          <p className="m-0 mt-2 text-sm text-[var(--muted)]">
+            Your cart is empty
+          </p>
         )}
         {cart.cartItems.length > 0 && (
-          <div className="cart__list">
+          <div className="flex min-w-0 flex-col">
             {cart.cartItems.map((cartItem) => (
               <CartRow
                 key={cartItem.product.id}

@@ -22,21 +22,26 @@ export function CatalogMeta({
 }) {
   const sortId = useId();
 
+  const categoryBaseClass =
+    "shrink-0 cursor-pointer rounded-full border px-3 py-[7px] text-[13px] leading-none";
+
+  function getCategoryClass(category: string) {
+    return currentCategory === category
+      ? `${categoryBaseClass} border-[#2d8998] bg-[#164e5a] text-[#d9fbff]`
+      : `${categoryBaseClass} border-[var(--border)] bg-[var(--card)] text-[var(--muted)] hover:border-[#3f6670] hover:text-[var(--foreground)]`;
+  }
+
   return (
-    <div className="product-catalog__meta">
-      <div className="product-catalog__filters">
-        <p className="product-catalog__count">
+    <div className="mb-6 flex items-center justify-between gap-6 max-[760px]:flex-col max-[760px]:items-stretch max-[760px]:gap-4">
+      <div className="flex min-w-0 flex-1 items-center gap-[18px] max-[760px]:flex-col max-[760px]:items-stretch max-[760px]:gap-3">
+        <p className="m-0 basis-[132px] text-sm font-bold leading-[1.3] text-[var(--foreground)] max-[760px]:basis-auto">
           {isFiltered && visibleCount + " of "}
           {totalCount} products
         </p>
-        <div className="product-catalog__categories">
+        <div className="flex min-w-0 flex-wrap gap-2">
           <button
             onClick={() => onCategoryChange("all")}
-            className={`product-catalog__category ${
-              currentCategory === "all"
-                ? "product-catalog__category--active"
-                : ""
-            }`}
+            className={getCategoryClass("all")}
             type="button"
           >
             All
@@ -44,11 +49,7 @@ export function CatalogMeta({
           {categories.map((category) => (
             <button
               onClick={() => onCategoryChange(category)}
-              className={`product-catalog__category ${
-                currentCategory === category
-                  ? "product-catalog__category--active"
-                  : ""
-              }`}
+              className={getCategoryClass(category)}
               type="button"
               key={category}
             >
@@ -57,9 +58,10 @@ export function CatalogMeta({
           ))}
         </div>
       </div>
-      <div className="product-catalog__sort">
+      <div className="flex shrink-0 items-center gap-2 text-sm text-[var(--muted)] max-[760px]:justify-between max-[760px]:border-t max-[760px]:border-[var(--border)] max-[760px]:pt-3">
         <label htmlFor={sortId}>Sort by</label>
         <select
+          className="min-h-9 rounded-md border border-[var(--border)] bg-[var(--card)] px-2.5 text-[var(--foreground)]"
           id={sortId}
           value={sortBy}
           onChange={(e) => {

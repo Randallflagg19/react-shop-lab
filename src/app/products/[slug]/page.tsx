@@ -1,5 +1,5 @@
 import { ProductDetails } from "@/entities/product/ui/ProductDetails";
-import { AddProductButton } from "@/features/cart/ui/AddProductButton";
+import { AddToCartButton } from "@/features/cart/ui/AddToCartButton";
 import { fetchProductBySlug } from "@/entities/product/api/productBySlug";
 import { notFound } from "next/navigation";
 
@@ -19,7 +19,7 @@ export default async function ProductPage({
     <main className="page">
       <ProductDetails
         product={product}
-        actions={<AddProductButton product={product} />}
+        actions={<AddToCartButton product={product} />}
       />
     </main>
   );

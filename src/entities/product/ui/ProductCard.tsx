@@ -15,23 +15,36 @@ function ProductCard({
 }) {
   const imageSrc = getProductImageSrc(product);
   return (
-    <article className="product-card">
-      <Link href={`/products/${product.slug}`} className="product-card__link">
-        <div className="product-card__image-wrap">
+    <article className="relative flex flex-col gap-2.5 rounded-lg border border-[var(--border)] bg-[var(--card)] p-4 max-[760px]:gap-2 max-[760px]:p-3">
+      <Link
+        href={`/products/${product.slug}`}
+        className="flex flex-col gap-2.5 text-inherit no-underline"
+      >
+        <div className="relative aspect-square w-full overflow-hidden rounded-md">
           <Image
             src={imageSrc}
             alt={product.title}
             fill
             unoptimized
             sizes="(max-width: 640px) 50vw, (max-width: 900px) 33vw, (max-width: 1200px) 25vw, 20vw"
-            className="product-card__image"
+            className="rounded-md object-cover"
           />
         </div>
-        <p className="product-card__price">${product.price}</p>
-        <h2 className="product-card__title">{product.title}</h2>
-        <p className="product-card__category">{product.category.name}</p>
-        <p className="product-card__description">{product.description}</p>
-        <p className="product-card__slug">{product.slug}</p>
+        <p className="m-0 text-xl font-bold leading-[1.2] text-[var(--foreground)]">
+          ${product.price}
+        </p>
+        <h2 className="m-0 text-lg font-bold leading-[1.3] text-[var(--foreground)] max-[760px]:text-base">
+          {product.title}
+        </h2>
+        <p className="m-0 text-sm leading-[1.3] text-[var(--muted)]">
+          {product.category.name}
+        </p>
+        <p className="m-0 line-clamp-3 overflow-hidden text-sm leading-[1.45] text-[var(--muted)] max-[760px]:line-clamp-2">
+          {product.description}
+        </p>
+        <p className="m-0 font-mono text-xs leading-[1.3] text-[var(--muted)] [overflow-wrap:anywhere]">
+          {product.slug}
+        </p>
       </Link>
       {topRightSlot}
     </article>

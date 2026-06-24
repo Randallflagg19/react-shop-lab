@@ -12,7 +12,7 @@ export function CatalogProductList({
   toggleFavorite: (id: number) => void;
 }) {
   return (
-    <ul className="product-list">
+    <ul className="m-0 grid list-none grid-cols-2 gap-4 p-0 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-6 xl:gap-y-8">
       {products.map((product) => (
         <li key={product.id}>
           <ProductCardMemo
