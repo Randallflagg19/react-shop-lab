@@ -108,7 +108,7 @@ https://api.escuelajs.co/api/v1/products
 
 ## Текущий прогресс
 
-Дни 1–12 завершены. Следующий этап — **День 13: общий Cart Context**.
+Дни 1–14 завершены. Следующий этап — **День 15: useDeferredValue**.
 
 Уже сделано:
 
@@ -149,10 +149,16 @@ https://api.escuelajs.co/api/v1/products
 - создан `useDebounce`, и фильтрация каталога переведена на отложенное поисковое значение;
 - корзина переведена с `useState` на типизированный `useReducer`;
 - reducer обрабатывает add, remove, increase, decrease и clear, а `useCart` возвращает удобный публичный API.
+- создан `CartContext`, `CartProvider` и `useCartContext`;
+- общий `CartProvider` подключён через client `Providers` внутри server `layout.tsx`;
+- `/cart` читает состояние корзины из контекста, а страница товара добавляет товар через `addToCart(product)`;
+- интерактивная кнопка добавления товара вынесена в отдельный client component, чтобы `ProductDetails` мог оставаться server component;
+- search input и sort select связаны с `label` через `useId`;
+- search control визуально доработан: видимый label, иконка поиска, стабильная ширина счётчика и защита от layout shift при появлении scrollbar.
 
 Следующий шаг:
 
-> День 13: создать `CartContext` и сделать одну корзину доступной каталогу, странице товара и маршруту `/cart`.
+> День 15: познакомиться с `useDeferredValue` и сравнить его с уже реализованным debounce-поиском.
 
 Замечание по API:
 
@@ -1259,7 +1265,7 @@ function cartReducer(state: CartItem[], action: CartAction): CartItem[] {
 
 # День 13 проекта — Cart Context
 
-Статус: **следующий этап**.
+Статус: **завершён**.
 
 ## Цель
 
@@ -1320,6 +1326,8 @@ Provider нужно размещать настолько глубоко в де
 ---
 
 # День 14 проекта — useId
+
+Статус: **завершён**.
 
 ## Цель
 

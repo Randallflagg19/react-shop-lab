@@ -1,7 +1,7 @@
 "use client";
 
+import { Product } from "@/entities/product/model/types";
 import { useCartContext } from "@/features/cart/model/CartContext";
-import { Product } from "../model/types";
 
 export function AddProductButton({ product }: { product: Product }) {
   const { addToCart } = useCartContext();

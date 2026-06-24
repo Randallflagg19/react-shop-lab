@@ -2,9 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { getProductImageSrc } from "../model/getProductImageSrc";
 import { Product } from "../model/types";
-import { AddProductButton } from "./AddProductButton";
 
-export function ProductDetails({ product }: { product: Product }) {
+export function ProductDetails({
+  product,
+  actions,
+}: {
+  product: Product;
+  actions?: React.ReactNode;
+}) {
   const imageSrc = getProductImageSrc(product);
 
   return (
@@ -40,7 +45,7 @@ export function ProductDetails({ product }: { product: Product }) {
           <button type="button">+</button>
         </div>
 
-        <AddProductButton product={product} />
+        {actions}
 
         <Link href="/" className="product-details__back-link">
           Back to catalog

@@ -1,4 +1,5 @@
 import { ProductDetails } from "@/entities/product/ui/ProductDetails";
+import { AddProductButton } from "@/features/cart/ui/AddProductButton";
 import { fetchProductBySlug } from "@/shared/api/productBySlug";
 import { notFound } from "next/navigation";
 
@@ -16,7 +17,10 @@ export default async function ProductPage({
 
   return (
     <main className="page">
-      <ProductDetails product={product} />
+      <ProductDetails
+        product={product}
+        actions={<AddProductButton product={product} />}
+      />
     </main>
   );
 }

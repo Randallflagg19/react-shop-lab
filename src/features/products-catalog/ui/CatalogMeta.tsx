@@ -1,3 +1,4 @@
+import { useId } from "react";
 import type { SortBy } from "../model/types";
 
 export function CatalogMeta({
@@ -19,6 +20,8 @@ export function CatalogMeta({
   sortBy: SortBy;
   onSortChange: (sort: SortBy) => void;
 }) {
+  const sortId = useId();
+
   return (
     <div className="product-catalog__meta">
       <div className="product-catalog__filters">
@@ -55,13 +58,13 @@ export function CatalogMeta({
         </div>
       </div>
       <div className="product-catalog__sort">
-        <label htmlFor="product-sort">Sort by</label>
+        <label htmlFor={sortId}>Sort by</label>
         <select
+          id={sortId}
           value={sortBy}
           onChange={(e) => {
             onSortChange(e.currentTarget.value as SortBy);
           }}
-          id="product-sort"
         >
           <option value="default">Default</option>
           <option value="price-asc">Price ascending</option>
