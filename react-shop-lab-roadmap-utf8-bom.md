@@ -108,7 +108,7 @@ https://api.escuelajs.co/api/v1/products
 
 ## Текущий прогресс
 
-Дни 1–14 завершены. Следующий этап — **День 15: useDeferredValue**.
+Дни 1–18 завершены. Текущий момент — **День 19: useSyncExternalStore**.
 
 Уже сделано:
 
@@ -155,10 +155,15 @@ https://api.escuelajs.co/api/v1/products
 - интерактивная кнопка добавления товара вынесена в отдельный client component, чтобы `ProductDetails` мог оставаться server component;
 - search input и sort select связаны с `label` через `useId`;
 - search control визуально доработан: видимый label, иконка поиска, стабильная ширина счётчика и защита от layout shift при появлении scrollbar.
+- проведён FSD-рефакторинг: product API перенесён в `entities/product/api`, cart/favorites actions вынесены в features, `ProductDetails` и `ProductCard` очищены через slots/actions, список каталога перенесён в `features/products-catalog`, компонентные стили перенесены из `globals.css` в Tailwind-классы компонентов.
+- `useDeferredValue` разобран на примере поиска и сравнён с существующим `useDebounce`; для текущего UX поиска оставлен debounce как более подходящее решение.
+- `useTransition` применён к смене категории каталога; `isPending` передан в meta UI и используется для временного disabled/opacity состояния category chips.
+- `useLayoutEffect` разобран на измерении DOM в строке категорий: через `ref`, `offsetTop` и resize listener проверялся перенос category chips на новую строку; упражнение осознанно не оставлено в продуктовой версии, потому что реальной необходимости в UI нет.
+- `useImperativeHandle` применён к `CatalogSearch`: компонент прячет настоящий input ref и отдаёт наружу ограниченный handle с командами `focus()` и потенциальным `clear()`, используя модель `ref` как prop в React 19.
 
 Следующий шаг:
 
-> День 15: познакомиться с `useDeferredValue` и сравнить его с уже реализованным debounce-поиском.
+> День 19: познакомиться с `useSyncExternalStore` на простом внешнем store, например online/offline статусе.
 
 Замечание по API:
 
@@ -1464,6 +1469,15 @@ function handleCategoryChange(category: string) {
 
 # День 17 проекта — useLayoutEffect
 
+Статус: **завершён**.
+
+Текущий результат:
+
+- разобрано отличие от `useEffect`;
+- сделано учебное измерение DOM для category chips;
+- проверка переноса чипсов была построена через `ref`, `offsetTop` и `resize`;
+- код не оставлен в продуктовой версии, потому что задача была учебной, а не реально нужной фичей.
+
 ## Цель
 
 Понять отличие `useEffect` от `useLayoutEffect`.
@@ -1507,6 +1521,16 @@ useLayoutEffect(() => {
 
 # День 18 проекта — useImperativeHandle + ref
 
+Статус: **завершён**.
+
+Текущий результат:
+
+- `CatalogSearch` вынесен в отдельный компонент;
+- внутри компонента настоящий `inputRef` остаётся приватной деталью;
+- наружу через `useImperativeHandle` отдаётся ограниченный handle;
+- `CatalogHeader` использует `searchRef.current?.focus()` вместо прямого доступа к DOM input;
+- разобрано, что `clear()` имеет смысл как команда “очистить и вернуть фокус”, но нужна только если UI реально вызывает её.
+
 ## Цель
 
 Познакомиться с редким, но полезным паттерном и учесть модель refs в React 19.
@@ -1549,6 +1573,8 @@ searchInputRef.current?.clear();
 ---
 
 # День 19 проекта — useSyncExternalStore
+
+Статус: **следующий этап**.
 
 ## Цель
 

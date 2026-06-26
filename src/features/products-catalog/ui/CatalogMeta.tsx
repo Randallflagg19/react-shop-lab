@@ -10,6 +10,7 @@ export function CatalogMeta({
   onCategoryChange,
   sortBy,
   onSortChange,
+  isPending,
 }: {
   totalCount: number;
   visibleCount: number;
@@ -19,11 +20,12 @@ export function CatalogMeta({
   onCategoryChange: (category: string) => void;
   sortBy: SortBy;
   onSortChange: (sort: SortBy) => void;
+  isPending: boolean;
 }) {
   const sortId = useId();
 
   const categoryBaseClass =
-    "shrink-0 cursor-pointer rounded-full border px-3 py-[7px] text-[13px] leading-none";
+    "shrink-0 cursor-pointer rounded-full border px-3 py-[7px] text-[13px] leading-none disabled:cursor-not-allowed";
 
   function getCategoryClass(category: string) {
     return currentCategory === category
@@ -38,8 +40,13 @@ export function CatalogMeta({
           {isFiltered && visibleCount + " of "}
           {totalCount} products
         </p>
-        <div className="flex min-w-0 flex-wrap gap-2">
+        <div
+          className={`flex min-w-0 flex-wrap gap-2 transition-opacity ${
+            isPending ? "opacity-60" : "opacity-100"
+          }`}
+        >
           <button
+            disabled={isPending}
             onClick={() => onCategoryChange("all")}
             className={getCategoryClass("all")}
             type="button"
@@ -48,6 +55,7 @@ export function CatalogMeta({
           </button>
           {categories.map((category) => (
             <button
+              disabled={isPending}
               onClick={() => onCategoryChange(category)}
               className={getCategoryClass(category)}
               type="button"

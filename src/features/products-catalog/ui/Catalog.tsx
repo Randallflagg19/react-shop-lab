@@ -2,7 +2,7 @@
 
 import { CatalogProductList } from "@/features/products-catalog/ui/CatalogProductList";
 import { useProducts } from "../model/useProducts";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useTransition } from "react";
 import { CatalogHeader } from "./CatalogHeader";
 import { CatalogMeta } from "./CatalogMeta";
 import type { SortBy } from "../model/types";
@@ -16,6 +16,7 @@ export function Catalog() {
   const [sortBy, setSortBy] = useState<SortBy>("default");
 
   const debouncedSearch = useDebounce(search);
+  const [isPending, startTransition] = useTransition();
 
   const { favoriteIds, toggleFavorite } = useFavorites();
 
@@ -48,6 +49,12 @@ export function Catalog() {
     }
   }, [products, debouncedSearch, currentCategory, sortBy]);
 
+  function handleCategoryChange(category: string) {
+    startTransition(() => {
+      setCurrentCategory(category);
+    });
+  }
+
   const categories = useMemo(() => {
     return products.reduce<string[]>((currentArray, currentEl) => {
       return currentArray.includes(currentEl.category.slug)
@@ -66,9 +73,10 @@ export function Catalog() {
           isFiltered={search.trim().length > 0 || currentCategory !== "all"}
           categories={categories}
           currentCategory={currentCategory}
-          onCategoryChange={setCurrentCategory}
+          onCategoryChange={handleCategoryChange}
           sortBy={sortBy}
           onSortChange={setSortBy}
+          isPending={isPending}
         />
       )}
       {isLoading && <div>Loading...</div>}
