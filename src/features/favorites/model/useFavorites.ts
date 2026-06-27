@@ -1,13 +1,12 @@
-import { useCallback, useState } from "react";
+import { useSyncExternalStore } from "react";
+import { favoritesStore } from "./favoritesStore";
 
 export function useFavorites() {
-  const [favoriteIds, setFavoriteIds] = useState<number[]>([]);
+  const favoriteIds = useSyncExternalStore(
+    favoritesStore.subscribe,
+    favoritesStore.getSnapshot,
+    favoritesStore.getServerSnapshot,
+  );
 
-  const toggleFavorite = useCallback((id: number) => {
-    setFavoriteIds((prev) => {
-      return prev.includes(id) ? prev.filter((el) => el !== id) : [...prev, id];
-    });
-  }, []);
-
-  return { favoriteIds, toggleFavorite };
+  return { favoriteIds, toggleFavorite: favoritesStore.toggleFavorite };
 }

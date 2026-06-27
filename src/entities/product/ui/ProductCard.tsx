@@ -4,9 +4,7 @@ import { Product } from "../model/types";
 import Link from "next/link";
 import React from "react";
 
-export const ProductCardMemo = React.memo(ProductCard);
-
-function ProductCard({
+export function ProductCard({
   product,
   topRightSlot,
 }: {
