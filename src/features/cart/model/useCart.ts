@@ -1,16 +1,75 @@
-import { useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 import type { CartItem } from "./types";
 import type { Product } from "@/entities/product/model/types";
+
+const CART_STORAGE_KEY = "react-shop-lab:cart";
+const EMPTY_CART_ITEMS: CartItem[] = [];
 
 type CartAction =
   | { type: "add"; product: Product }
   | { type: "remove"; productId: number }
   | { type: "increase"; productId: number }
   | { type: "decrease"; productId: number }
-  | { type: "clear" };
+  | { type: "clear" }
+  | { type: "hydrate"; items: CartItem[] };
+
+function readCartItems() {
+  if (typeof window == "undefined") return EMPTY_CART_ITEMS;
+
+  const storedCart = localStorage.getItem(CART_STORAGE_KEY);
+
+  if (storedCart === null) return EMPTY_CART_ITEMS;
+
+  try {
+    const parsedCart: unknown = JSON.parse(storedCart);
+
+    return Array.isArray(parsedCart)
+      ? (parsedCart as CartItem[])
+      : EMPTY_CART_ITEMS;
+  } catch {
+    return EMPTY_CART_ITEMS;
+  }
+}
 
 export function useCart(initialItems: CartItem[] = []) {
   const [cartItems, dispatch] = useReducer(reducer, initialItems);
+  const [isCartRestored, setIsCartRestored] = useState(false);
+
+  useEffect(() => {
+    dispatch({
+      type: "hydrate",
+      items: readCartItems(),
+    });
+
+    // Restore client-only persisted state after hydration.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsCartRestored(true);
+
+    function handleStorageChange(event: StorageEvent) {
+      if (event.key !== CART_STORAGE_KEY) {
+        return;
+      }
+
+      dispatch({
+        type: "hydrate",
+        items: readCartItems(),
+      });
+    }
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isCartRestored) {
+      return;
+    }
+
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
+  }, [cartItems, isCartRestored]);
 
   function reducer(state: CartItem[], action: CartAction) {
     switch (action.type) {
@@ -60,6 +119,9 @@ export function useCart(initialItems: CartItem[] = []) {
 
       case "clear":
         return [];
+
+      case "hydrate":
+        return action.items;
     }
   }
 
