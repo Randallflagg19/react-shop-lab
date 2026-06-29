@@ -18,7 +18,7 @@ export function CatalogHeader({
     <div className="mb-7 flex items-center justify-between gap-8 border-b border-[var(--border)] pb-6 max-[760px]:mb-5 max-[760px]:flex-col max-[760px]:items-stretch max-[760px]:gap-5 max-[760px]:pb-5">
       <div className="flex flex-col gap-1.5">
         <h1 className="m-0 text-[28px] font-bold leading-[1.15] text-[var(--foreground)]">
-          React Shop Lab
+          AI Slop Shop
         </h1>
         <p className="m-0 text-sm leading-[1.4] text-[var(--muted)]">
           Practice catalog built with React hooks and Next.js

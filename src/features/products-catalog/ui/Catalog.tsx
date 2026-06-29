@@ -65,7 +65,7 @@ export function Catalog() {
 
   return (
     <>
-      {!error && <CatalogHeader search={search} onSearchChange={setSearch} />}
+      <CatalogHeader search={search} onSearchChange={setSearch} />
       {!isLoading && !error && (
         <CatalogMeta
           totalCount={products.length}

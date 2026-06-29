@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getProductImageSrc } from "../model/getProductImageSrc";
 import { Product } from "../model/types";
+import { formatPrice } from "@/shared/lib/formatPrice";
 
 export function ProductDetails({
   product,
@@ -21,7 +22,7 @@ export function ProductDetails({
           fill
           unoptimized
           sizes="(max-width: 900px) 100vw, 50vw"
-          className="object-cover p-5 max-[1000px]:p-3 max-[760px]:p-0"
+          className="bg-white object-contain p-5 max-[1000px]:p-3 max-[760px]:p-0"
         />
       </div>
 
@@ -33,7 +34,7 @@ export function ProductDetails({
           {product.title}
         </h1>
         <p className="m-0 text-[28px] font-bold max-[1000px]:text-[26px]">
-          ${product.price}
+          {formatPrice(product.price)}
         </p>
 
         <div className="max-h-[220px] overflow-y-auto rounded-lg border border-[var(--border)] p-4 text-[15px] leading-[1.6] text-[var(--muted)] max-[1000px]:max-h-[180px] max-[1000px]:p-3.5 max-[1000px]:text-sm max-[1000px]:leading-[1.5] max-[760px]:max-h-[160px]">

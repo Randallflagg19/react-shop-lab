@@ -3,6 +3,7 @@ import { getProductImageSrc } from "../model/getProductImageSrc";
 import { Product } from "../model/types";
 import Link from "next/link";
 import React from "react";
+import { formatPrice } from "@/shared/lib/formatPrice";
 
 export function ProductCard({
   product,
@@ -25,11 +26,11 @@ export function ProductCard({
             fill
             unoptimized
             sizes="(max-width: 640px) 50vw, (max-width: 900px) 33vw, (max-width: 1200px) 25vw, 20vw"
-            className="rounded-md object-cover"
+            className="rounded-md bg-white object-contain"
           />
         </div>
         <p className="m-0 text-xl font-bold leading-[1.2] text-[var(--foreground)]">
-          ${product.price}
+          {formatPrice(product.price)}
         </p>
         <h2 className="m-0 text-lg font-bold leading-[1.3] text-[var(--foreground)] max-[760px]:text-base">
           {product.title}

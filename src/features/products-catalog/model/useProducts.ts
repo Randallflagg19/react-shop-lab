@@ -18,9 +18,11 @@ export function useProducts() {
         const result = await fetchProducts(controller.signal);
         setProducts(result);
       } catch (error) {
-        if (error instanceof DOMException && error.name === "AbortError") {
+        if (controller.signal.aborted) {
           return;
         }
+
+        console.error(error);
         setError("Ошибка при получении списка товаров");
       } finally {
         if (!controller.signal.aborted) {

@@ -1,3 +1,5 @@
+import { formatPrice } from "@/shared/lib/formatPrice";
+
 export function CartSummary({
   productCount,
   totalCount,
@@ -27,7 +29,9 @@ export function CartSummary({
 
       <div className="mt-1 flex items-center justify-between gap-5 border-t border-[var(--border)] pt-[18px] text-sm text-[var(--foreground)]">
         <span>Total</span>
-        <strong className="text-2xl font-bold">${totalPrice}</strong>
+        <strong className="text-2xl font-bold">
+          {formatPrice(totalPrice)}
+        </strong>
       </div>
 
       <button

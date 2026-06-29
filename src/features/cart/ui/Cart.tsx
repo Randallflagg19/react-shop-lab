@@ -3,6 +3,7 @@
 import { CartRow } from "./CartRow";
 import { CartSummary } from "./CartSummary";
 import { useCartContext } from "../model/CartContext";
+import Link from "next/link";
 
 export function Cart() {
   const cart = useCartContext();
@@ -10,6 +11,12 @@ export function Cart() {
   return (
     <section>
       <header className="mb-6 border-b border-[var(--border)] pb-5">
+        <Link
+          href="/"
+          className="mb-4 inline-block text-sm text-[var(--muted)] no-underline hover:text-[var(--foreground)]"
+        >
+          Back to catalog
+        </Link>
         <h1 className="m-0">Cart</h1>
         <p className="m-0 mt-2 text-sm text-[var(--muted)]">
           {cart.cartItems.length} products · {cart.totalCount} items

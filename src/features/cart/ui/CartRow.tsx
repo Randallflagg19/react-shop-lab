@@ -1,3 +1,4 @@
+import { formatPrice } from "@/shared/lib/formatPrice";
 import type { CartItem } from "../model/types";
 
 type CartRowProps = {
@@ -22,7 +23,9 @@ export function CartRow({
         </p>
       </div>
 
-      <p className="m-0 max-[640px]:col-start-1">${product.price}</p>
+      <p className="m-0 max-[640px]:col-start-1">
+        {formatPrice(product.price)}
+      </p>
 
       <div className="grid grid-cols-[40px_48px_40px] overflow-hidden rounded-md border border-[var(--border)] max-[640px]:col-start-1">
         <button
@@ -45,7 +48,7 @@ export function CartRow({
       </div>
 
       <p className="m-0 max-[640px]:col-start-2 max-[640px]:row-start-1 max-[640px]:font-bold">
-        ${product.price * quantity}
+        {formatPrice(product.price * quantity)}
       </p>
 
       <button
