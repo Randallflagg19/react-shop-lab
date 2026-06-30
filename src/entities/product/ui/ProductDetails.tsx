@@ -22,6 +22,7 @@ export function ProductDetails({
           fill
           sizes="(max-width: 900px) 100vw, 50vw"
           className="bg-white object-contain p-5 max-[1000px]:p-3 max-[760px]:p-0"
+          unoptimized={process.env.NODE_ENV === "development"}
         />
       </div>
 
@@ -47,23 +48,7 @@ export function ProductDetails({
           </code>
         </div>
 
-        <div className="flex w-fit overflow-hidden rounded-lg border border-[var(--border)] max-[1000px]:w-full">
-          <button
-            className="min-w-11 cursor-pointer border-0 bg-transparent p-3 text-center text-[var(--foreground)] max-[1000px]:min-w-0 max-[1000px]:flex-1 max-[760px]:p-[13px]"
-            type="button"
-          >
-            -
-          </button>
-          <span className="min-w-11 border-0 bg-transparent p-3 text-center text-[var(--foreground)] max-[1000px]:min-w-0 max-[1000px]:flex-1 max-[760px]:p-[13px]">
-            1
-          </span>
-          <button
-            className="min-w-11 cursor-pointer border-0 bg-transparent p-3 text-center text-[var(--foreground)] max-[1000px]:min-w-0 max-[1000px]:flex-1 max-[760px]:p-[13px]"
-            type="button"
-          >
-            +
-          </button>
-        </div>
+        {/* Button */}
 
         {actions}
 

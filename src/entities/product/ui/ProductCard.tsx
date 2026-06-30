@@ -26,6 +26,7 @@ export function ProductCard({
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 900px) 33vw, (max-width: 1200px) 25vw, 20vw"
             className="rounded-md bg-white object-contain"
+            unoptimized={process.env.NODE_ENV === "development"}
           />
         </div>
         <p className="m-0 text-xl font-bold leading-[1.2] text-[var(--foreground)]">
@@ -39,9 +40,6 @@ export function ProductCard({
         </p>
         <p className="m-0 line-clamp-3 overflow-hidden text-sm leading-[1.45] text-[var(--muted)] max-[760px]:line-clamp-2">
           {product.description}
-        </p>
-        <p className="m-0 font-mono text-xs leading-[1.3] text-[var(--muted)] [overflow-wrap:anywhere]">
-          {product.slug}
         </p>
       </Link>
       {topRightSlot}

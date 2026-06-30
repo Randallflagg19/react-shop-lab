@@ -6,7 +6,7 @@ const CART_STORAGE_KEY = "react-shop-lab:cart";
 const EMPTY_CART_ITEMS: CartItem[] = [];
 
 type CartAction =
-  | { type: "add"; product: Product }
+  | { type: "add"; product: Product; quantity: number }
   | { type: "remove"; productId: number }
   | { type: "increase"; productId: number }
   | { type: "decrease"; productId: number }
@@ -79,12 +79,15 @@ export function useCart(initialItems: CartItem[] = []) {
         );
 
         if (!alreadyExist) {
-          return [...state, { product: action.product, quantity: 1 }];
+          return [
+            ...state,
+            { product: action.product, quantity: action.quantity },
+          ];
         }
 
         return state.map((item) =>
           item.product.id === action.product.id
-            ? { ...item, quantity: item.quantity + 1 }
+            ? { ...item, quantity: item.quantity + action.quantity }
             : item,
         );
       }
@@ -125,8 +128,8 @@ export function useCart(initialItems: CartItem[] = []) {
     }
   }
 
-  function addToCart(product: Product) {
-    dispatch({ type: "add", product });
+  function addToCart(product: Product, quantity: number) {
+    dispatch({ type: "add", product, quantity });
   }
 
   function removeFromCart(productId: number) {

@@ -33,10 +33,7 @@ export function CatalogSearch({
 
   return (
     <div className="flex w-[min(380px,100%)] flex-col gap-1.5">
-      <label
-        className="text-[13px] font-medium text-[var(--foreground)]"
-        htmlFor={searchId}
-      >
+      <label className="sr-only" htmlFor={searchId}>
         Search products
       </label>
 
@@ -57,7 +54,7 @@ export function CatalogSearch({
         <input
           id={searchId}
           ref={inputRef}
-          placeholder="Product name"
+          placeholder="Найти товар"
           className="w-full rounded-md border border-[var(--border)] bg-[var(--card)] py-3 pr-3.5 pl-11 text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--muted)] focus:border-cyan-300 focus:shadow-[0_0_0_3px_rgba(103,232,249,0.12)]"
           type="text"
           value={search}
