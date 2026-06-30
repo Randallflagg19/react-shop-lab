@@ -20,7 +20,6 @@ export function ProductDetails({
           src={imageSrc}
           alt={product.title}
           fill
-          unoptimized
           sizes="(max-width: 900px) 100vw, 50vw"
           className="bg-white object-contain p-5 max-[1000px]:p-3 max-[760px]:p-0"
         />

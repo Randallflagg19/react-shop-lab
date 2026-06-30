@@ -24,7 +24,6 @@ export function ProductCard({
             src={imageSrc}
             alt={product.title}
             fill
-            unoptimized
             sizes="(max-width: 640px) 50vw, (max-width: 900px) 33vw, (max-width: 1200px) 25vw, 20vw"
             className="rounded-md bg-white object-contain"
           />
