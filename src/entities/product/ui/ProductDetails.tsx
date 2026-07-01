@@ -57,7 +57,7 @@ export function ProductDetails({
 
         <div
           data-product-description
-          className="max-h-[220px] overflow-y-auto rounded-lg border border-[var(--border)] p-4 text-[15px] leading-[1.6] text-[var(--muted)] max-[1000px]:max-h-[180px] max-[1000px]:p-3.5 max-[1000px]:text-sm max-[1000px]:leading-[1.5] max-[760px]:overflow-visible"
+          className="max-h-[220px] overflow-y-auto rounded-lg border border-[var(--border)] p-4 text-[15px] leading-[1.6] text-[var(--muted)] max-[1000px]:max-h-[180px] max-[1000px]:p-3.5 max-[1000px]:text-sm max-[1000px]:leading-[1.5] max-[760px]:max-h-none max-[760px]:overflow-visible"
         >
           {product.description}
         </div>
