@@ -74,7 +74,7 @@ export function Catalog() {
           />
         }
       />
-      <main className="page">
+      <main className="page" data-page="catalog">
         {!isLoading && !error && (
           <CatalogMeta
             totalCount={products.length}
@@ -88,13 +88,13 @@ export function Catalog() {
             isPending={isPending}
           />
         )}
-        {isLoading && <div>Loading...</div>}
-        {error && <div>{error}</div>}
+        {isLoading && <div data-page-status>Loading...</div>}
+        {error && <div data-page-status="error">{error}</div>}
         {!isLoading && !error && products.length === 0 && (
-          <p>Товары не найдены</p>
+          <p data-page-status>Товары не найдены</p>
         )}
         {!isLoading && products.length > 0 && visibleProducts.length === 0 && (
-          <p>{"По выбранным фильтрам ничего не найдено"}</p>
+          <p data-page-status>{"По выбранным фильтрам ничего не найдено"}</p>
         )}
 
         {visibleProducts.length > 0 && (

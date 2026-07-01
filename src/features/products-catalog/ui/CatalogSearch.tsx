@@ -32,9 +32,9 @@ export function CatalogSearch({
   const searchId = useId();
 
   return (
-    <div className="flex w-[min(380px,100%)] flex-col gap-1.5">
+    <div data-catalog-search className="flex w-[min(380px,100%)] flex-col gap-1.5">
       <label className="sr-only" htmlFor={searchId}>
-        Search products
+        Поиск товаров
       </label>
 
       <div className="relative">

@@ -1,0 +1,400 @@
+[data-arcane-app] {
+  --arcane-gold: #c9a76a;
+  --arcane-gold-bright: #f1dfb1;
+  --arcane-gold-dim: #705733;
+  --arcane-purple: #7a36aa;
+  --arcane-panel: rgba(10, 7, 13, 0.9);
+  color: #eadfc9;
+  background:
+    linear-gradient(rgba(5, 4, 8, 0.28), rgba(5, 4, 8, 0.7)),
+    url("/images/product-detail-arcane-bg.jpg") center top / cover fixed,
+    #060509;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+[data-arcane-app] [data-site-header] {
+  background: linear-gradient(180deg, rgba(5, 4, 8, 0.95), rgba(5, 4, 8, 0.58));
+}
+
+[data-arcane-app] .site-header-inner {
+  position: relative;
+  border-color: rgba(181, 143, 75, 0.62);
+}
+
+[data-arcane-app] .site-header-inner::after {
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  content: "";
+  background: #8a48bb;
+  border: 1px solid var(--arcane-gold-bright);
+  box-shadow: 0 0 16px rgba(155, 74, 216, 0.9);
+  transform: translateX(-50%) rotate(45deg);
+}
+
+[data-arcane-app] [data-site-brand] {
+  color: var(--arcane-gold-bright);
+  text-shadow:
+    0 1px 0 #412f1b,
+    0 0 15px rgba(186, 116, 229, 0.25);
+}
+
+[data-arcane-app] [data-site-brand] > span:first-child {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+[data-arcane-app] [data-site-brand] > span:last-child {
+  color: #c2ad88;
+  font-family: Georgia, "Times New Roman", serif;
+  letter-spacing: 0.2em;
+}
+
+[data-arcane-app] [data-site-navigation] a {
+  color: #e8d7b2;
+  background: linear-gradient(180deg, rgba(24, 17, 24, 0.96), rgba(7, 6, 10, 0.98));
+  border-color: rgba(199, 160, 91, 0.66);
+  border-radius: 2px;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 226, 164, 0.08),
+    0 0 0 1px rgba(57, 38, 20, 0.75);
+}
+
+[data-arcane-app] [data-site-navigation] a:hover,
+[data-arcane-app] [data-site-navigation] a[aria-current="page"] {
+  color: #fff1cb;
+  border-color: var(--arcane-gold-bright);
+  background: linear-gradient(180deg, rgba(65, 31, 69, 0.98), rgba(10, 7, 14, 0.98));
+}
+
+[data-arcane-app] [data-site-navigation] a span:last-child {
+  color: #160d12;
+  background: linear-gradient(135deg, #d59bff, #8a45c2);
+}
+
+[data-arcane-app] [data-page] {
+  min-height: calc(100vh - 132px);
+}
+
+[data-arcane-app] [data-page-heading] {
+  position: relative;
+  border-color: rgba(181, 143, 75, 0.55);
+}
+
+[data-arcane-app] [data-page-heading] h1 {
+  color: var(--arcane-gold-bright);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.1rem, 4vw, 3.6rem);
+  font-weight: 400;
+  letter-spacing: 0.035em;
+  text-shadow: 0 0 18px rgba(123, 53, 153, 0.35);
+}
+
+[data-arcane-app] [data-page-heading] p {
+  color: #bcae99;
+  letter-spacing: 0.05em;
+}
+
+[data-arcane-app] [data-page-status],
+[data-arcane-app] [data-empty-state] {
+  grid-column: 1 / -1;
+  padding: 22px;
+  color: #cbbba3;
+  background: linear-gradient(145deg, rgba(24, 13, 28, 0.9), rgba(7, 6, 10, 0.94));
+  border: 1px solid rgba(164, 112, 87, 0.5);
+  border-radius: 2px;
+  box-shadow: inset 0 0 28px rgba(68, 25, 80, 0.18);
+}
+
+[data-arcane-app] [data-page-status] {
+  margin: 0;
+}
+
+[data-arcane-app] [data-page-status="error"] {
+  color: #f0a2ad;
+  border-color: rgba(213, 92, 111, 0.62);
+}
+
+[data-arcane-app] [data-empty-state] a {
+  color: #e1bd78;
+}
+
+[data-arcane-app] [data-catalog-search] input {
+  color: #f0e2c8;
+  background: rgba(8, 6, 10, 0.88);
+  border-color: rgba(193, 151, 78, 0.62);
+  border-radius: 2px;
+  box-shadow: inset 0 0 16px rgba(96, 40, 115, 0.14);
+}
+
+[data-arcane-app] [data-catalog-search] input:focus {
+  border-color: var(--arcane-gold-bright);
+  box-shadow:
+    inset 0 0 18px rgba(105, 42, 127, 0.25),
+    0 0 0 3px rgba(152, 78, 186, 0.15);
+}
+
+[data-arcane-app] [data-site-search] {
+  margin-left: auto;
+}
+
+[data-arcane-app] [data-catalog-meta] {
+  padding: 16px 18px;
+  background: rgba(8, 6, 10, 0.72);
+  border: 1px solid rgba(132, 98, 51, 0.48);
+  box-shadow: inset 0 0 25px rgba(76, 28, 91, 0.12);
+}
+
+[data-arcane-app] [data-catalog-count] {
+  display: inline-flex;
+  flex: 0 0 190px;
+  align-items: baseline;
+  width: 190px;
+  min-width: 190px;
+  gap: 0.28em;
+  color: #e8d8bb;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1rem;
+  font-variant-numeric: lining-nums tabular-nums;
+  line-height: 1;
+}
+
+[data-arcane-app] [data-catalog-count] span {
+  font: inherit;
+  line-height: inherit;
+}
+
+[data-arcane-app] [data-category-list] button {
+  color: #bfae96;
+  background: rgba(15, 11, 17, 0.94);
+  border-color: rgba(137, 102, 54, 0.55);
+  border-radius: 2px;
+  transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+[data-arcane-app] [data-category-list] button:hover {
+  color: #f3dfb9;
+  border-color: var(--arcane-gold);
+}
+
+[data-arcane-app] [data-category-list] button[class*="bg-[#164e5a]"] {
+  color: #f7e5bd;
+  background: linear-gradient(180deg, #582263, #28102e);
+  border-color: var(--arcane-gold);
+  box-shadow: inset 0 0 12px rgba(185, 79, 230, 0.18);
+}
+
+[data-arcane-app] [data-catalog-sort] {
+  color: #d5c19e;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.035em;
+}
+
+[data-arcane-app] [data-catalog-sort] select {
+  min-width: 190px;
+  min-height: 42px;
+  padding-inline: 14px 34px;
+  color: #ead9bc;
+  color-scheme: dark;
+  background: linear-gradient(180deg, rgba(39, 19, 44, 0.96), rgba(10, 7, 13, 0.98));
+  border-color: rgba(210, 169, 93, 0.72);
+  border-radius: 2px;
+  box-shadow:
+    inset 0 0 16px rgba(119, 48, 139, 0.2),
+    0 0 0 1px rgba(44, 29, 17, 0.8);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.95rem;
+}
+
+[data-arcane-app] [data-catalog-sort] select:focus {
+  border-color: var(--arcane-gold-bright);
+  outline: 2px solid rgba(163, 88, 196, 0.3);
+  outline-offset: 2px;
+}
+
+[data-arcane-app] [data-catalog-sort] option {
+  color: #ead9bc;
+  background: #171019;
+}
+
+[data-arcane-app] [data-product-grid] {
+  align-items: stretch;
+}
+
+[data-arcane-app] [data-product-grid] > li {
+  display: flex;
+}
+
+[data-arcane-app] [data-product-card] {
+  width: 100%;
+  color: #e5d7bf;
+  background:
+    linear-gradient(150deg, rgba(26, 17, 28, 0.96), rgba(7, 6, 9, 0.98)) padding-box;
+  border-color: rgba(154, 116, 61, 0.62);
+  border-radius: 2px;
+  box-shadow:
+    inset 0 0 30px rgba(72, 27, 85, 0.13),
+    0 12px 32px rgba(0, 0, 0, 0.34);
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+[data-arcane-app] [data-product-card]:hover {
+  border-color: var(--arcane-gold);
+  box-shadow:
+    inset 0 0 34px rgba(89, 32, 107, 0.2),
+    0 16px 38px rgba(0, 0, 0, 0.46),
+    0 0 18px rgba(112, 46, 137, 0.18);
+  transform: translateY(-3px);
+}
+
+[data-arcane-app] [data-product-card-image] {
+  padding: 6px;
+  background: #ede8dd;
+  border: 1px solid rgba(226, 190, 120, 0.72);
+  border-radius: 1px;
+  box-shadow:
+    0 0 0 3px #171117,
+    0 0 0 4px rgba(136, 101, 52, 0.72);
+}
+
+[data-arcane-app] [data-product-card-image] img {
+  padding: 6px;
+  border-radius: 0;
+}
+
+[data-arcane-app] [data-product-card-price] {
+  color: var(--arcane-gold);
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+}
+
+[data-arcane-app] [data-product-card-title] {
+  color: #f0e4cf;
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+}
+
+[data-arcane-app] [data-product-card-category] {
+  color: #c69ad5;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+[data-arcane-app] [data-product-card-description] {
+  color: #aa9f91;
+}
+
+[data-arcane-app] [data-product-card] [data-favorite-button="icon"] {
+  color: #dfc9a1;
+  background: rgba(8, 6, 10, 0.86);
+  border-color: rgba(201, 165, 98, 0.66);
+}
+
+[data-arcane-app] [data-cart-layout] {
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+[data-arcane-app] [data-cart-list] {
+  border-top: 1px solid rgba(154, 116, 61, 0.5);
+}
+
+[data-arcane-app] [data-cart-row] {
+  padding-inline: 18px;
+  color: #dfd1bb;
+  background: linear-gradient(90deg, rgba(20, 12, 22, 0.82), rgba(7, 6, 9, 0.7));
+  border-color: rgba(154, 116, 61, 0.5);
+}
+
+[data-arcane-app] [data-cart-row] h2 {
+  color: #f0e2c9;
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+}
+
+[data-arcane-app] [data-cart-row] > div:first-child p {
+  color: #c69ad5;
+}
+
+[data-arcane-app] [data-cart-quantity] {
+  color: #ead8b5;
+  background: rgba(8, 6, 10, 0.82);
+  border-color: rgba(198, 158, 87, 0.68);
+  border-radius: 2px;
+}
+
+[data-arcane-app] [data-cart-quantity] button:hover {
+  background: rgba(120, 55, 141, 0.26);
+}
+
+[data-arcane-app] [data-cart-remove],
+[data-arcane-app] [data-cart-clear] {
+  color: #d7c3a0;
+  background: rgba(8, 6, 10, 0.72);
+  border-color: rgba(192, 151, 79, 0.58);
+  border-radius: 2px;
+}
+
+[data-arcane-app] [data-cart-remove]:hover,
+[data-arcane-app] [data-cart-clear]:hover {
+  color: #f4dfb7;
+  background: rgba(64, 26, 74, 0.7);
+  border-color: var(--arcane-gold);
+}
+
+[data-arcane-app] [data-cart-summary] {
+  color: #d9cbb3;
+  background: linear-gradient(145deg, rgba(31, 16, 35, 0.94), rgba(7, 6, 10, 0.98));
+  border-color: rgba(185, 143, 72, 0.68);
+  border-radius: 2px;
+  box-shadow:
+    inset 0 0 34px rgba(91, 34, 108, 0.2),
+    0 18px 44px rgba(0, 0, 0, 0.42);
+}
+
+[data-arcane-app] [data-cart-summary] h2,
+[data-arcane-app] [data-cart-summary] strong {
+  color: #f0dfbd;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+[data-arcane-app] [data-cart-summary] div {
+  color: #b9aa95;
+  border-color: rgba(154, 116, 61, 0.5);
+}
+
+@media (max-width: 760px) {
+  [data-arcane-app] {
+    background-attachment: scroll;
+  }
+
+  [data-arcane-app] [data-catalog-meta] {
+    padding: 14px;
+  }
+
+  [data-arcane-app] [data-catalog-count] {
+    flex-basis: auto;
+    width: auto;
+    min-width: 0;
+  }
+
+  [data-arcane-app] [data-product-card] {
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.34);
+  }
+
+  [data-arcane-app] [data-product-card-image] {
+    padding: 3px;
+    box-shadow:
+      0 0 0 2px #171117,
+      0 0 0 3px rgba(136, 101, 52, 0.62);
+  }
+}
+
+@media (max-width: 640px) {
+  [data-arcane-app] [data-cart-row] {
+    padding-inline: 12px;
+  }
+}

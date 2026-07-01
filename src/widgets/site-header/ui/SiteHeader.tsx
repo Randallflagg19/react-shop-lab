@@ -33,7 +33,10 @@ export function SiteHeader({ searchSlot }: { searchSlot?: React.ReactNode }) {
 
         <div className="flex min-w-0 flex-1 items-center justify-end gap-3 max-[1200px]:flex-wrap max-[640px]:grid max-[640px]:grid-cols-2">
           {searchSlot && (
-            <div className="w-[min(380px,100%)] max-[1200px]:order-2 max-[1200px]:w-full max-[640px]:col-span-2">
+            <div
+              data-site-search
+              className="flex w-[min(380px,100%)] justify-end max-[1200px]:order-2 max-[1200px]:w-full max-[640px]:col-span-2"
+            >
               {searchSlot}
             </div>
           )}

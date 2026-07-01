@@ -14,41 +14,55 @@ export default function FavoritesPage() {
   );
 
   return (
-    <>
+    <div data-page-shell="favorites">
       <SiteHeader />
-      <main className="page">
-      <header className="mb-7 border-b border-[var(--border)] pb-5">
-        <h1 className="m-0 text-3xl">Избранное</h1>
-        <p className="m-0 mt-2 text-sm text-[var(--muted)]">
-          Сохранённые товары: {favoriteProducts.length}
-        </p>
-      </header>
-
-      {isLoading && <p className="text-[var(--muted)]">Загрузка...</p>}
-      {error && <p className="text-rose-400">{error}</p>}
-
-      {!isLoading && !error && favoriteProducts.length === 0 && (
-        <div className="rounded-lg border border-[var(--border)] bg-[var(--card)] p-6">
-          <p className="m-0 text-[var(--muted)]">
-            В избранном пока ничего нет.
+      <main className="page" data-page="favorites">
+        <header
+          data-page-heading
+          className="mb-7 border-b border-[var(--border)] pb-5"
+        >
+          <h1 className="m-0 text-3xl">Избранное</h1>
+          <p className="m-0 mt-2 text-sm text-[var(--muted)]">
+            Сохранённые товары: {favoriteProducts.length}
           </p>
-          <Link
-            href="/"
-            className="mt-4 inline-block text-cyan-300 underline-offset-4 hover:underline"
-          >
-            Вернуться в каталог
-          </Link>
-        </div>
-      )}
+        </header>
 
-      {!isLoading && !error && favoriteProducts.length > 0 && (
-        <CatalogProductList
-          products={favoriteProducts}
-          favoriteIds={favoriteIds}
-          toggleFavorite={toggleFavorite}
-        />
-      )}
+        {isLoading && (
+          <p data-page-status className="text-[var(--muted)]">
+            Загрузка...
+          </p>
+        )}
+        {error && (
+          <p data-page-status="error" className="text-rose-400">
+            {error}
+          </p>
+        )}
+
+        {!isLoading && !error && favoriteProducts.length === 0 && (
+          <div
+            data-empty-state
+            className="rounded-lg border border-[var(--border)] bg-[var(--card)] p-6"
+          >
+            <p className="m-0 text-[var(--muted)]">
+              В избранном пока ничего нет.
+            </p>
+            <Link
+              href="/"
+              className="mt-4 inline-block text-cyan-300 underline-offset-4 hover:underline"
+            >
+              Вернуться в каталог
+            </Link>
+          </div>
+        )}
+
+        {!isLoading && !error && favoriteProducts.length > 0 && (
+          <CatalogProductList
+            products={favoriteProducts}
+            favoriteIds={favoriteIds}
+            toggleFavorite={toggleFavorite}
+          />
+        )}
       </main>
-    </>
+    </div>
   );
 }
