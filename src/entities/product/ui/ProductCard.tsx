@@ -43,7 +43,7 @@ export function ProductCard({
             alt={product.title}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 900px) 33vw, (max-width: 1200px) 25vw, 20vw"
-            className={`rounded-md bg-white object-contain transition-[opacity,filter] duration-250 ease-out ${
+            className={`rounded-md object-contain transition-[opacity,filter] duration-250 ease-out ${
               isImageLoading ? "opacity-0 blur-[2px]" : "opacity-100 blur-0"
             }`}
             onLoad={() => setIsImageLoading(false)}
