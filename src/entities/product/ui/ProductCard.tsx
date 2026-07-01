@@ -47,8 +47,7 @@ export function ProductCard({
               isImageLoading ? "opacity-0 blur-[2px]" : "opacity-100 blur-0"
             }`}
             onLoad={() => setIsImageLoading(false)}
-            unoptimized
-            // unoptimized={process.env.NODE_ENV === "development"}
+            unoptimized={process.env.NODE_ENV === "development"}
           />
         </div>
         <p
