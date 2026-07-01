@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { getProductImageSrc } from "../model/getProductImageSrc";
 import { Product } from "../model/types";
 import { formatPrice } from "@/shared/lib/formatPrice";
@@ -42,29 +41,7 @@ export function ProductDetails({
           {product.description}
         </div>
 
-        <div className="flex flex-col gap-1.5 border-b border-[var(--border)] pb-4 text-[var(--muted)] max-[760px]:pb-3.5">
-          <span className="text-xs font-bold tracking-[0.08em]">SLUG / ID</span>
-          <code className="text-sm [overflow-wrap:anywhere] max-[1000px]:text-[13px]">
-            {product.slug}
-          </code>
-        </div>
-
-        {/* Button */}
-
         {actions}
-
-        <Link
-          href="/"
-          className="block w-full rounded-md border border-[var(--border)] px-[18px] py-3.5 text-center text-[var(--foreground)] no-underline max-[760px]:min-h-12 max-[760px]:px-4"
-        >
-          Back to catalog
-        </Link>
-        <Link
-          href="/cart"
-          className="block w-full rounded-md border border-[var(--border)] px-[18px] py-3.5 text-center text-[var(--foreground)] no-underline max-[760px]:min-h-12 max-[760px]:px-4"
-        >
-          To cart
-        </Link>
       </div>
     </section>
   );

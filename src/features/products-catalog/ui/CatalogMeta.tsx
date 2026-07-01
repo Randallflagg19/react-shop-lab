@@ -38,7 +38,7 @@ export function CatalogMeta({
       <div className="flex min-w-0 flex-1 items-center gap-[18px] max-[760px]:flex-col max-[760px]:items-stretch max-[760px]:gap-3">
         <p className="m-0 basis-[132px] text-sm font-bold leading-[1.3] text-[var(--foreground)] max-[760px]:basis-auto">
           {isFiltered && visibleCount + " of "}
-          {totalCount} products
+          {totalCount} товаров
         </p>
         <div
           className={`flex min-w-0 flex-wrap gap-2 transition-opacity ${
