@@ -12,7 +12,7 @@ export function SiteHeader({ searchSlot }: { searchSlot?: React.ReactNode }) {
   const { favoriteIds } = useFavorites();
 
   const navigationLinkClass =
-    "flex h-[46px] shrink-0 items-center gap-2 rounded-md border bg-[var(--card)] px-4 text-sm font-medium text-[var(--foreground)] no-underline transition-colors hover:border-cyan-300 hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/70 max-[640px]:px-3";
+    "flex h-[46px] shrink-0 items-center gap-2 rounded-md border bg-[var(--card)] px-4 text-sm font-medium text-[var(--foreground)] no-underline transition-colors hover:border-cyan-300 hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/70 max-[640px]:px-3 max-[420px]:gap-1.5 max-[420px]:px-2 max-[420px]:text-[13px]";
 
   return (
     <header data-site-header>
@@ -56,9 +56,12 @@ export function SiteHeader({ searchSlot }: { searchSlot?: React.ReactNode }) {
             }`}
           >
             <Heart size={18} strokeWidth={2} aria-hidden="true" />
-            <span className="max-[420px]:sr-only">Избранное</span>
-            <span className="grid h-5 min-w-5 place-items-center rounded-full bg-cyan-300 px-1 text-xs font-bold text-black">
-              {favoriteIds.length > 99 ? "99+" : favoriteIds.length}
+            <span data-site-navigation-label>Избранное</span>
+            <span
+              data-site-navigation-count
+              className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-cyan-300 px-1 text-xs font-bold text-black"
+            >
+              <span>{favoriteIds.length > 99 ? "99+" : favoriteIds.length}</span>
             </span>
           </Link>
 
@@ -72,9 +75,12 @@ export function SiteHeader({ searchSlot }: { searchSlot?: React.ReactNode }) {
             }`}
           >
             <ShoppingCart size={18} strokeWidth={2} aria-hidden="true" />
-            <span className="max-[420px]:sr-only">Корзина</span>
-            <span className="grid h-5 min-w-5 place-items-center rounded-full bg-lime-300 px-1 text-xs font-bold text-black">
-              {totalCount > 99 ? "99+" : totalCount}
+            <span data-site-navigation-label>Корзина</span>
+            <span
+              data-site-navigation-count
+              className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-lime-300 px-1 text-xs font-bold text-black"
+            >
+              <span>{totalCount > 99 ? "99+" : totalCount}</span>
             </span>
           </Link>
           </nav>
