@@ -8,9 +8,11 @@ import { formatPrice } from "@/shared/lib/formatPrice";
 export function ProductCard({
   product,
   topRightSlot,
+  eager,
 }: {
   product: Product;
   topRightSlot?: React.ReactNode;
+  eager?: boolean;
 }) {
   const imageSrc = getProductImageSrc(product);
   return (
@@ -21,6 +23,7 @@ export function ProductCard({
       >
         <div className="relative aspect-square w-full overflow-hidden rounded-md">
           <Image
+            loading={eager ? "eager" : "lazy"}
             src={imageSrc}
             alt={product.title}
             fill

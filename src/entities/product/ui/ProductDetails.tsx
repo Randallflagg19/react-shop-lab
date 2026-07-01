@@ -17,6 +17,7 @@ export function ProductDetails({
     <section className="flex items-start gap-12 max-[1000px]:grid max-[1000px]:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] max-[1000px]:gap-7 max-[760px]:flex max-[760px]:w-full max-[760px]:flex-col max-[760px]:gap-6">
       <div className="relative aspect-square w-full max-w-[620px] flex-[0_1_620px] overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--card)] p-5 max-[1000px]:max-w-none max-[1000px]:p-3 max-[760px]:flex-none max-[760px]:p-0">
         <Image
+          loading="eager"
           src={imageSrc}
           alt={product.title}
           fill
