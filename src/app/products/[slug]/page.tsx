@@ -2,6 +2,7 @@ import { ProductDetails } from "@/entities/product/ui/ProductDetails";
 import { AddToCartButton } from "@/features/cart/ui/AddToCartButton";
 import { fetchProductBySlug } from "@/entities/product/api/productBySlug";
 import { notFound } from "next/navigation";
+import { SiteHeader } from "@/widgets/site-header/ui/SiteHeader";
 
 export default async function ProductPage({
   params,
@@ -16,11 +17,14 @@ export default async function ProductPage({
   }
 
   return (
-    <main className="page">
-      <ProductDetails
-        product={product}
-        actions={<AddToCartButton product={product} />}
-      />
-    </main>
+    <>
+      <SiteHeader />
+      <main className="page">
+        <ProductDetails
+          product={product}
+          actions={<AddToCartButton product={product} />}
+        />
+      </main>
+    </>
   );
 }

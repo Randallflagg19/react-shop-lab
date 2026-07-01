@@ -3,11 +3,12 @@
 import { CatalogProductList } from "@/features/products-catalog/ui/CatalogProductList";
 import { useProducts } from "../model/useProducts";
 import { useMemo, useState, useTransition } from "react";
-import { CatalogHeader } from "./CatalogHeader";
+import { CatalogSearchSlot } from "./CatalogSearchSlot";
 import { CatalogMeta } from "./CatalogMeta";
 import type { SortBy } from "../model/types";
 import { useDebounce } from "../model/useDebounce";
 import { useFavorites } from "@/features/favorites/model/useFavorites";
+import { SiteHeader } from "@/widgets/site-header/ui/SiteHeader";
 
 export function Catalog() {
   const { products, isLoading, error } = useProducts();
@@ -65,36 +66,45 @@ export function Catalog() {
 
   return (
     <>
-      <CatalogHeader search={search} onSearchChange={setSearch} />
-      {!isLoading && !error && (
-        <CatalogMeta
-          totalCount={products.length}
-          visibleCount={visibleProducts.length}
-          isFiltered={search.trim().length > 0 || currentCategory !== "all"}
-          categories={categories}
-          currentCategory={currentCategory}
-          onCategoryChange={handleCategoryChange}
-          sortBy={sortBy}
-          onSortChange={setSortBy}
-          isPending={isPending}
-        />
-      )}
-      {isLoading && <div>Loading...</div>}
-      {error && <div>{error}</div>}
-      {!isLoading && !error && products.length === 0 && (
-        <p>Товары не найдены</p>
-      )}
-      {!isLoading && products.length > 0 && visibleProducts.length === 0 && (
-        <p>{"По выбранным фильтрам ничего не найдено"}</p>
-      )}
+      <SiteHeader
+        searchSlot={
+          <CatalogSearchSlot
+            search={search}
+            onSearchChange={setSearch}
+          />
+        }
+      />
+      <main className="page">
+        {!isLoading && !error && (
+          <CatalogMeta
+            totalCount={products.length}
+            visibleCount={visibleProducts.length}
+            isFiltered={search.trim().length > 0 || currentCategory !== "all"}
+            categories={categories}
+            currentCategory={currentCategory}
+            onCategoryChange={handleCategoryChange}
+            sortBy={sortBy}
+            onSortChange={setSortBy}
+            isPending={isPending}
+          />
+        )}
+        {isLoading && <div>Loading...</div>}
+        {error && <div>{error}</div>}
+        {!isLoading && !error && products.length === 0 && (
+          <p>Товары не найдены</p>
+        )}
+        {!isLoading && products.length > 0 && visibleProducts.length === 0 && (
+          <p>{"По выбранным фильтрам ничего не найдено"}</p>
+        )}
 
-      {visibleProducts.length > 0 && (
-        <CatalogProductList
-          favoriteIds={favoriteIds}
-          toggleFavorite={toggleFavorite}
-          products={visibleProducts}
-        />
-      )}
+        {visibleProducts.length > 0 && (
+          <CatalogProductList
+            favoriteIds={favoriteIds}
+            toggleFavorite={toggleFavorite}
+            products={visibleProducts}
+          />
+        )}
+      </main>
     </>
   );
 }

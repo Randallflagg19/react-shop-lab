@@ -32,16 +32,29 @@ body {
   padding: 32px 0 64px;
 }
 
+.site-header-inner {
+  width: min(100% - 96px, 1600px);
+  margin: 0 auto;
+}
+
 @media (min-width: 761px) and (max-width: 1000px) {
-  .page {
+  .page,
+  .site-header-inner {
     width: calc(100% - 48px);
+  }
+
+  .page {
     padding: 28px 0 48px;
   }
 }
 
 @media (max-width: 760px) {
-  .page {
+  .page,
+  .site-header-inner {
     width: calc(100% - 32px);
+  }
+
+  .page {
     padding: 24px 0 40px;
   }
 }
