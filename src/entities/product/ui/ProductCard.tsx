@@ -26,7 +26,7 @@ export function ProductCard({
     >
       <Link
         href={`/products/${product.slug}`}
-        className="flex flex-col gap-2.5 text-inherit no-underline"
+        className="flex flex-1 flex-col gap-2.5 text-inherit no-underline"
       >
         <div
           data-product-card-image
@@ -76,6 +76,13 @@ export function ProductCard({
         </p>
       </Link>
       {topRightSlot}
+      <Link
+        data-product-card-action
+        href={`/products/${product.slug}`}
+        className="mt-auto block w-full text-center no-underline"
+      >
+        Осмотреть артефакт
+      </Link>
     </article>
   );
 }

@@ -230,40 +230,71 @@
 }
 
 [data-arcane-app] [data-product-card] {
+  isolation: isolate;
   width: 100%;
   color: #e5d7bf;
   background:
-    linear-gradient(150deg, rgba(26, 17, 28, 0.96), rgba(7, 6, 9, 0.98)) padding-box;
-  border-color: rgba(154, 116, 61, 0.62);
+    radial-gradient(circle at 50% 0, rgba(108, 42, 128, 0.14), transparent 38%),
+    linear-gradient(155deg, rgba(22, 14, 24, 0.98), rgba(6, 5, 8, 0.99)) padding-box;
+  border-color: rgba(190, 148, 76, 0.72);
   border-radius: 2px;
   box-shadow:
-    inset 0 0 30px rgba(72, 27, 85, 0.13),
-    0 12px 32px rgba(0, 0, 0, 0.34);
+    inset 0 0 34px rgba(82, 30, 98, 0.16),
+    0 12px 32px rgba(0, 0, 0, 0.38);
   transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
 }
 
+[data-arcane-app] [data-product-card]::before {
+  position: absolute;
+  z-index: 2;
+  inset: 4px;
+  content: "";
+  pointer-events: none;
+  border: 1px solid rgba(221, 184, 111, 0.22);
+  border-radius: 1px;
+}
+
+[data-arcane-app] [data-product-card]::after {
+  position: absolute;
+  z-index: -1;
+  inset: 14%;
+  content: "";
+  pointer-events: none;
+  border-radius: 30%;
+  box-shadow: 0 0 34px 14px rgba(112, 46, 137, 0.13);
+  opacity: 0.65;
+  transition: opacity 180ms ease, box-shadow 180ms ease;
+}
+
 [data-arcane-app] [data-product-card]:hover {
-  border-color: var(--arcane-gold);
+  border-color: var(--arcane-gold-bright);
   box-shadow:
-    inset 0 0 34px rgba(89, 32, 107, 0.2),
+    inset 0 0 38px rgba(99, 37, 118, 0.23),
     0 16px 38px rgba(0, 0, 0, 0.46),
-    0 0 18px rgba(112, 46, 137, 0.18);
+    0 0 20px rgba(112, 46, 137, 0.2);
   transform: translateY(-3px);
 }
 
+[data-arcane-app] [data-product-card]:hover::after {
+  box-shadow: 0 0 38px 16px rgba(126, 51, 153, 0.2);
+  opacity: 1;
+}
+
 [data-arcane-app] [data-product-card-image] {
-  padding: 6px;
-  background: #ede8dd;
-  border: 1px solid rgba(226, 190, 120, 0.72);
-  border-radius: 1px;
+  padding: 8px;
+  background: linear-gradient(180deg, rgba(246, 241, 229, 0.98), rgba(230, 219, 195, 0.94));
+  border: 1px solid rgba(214, 177, 108, 0.72);
+  border-radius: 2px;
   box-shadow:
+    inset 0 0 20px rgba(64, 37, 12, 0.1),
     0 0 0 3px #171117,
-    0 0 0 4px rgba(136, 101, 52, 0.72);
+    0 0 0 4px rgba(136, 101, 52, 0.62);
 }
 
 [data-arcane-app] [data-product-card-image] img {
-  padding: 6px;
+  padding: 8px;
   border-radius: 0;
+  filter: none;
 }
 
 [data-arcane-app] [data-product-card-image] [data-product-image-portal] {
@@ -361,15 +392,18 @@
 }
 
 [data-arcane-app] [data-product-card-price] {
-  color: var(--arcane-gold);
+  color: #d9b771;
   font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.25rem;
   font-weight: 400;
+  letter-spacing: 0.015em;
 }
 
 [data-arcane-app] [data-product-card-title] {
-  color: #f0e4cf;
+  color: #f1e5cf;
   font-family: Georgia, "Times New Roman", serif;
   font-weight: 400;
+  text-wrap: balance;
 }
 
 [data-arcane-app] [data-product-card-category] {
@@ -379,15 +413,86 @@
 }
 
 [data-arcane-app] [data-product-card-description] {
-  color: #aa9f91;
+  color: #aaa092;
+  line-height: 1.55;
 }
 
 [data-arcane-app] [data-product-card] [data-favorite-button="icon"] {
-  color: #dfc9a1;
-  background: rgba(8, 6, 10, 0.86);
-  border-color: rgba(201, 165, 98, 0.66);
+  z-index: 3;
+  color: #d8c19b;
+  background: radial-gradient(circle at 50% 35%, rgba(72, 32, 80, 0.72), rgba(8, 6, 10, 0.96));
+  border-color: rgba(213, 174, 101, 0.76);
+  box-shadow:
+    inset 0 0 10px rgba(122, 54, 170, 0.2),
+    0 3px 12px rgba(0, 0, 0, 0.48);
+  transition: color 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
 
+[data-arcane-app] [data-product-card] [data-favorite-button="icon"]:hover {
+  color: #f0ddb6;
+  border-color: var(--arcane-gold-bright);
+  box-shadow:
+    inset 0 0 12px rgba(122, 54, 170, 0.28),
+    0 0 14px rgba(122, 54, 170, 0.34);
+  transform: translateY(-1px);
+}
+
+[data-arcane-app] [data-product-card] [data-favorite-button="icon"][aria-pressed="true"] {
+  color: #f09ac9;
+  border-color: rgba(224, 172, 207, 0.86);
+  box-shadow:
+    inset 0 0 12px rgba(154, 54, 133, 0.36),
+    0 0 8px rgba(226, 105, 178, 0.58),
+    0 0 18px rgba(122, 54, 170, 0.38);
+}
+
+[data-arcane-app] [data-product-card-action] {
+  position: relative;
+  z-index: 1;
+  padding: 9px 5px;
+  color: #e5cf9f;
+  background:
+    radial-gradient(circle at 50% 100%, rgba(113, 42, 132, 0.24), transparent 62%),
+    linear-gradient(180deg, rgba(27, 16, 29, 0.98), rgba(8, 6, 10, 0.98));
+  border: 1px solid rgba(190, 148, 76, 0.74);
+  border-radius: 2px;
+  box-shadow:
+    inset 0 0 0 1px rgba(239, 210, 151, 0.06),
+    inset 0 0 16px rgba(91, 35, 107, 0.16);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.035em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: color 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+}
+
+[data-arcane-app] [data-product-card-action]::before,
+[data-arcane-app] [data-product-card-action]::after {
+  color: #b98ae0;
+  content: "✦";
+  font-size: 0.7em;
+}
+
+[data-arcane-app] [data-product-card-action]::before {
+  margin-right: 0.35em;
+}
+
+[data-arcane-app] [data-product-card-action]::after {
+  margin-left: 0.35em;
+}
+
+[data-arcane-app] [data-product-card-action]:hover {
+  color: #f5e4bc;
+  background:
+    radial-gradient(circle at 50% 100%, rgba(134, 52, 156, 0.34), transparent 66%),
+    linear-gradient(180deg, rgba(38, 19, 42, 0.99), rgba(10, 7, 13, 0.99));
+  border-color: var(--arcane-gold-bright);
+  box-shadow:
+    inset 0 0 18px rgba(111, 43, 130, 0.24),
+    0 0 13px rgba(112, 46, 137, 0.2);
+}
 [data-arcane-app] [data-cart-layout] {
   gap: clamp(1.5rem, 4vw, 3.5rem);
 }
@@ -484,6 +589,21 @@
     box-shadow:
       0 0 0 2px #171117,
       0 0 0 3px rgba(136, 101, 52, 0.62);
+  }
+
+  [data-arcane-app] [data-product-card-image] img {
+    padding: 3px;
+  }
+
+  [data-arcane-app] [data-product-card-action] {
+    padding-block: 8px;
+    font-size: 0.64rem;
+    letter-spacing: 0.02em;
+  }
+
+  [data-arcane-app] [data-product-card-action]::before,
+  [data-arcane-app] [data-product-card-action]::after {
+    display: none;
   }
 }
 
