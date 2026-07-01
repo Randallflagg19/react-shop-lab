@@ -266,6 +266,100 @@
   border-radius: 0;
 }
 
+[data-arcane-app] [data-product-card-image] [data-product-image-portal] {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at center, rgba(122, 54, 170, 0.18), transparent 38%),
+    linear-gradient(180deg, rgba(10, 6, 14, 0.97), rgba(5, 4, 8, 0.99));
+  opacity: 0;
+  transition: opacity 220ms ease-out;
+}
+
+[data-arcane-app]
+  [data-product-card-image]
+  [data-product-image-portal][data-loading="true"] {
+  opacity: 1;
+}
+
+[data-arcane-app] [data-product-card-image] [data-product-image-portal]::before {
+  grid-area: 1 / 1;
+  width: clamp(52px, 34%, 76px);
+  aspect-ratio: 1;
+  content: "";
+  border: 1px solid rgba(201, 167, 106, 0.3);
+  border-top-color: rgba(174, 91, 221, 0.88);
+  border-right-color: rgba(174, 91, 221, 0.48);
+  border-radius: 50%;
+  box-shadow:
+    0 0 18px rgba(122, 54, 170, 0.38),
+    inset 0 0 22px rgba(122, 54, 170, 0.16);
+  animation: product-portal-spin 5.6s linear infinite;
+}
+
+[data-arcane-app] [data-product-card-image] [data-product-image-portal]::after {
+  grid-area: 1 / 1;
+  width: clamp(12px, 8%, 18px);
+  aspect-ratio: 1;
+  content: "";
+  background: linear-gradient(135deg, #d8bd82, #7a36aa 58%, #24102d);
+  border: 1px solid rgba(241, 223, 177, 0.62);
+  box-shadow:
+    0 0 14px rgba(153, 70, 194, 0.72),
+    0 0 30px rgba(122, 54, 170, 0.3);
+  animation: product-portal-pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes product-portal-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes product-portal-pulse {
+  0%,
+  100% {
+    opacity: 0.58;
+    transform: rotate(45deg) scale(0.88);
+  }
+
+  50% {
+    opacity: 0.92;
+    transform: rotate(45deg) scale(1.04);
+  }
+}
+
+[data-arcane-app]
+  [data-product-card-image]
+  [data-product-image-portal][data-loading="false"]::before,
+[data-arcane-app]
+  [data-product-card-image]
+  [data-product-image-portal][data-loading="false"]::after {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-arcane-app] [data-product-card-image] img,
+  [data-arcane-app] [data-product-card-image] [data-product-image-portal] {
+    transition: none;
+  }
+
+  [data-arcane-app] [data-product-card-image] [data-product-image-portal]::before {
+    animation: none;
+  }
+
+  [data-arcane-app] [data-product-card-image] [data-product-image-portal]::after {
+    animation: none;
+    opacity: 0.78;
+    transform: rotate(45deg);
+  }
+}
+
 [data-arcane-app] [data-product-card-price] {
   color: var(--arcane-gold);
   font-family: Georgia, "Times New Roman", serif;

@@ -1,8 +1,10 @@
+"use client";
+
 import Image from "next/image";
 import { getProductImageSrc } from "../model/getProductImageSrc";
 import { Product } from "../model/types";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { formatPrice } from "@/shared/lib/formatPrice";
 
 export function ProductCard({
@@ -15,6 +17,8 @@ export function ProductCard({
   eager?: boolean;
 }) {
   const imageSrc = getProductImageSrc(product);
+  const [isImageLoading, setIsImageLoading] = useState(true);
+
   return (
     <article
       data-product-card
@@ -28,13 +32,21 @@ export function ProductCard({
           data-product-card-image
           className="relative aspect-square w-full overflow-hidden rounded-md"
         >
+          <div
+            data-product-image-portal
+            data-loading={isImageLoading}
+            aria-hidden="true"
+          />
           <Image
             loading={eager ? "eager" : "lazy"}
             src={imageSrc}
             alt={product.title}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 900px) 33vw, (max-width: 1200px) 25vw, 20vw"
-            className="rounded-md bg-white object-contain"
+            className={`rounded-md bg-white object-contain transition-[opacity,filter] duration-250 ease-out ${
+              isImageLoading ? "opacity-0 blur-[2px]" : "opacity-100 blur-0"
+            }`}
+            onLoad={() => setIsImageLoading(false)}
             unoptimized={process.env.NODE_ENV === "development"}
           />
         </div>
