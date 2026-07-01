@@ -17,7 +17,7 @@ export function CatalogProductList({
         <li key={product.id}>
           <ProductCard
             product={product}
-            eager={index < 5}
+            eager={index < 6}
             topRightSlot={
               <FavoriteButton
                 isFavorite={favoriteIds.includes(product.id)}
