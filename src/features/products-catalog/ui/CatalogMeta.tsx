@@ -86,6 +86,8 @@ export function CatalogMeta({
           }`}
         >
           <button
+            aria-pressed={currentCategory === "all"}
+            data-active={currentCategory === "all"}
             disabled={isPending}
             onClick={() => onCategoryChange("all")}
             className={getCategoryClass("all")}
@@ -95,6 +97,8 @@ export function CatalogMeta({
           </button>
           {categories.map((category) => (
             <button
+              aria-pressed={currentCategory === category}
+              data-active={currentCategory === category}
               disabled={isPending}
               onClick={() => onCategoryChange(category)}
               className={getCategoryClass(category)}

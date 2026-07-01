@@ -6,45 +6,61 @@
   --arcane-panel: rgba(10, 7, 13, 0.9);
   color: #eadfc9;
   background:
-    linear-gradient(rgba(5, 4, 8, 0.28), rgba(5, 4, 8, 0.7)),
+    radial-gradient(circle at 12% 22%, rgba(91, 31, 113, 0.2), transparent 30%),
+    radial-gradient(circle at 88% 58%, rgba(74, 28, 96, 0.16), transparent 32%),
+    linear-gradient(rgba(5, 4, 8, 0.32), rgba(5, 4, 8, 0.74)),
     url("/images/product-detail-arcane-bg.jpg") center top / cover fixed,
     #060509;
   font-family: Georgia, "Times New Roman", serif;
 }
 
+[data-arcane-app] :where(a, button, input, select):focus-visible {
+  --tw-ring-color: rgba(190, 113, 221, 0.68);
+  outline: 2px solid rgba(241, 223, 177, 0.82);
+  outline-offset: 3px;
+}
+
 [data-arcane-app] [data-site-header] {
-  background: linear-gradient(180deg, rgba(5, 4, 8, 0.95), rgba(5, 4, 8, 0.58));
+  background:
+    radial-gradient(circle at 50% 120%, rgba(100, 36, 123, 0.18), transparent 34%),
+    linear-gradient(180deg, rgba(5, 4, 8, 0.98), rgba(5, 4, 8, 0.66));
 }
 
 [data-arcane-app] .site-header-inner {
   position: relative;
-  border-color: rgba(181, 143, 75, 0.62);
+  border-color: rgba(204, 161, 83, 0.78);
+  box-shadow:
+    0 1px 0 rgba(244, 214, 153, 0.08),
+    0 10px 28px -24px rgba(139, 59, 167, 0.82);
 }
 
 [data-arcane-app] .site-header-inner::after {
   position: absolute;
-  bottom: -5px;
+  bottom: -6px;
   left: 50%;
-  width: 9px;
-  height: 9px;
+  width: 11px;
+  height: 11px;
   content: "";
-  background: #8a48bb;
+  background: linear-gradient(135deg, #d293f5, #713092 62%, #24102c);
   border: 1px solid var(--arcane-gold-bright);
-  box-shadow: 0 0 16px rgba(155, 74, 216, 0.9);
+  box-shadow:
+    0 0 8px rgba(241, 223, 177, 0.62),
+    0 0 20px rgba(155, 74, 216, 0.94);
   transform: translateX(-50%) rotate(45deg);
 }
 
 [data-arcane-app] [data-site-brand] {
   color: var(--arcane-gold-bright);
   text-shadow:
-    0 1px 0 #412f1b,
-    0 0 15px rgba(186, 116, 229, 0.25);
+    0 1px 0 #4c351d,
+    0 0 12px rgba(236, 192, 111, 0.18),
+    0 0 24px rgba(170, 78, 213, 0.3);
 }
 
 [data-arcane-app] [data-site-brand] > span:first-child {
   font-family: Georgia, "Times New Roman", serif;
-  font-weight: 500;
-  letter-spacing: 0.04em;
+  font-weight: 600;
+  letter-spacing: 0.055em;
 }
 
 [data-arcane-app] [data-site-brand] > span:last-child {
@@ -55,16 +71,17 @@
 
 [data-arcane-app] [data-site-navigation] a {
   color: #e8d7b2;
-  background: linear-gradient(
-    180deg,
-    rgba(24, 17, 24, 0.96),
-    rgba(7, 6, 10, 0.98)
-  );
-  border-color: rgba(199, 160, 91, 0.66);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(108, 42, 128, 0.22), transparent 65%),
+    linear-gradient(180deg, rgba(25, 17, 26, 0.98), rgba(6, 5, 9, 0.99));
+  border-color: rgba(210, 170, 94, 0.78);
   border-radius: 2px;
   box-shadow:
-    inset 0 0 0 1px rgba(255, 226, 164, 0.08),
-    0 0 0 1px rgba(57, 38, 20, 0.75);
+    inset 0 0 0 1px rgba(255, 226, 164, 0.1),
+    inset 0 0 18px rgba(99, 38, 116, 0.14),
+    0 0 0 1px rgba(57, 38, 20, 0.8),
+    0 8px 20px rgba(0, 0, 0, 0.24);
+  transition: color 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
 }
 
 [data-arcane-app] [data-site-navigation] a:hover,
@@ -76,6 +93,10 @@
     rgba(65, 31, 69, 0.98),
     rgba(10, 7, 14, 0.98)
   );
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 226, 164, 0.12),
+    inset 0 0 22px rgba(129, 48, 151, 0.24),
+    0 0 14px rgba(122, 54, 170, 0.22);
 }
 
 [data-arcane-app] [data-site-navigation-count] {
@@ -96,7 +117,21 @@
 
 [data-arcane-app] [data-page-heading] {
   position: relative;
-  border-color: rgba(181, 143, 75, 0.55);
+  border-color: rgba(194, 151, 75, 0.68);
+  box-shadow: 0 10px 24px -24px rgba(136, 56, 161, 0.72);
+}
+
+[data-arcane-app] [data-page-heading]::after {
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  content: "";
+  background: #78339a;
+  border: 1px solid #ddbf83;
+  box-shadow: 0 0 10px rgba(145, 61, 183, 0.68);
+  transform: translateX(-50%) rotate(45deg);
 }
 
 [data-arcane-app] [data-page-heading] h1 {
@@ -118,14 +153,15 @@
   grid-column: 1 / -1;
   padding: 22px;
   color: #cbbba3;
-  background: linear-gradient(
-    145deg,
-    rgba(24, 13, 28, 0.9),
-    rgba(7, 6, 10, 0.94)
-  );
-  border: 1px solid rgba(164, 112, 87, 0.5);
+  background:
+    radial-gradient(circle at 15% 0, rgba(108, 40, 127, 0.16), transparent 42%),
+    linear-gradient(145deg, rgba(24, 13, 28, 0.94), rgba(7, 6, 10, 0.97));
+  border: 1px solid rgba(184, 141, 73, 0.62);
   border-radius: 2px;
-  box-shadow: inset 0 0 28px rgba(68, 25, 80, 0.18);
+  box-shadow:
+    inset 0 0 0 1px rgba(239, 210, 151, 0.05),
+    inset 0 0 30px rgba(76, 27, 91, 0.2),
+    0 12px 28px rgba(0, 0, 0, 0.2);
 }
 
 [data-arcane-app] [data-page-status] {
@@ -138,22 +174,46 @@
 }
 
 [data-arcane-app] [data-empty-state] a {
+  display: inline-flex;
+  padding: 9px 13px;
   color: #e1bd78;
+  background: linear-gradient(180deg, rgba(39, 19, 44, 0.94), rgba(9, 7, 12, 0.98));
+  border: 1px solid rgba(194, 151, 79, 0.68);
+  border-radius: 2px;
+  text-decoration: none;
+}
+
+[data-arcane-app] [data-empty-state] a:hover {
+  color: #f4dfb7;
+  border-color: var(--arcane-gold-bright);
+  box-shadow: 0 0 14px rgba(122, 54, 170, 0.24);
 }
 
 [data-arcane-app] [data-catalog-search] input {
   color: #f0e2c8;
-  background: rgba(8, 6, 10, 0.88);
-  border-color: rgba(193, 151, 78, 0.62);
+  background:
+    radial-gradient(circle at 92% 50%, rgba(111, 43, 131, 0.16), transparent 26%),
+    linear-gradient(180deg, rgba(14, 9, 16, 0.97), rgba(6, 5, 9, 0.99));
+  border-color: rgba(207, 165, 88, 0.76);
   border-radius: 2px;
-  box-shadow: inset 0 0 16px rgba(96, 40, 115, 0.14);
+  box-shadow:
+    inset 0 0 0 1px rgba(246, 214, 151, 0.06),
+    inset 0 0 20px rgba(96, 40, 115, 0.17),
+    0 6px 18px rgba(0, 0, 0, 0.22);
+  transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
 }
 
 [data-arcane-app] [data-catalog-search] input:focus {
   border-color: var(--arcane-gold-bright);
   box-shadow:
-    inset 0 0 18px rgba(105, 42, 127, 0.25),
-    0 0 0 3px rgba(152, 78, 186, 0.15);
+    inset 0 0 22px rgba(119, 45, 143, 0.28),
+    0 0 0 2px rgba(220, 176, 98, 0.18),
+    0 0 18px rgba(152, 78, 186, 0.3);
+}
+
+[data-arcane-app] [data-catalog-search] > div > span {
+  color: #c5a667;
+  filter: drop-shadow(0 0 5px rgba(143, 64, 175, 0.42));
 }
 
 [data-arcane-app] [data-site-search] {
@@ -161,10 +221,30 @@
 }
 
 [data-arcane-app] [data-catalog-meta] {
+  position: relative;
   padding: 16px 18px;
-  background: rgba(8, 6, 10, 0.72);
-  border: 1px solid rgba(132, 98, 51, 0.48);
-  box-shadow: inset 0 0 25px rgba(76, 28, 91, 0.12);
+  background:
+    radial-gradient(circle at 50% 0, rgba(115, 43, 137, 0.18), transparent 34%),
+    linear-gradient(180deg, rgba(14, 9, 16, 0.94), rgba(6, 5, 9, 0.96));
+  border: 1px solid rgba(176, 132, 64, 0.66);
+  box-shadow:
+    inset 0 0 0 1px rgba(239, 210, 151, 0.05),
+    inset 0 0 32px rgba(86, 31, 103, 0.14),
+    0 10px 28px rgba(0, 0, 0, 0.2);
+}
+
+[data-arcane-app] [data-catalog-meta]::before {
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  content: "";
+  pointer-events: none;
+  background: linear-gradient(135deg, #c989ec, #672985);
+  border: 1px solid var(--arcane-gold-bright);
+  box-shadow: 0 0 12px rgba(150, 66, 190, 0.72);
+  transform: translateX(-50%) rotate(45deg);
 }
 
 [data-arcane-app] [data-catalog-count] {
@@ -187,26 +267,36 @@
 }
 
 [data-arcane-app] [data-category-list] button {
-  color: #bfae96;
-  background: rgba(15, 11, 17, 0.94);
-  border-color: rgba(137, 102, 54, 0.55);
+  color: #c8b79d;
+  background: linear-gradient(180deg, rgba(22, 15, 23, 0.98), rgba(8, 6, 10, 0.99));
+  border-color: rgba(168, 127, 65, 0.68);
   border-radius: 2px;
   transition:
     color 160ms ease,
     border-color 160ms ease,
-    background 160ms ease;
+    background 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
 }
 
 [data-arcane-app] [data-category-list] button:hover {
   color: #f3dfb9;
-  border-color: var(--arcane-gold);
+  border-color: var(--arcane-gold-bright);
+  box-shadow:
+    inset 0 0 12px rgba(118, 45, 139, 0.2),
+    0 0 10px rgba(122, 54, 170, 0.14);
+  transform: translateY(-1px);
 }
 
-[data-arcane-app] [data-category-list] button[class*="bg-[#164e5a]"] {
+[data-arcane-app] [data-category-list] button[data-active="true"] {
   color: #f7e5bd;
-  background: linear-gradient(180deg, #582263, #28102e);
-  border-color: var(--arcane-gold);
-  box-shadow: inset 0 0 12px rgba(185, 79, 230, 0.18);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(187, 85, 218, 0.24), transparent 58%),
+    linear-gradient(180deg, #64286f, #28102e);
+  border-color: var(--arcane-gold-bright);
+  box-shadow:
+    inset 0 0 14px rgba(204, 99, 238, 0.22),
+    0 0 12px rgba(122, 54, 170, 0.24);
 }
 
 [data-arcane-app] [data-catalog-sort] {
@@ -222,24 +312,24 @@
   padding-inline: 14px 34px;
   color: #ead9bc;
   color-scheme: dark;
-  background: linear-gradient(
-    180deg,
-    rgba(39, 19, 44, 0.96),
-    rgba(10, 7, 13, 0.98)
-  );
-  border-color: rgba(210, 169, 93, 0.72);
+  background: linear-gradient(180deg, rgba(43, 20, 48, 0.98), rgba(8, 6, 11, 0.99));
+  border-color: rgba(218, 176, 96, 0.82);
   border-radius: 2px;
   box-shadow:
-    inset 0 0 16px rgba(119, 48, 139, 0.2),
-    0 0 0 1px rgba(44, 29, 17, 0.8);
+    inset 0 0 0 1px rgba(246, 214, 151, 0.06),
+    inset 0 0 18px rgba(119, 48, 139, 0.24),
+    0 0 0 1px rgba(44, 29, 17, 0.84);
   font-family: Georgia, "Times New Roman", serif;
   font-size: 0.95rem;
 }
 
 [data-arcane-app] [data-catalog-sort] select:focus {
   border-color: var(--arcane-gold-bright);
-  outline: 2px solid rgba(163, 88, 196, 0.3);
+  outline: 2px solid rgba(163, 88, 196, 0.36);
   outline-offset: 2px;
+  box-shadow:
+    inset 0 0 20px rgba(133, 52, 156, 0.3),
+    0 0 14px rgba(122, 54, 170, 0.24);
 }
 
 [data-arcane-app] [data-catalog-sort] option {
@@ -566,7 +656,8 @@
 }
 
 [data-arcane-app] [data-cart-list] {
-  border-top: 1px solid rgba(154, 116, 61, 0.5);
+  border-top: 1px solid rgba(184, 141, 70, 0.58);
+  box-shadow: inset 0 1px 0 rgba(239, 210, 151, 0.04);
 }
 
 [data-arcane-app] [data-cart-row] {
@@ -574,10 +665,11 @@
   color: #dfd1bb;
   background: linear-gradient(
     90deg,
-    rgba(20, 12, 22, 0.82),
-    rgba(7, 6, 9, 0.7)
+    rgba(24, 13, 28, 0.88),
+    rgba(7, 6, 9, 0.78)
   );
-  border-color: rgba(154, 116, 61, 0.5);
+  border-color: rgba(174, 132, 67, 0.54);
+  box-shadow: inset 0 0 24px rgba(75, 27, 89, 0.12);
 }
 
 [data-arcane-app] [data-cart-row] h2 {
@@ -592,28 +684,41 @@
 
 [data-arcane-app] [data-cart-quantity] {
   color: #ead8b5;
-  background: rgba(8, 6, 10, 0.82);
-  border-color: rgba(198, 158, 87, 0.68);
+  background: linear-gradient(180deg, rgba(27, 16, 30, 0.94), rgba(7, 6, 9, 0.98));
+  border-color: rgba(210, 168, 91, 0.74);
   border-radius: 2px;
+  box-shadow:
+    inset 0 0 0 1px rgba(239, 210, 151, 0.05),
+    inset 0 0 14px rgba(104, 40, 122, 0.16);
+}
+
+[data-arcane-app] [data-cart-quantity] > * + * {
+  border-left: 1px solid rgba(178, 134, 68, 0.34);
 }
 
 [data-arcane-app] [data-cart-quantity] button:hover {
-  background: rgba(120, 55, 141, 0.26);
+  color: #f5e3bd;
+  background: rgba(120, 55, 141, 0.32);
 }
 
 [data-arcane-app] [data-cart-remove],
 [data-arcane-app] [data-cart-clear] {
   color: #d7c3a0;
-  background: rgba(8, 6, 10, 0.72);
-  border-color: rgba(192, 151, 79, 0.58);
+  background: linear-gradient(180deg, rgba(31, 18, 34, 0.94), rgba(7, 6, 9, 0.98));
+  border-color: rgba(202, 160, 86, 0.68);
   border-radius: 2px;
+  box-shadow: inset 0 0 14px rgba(91, 34, 108, 0.12);
+  transition: color 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
 }
 
 [data-arcane-app] [data-cart-remove]:hover,
 [data-arcane-app] [data-cart-clear]:hover {
   color: #f4dfb7;
   background: rgba(64, 26, 74, 0.7);
-  border-color: var(--arcane-gold);
+  border-color: var(--arcane-gold-bright);
+  box-shadow:
+    inset 0 0 16px rgba(121, 45, 143, 0.2),
+    0 0 12px rgba(111, 45, 153, 0.2);
 }
 
 [data-arcane-app] [data-cart-summary] {
@@ -626,6 +731,7 @@
   border-color: rgba(185, 143, 72, 0.68);
   border-radius: 2px;
   box-shadow:
+    inset 0 0 0 1px rgba(239, 210, 151, 0.06),
     inset 0 0 34px rgba(91, 34, 108, 0.2),
     0 18px 44px rgba(0, 0, 0, 0.42);
 }
