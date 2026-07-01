@@ -16,7 +16,8 @@ export function SiteHeader({ searchSlot }: { searchSlot?: React.ReactNode }) {
 
   return (
     <header data-site-header>
-      <div className="site-header-inner flex items-center justify-between gap-8 border-b border-[var(--border)] py-6 max-[760px]:gap-4 max-[640px]:flex-col max-[640px]:items-stretch">
+      <div className="site-header-inner flex items-center justify-between gap-8 border-b border-[var(--border)] py-6 max-[1100px]:flex-col max-[1100px]:items-stretch max-[1100px]:gap-4">
+        {" "}
         <Link
           data-site-brand
           href="/"
@@ -30,7 +31,6 @@ export function SiteHeader({ searchSlot }: { searchSlot?: React.ReactNode }) {
             Невозможные товары для сомнительной реальности
           </span>
         </Link>
-
         <div className="flex min-w-0 flex-1 items-center justify-end gap-3 max-[1200px]:flex-wrap max-[640px]:grid max-[640px]:grid-cols-2">
           {searchSlot && (
             <div
@@ -46,43 +46,45 @@ export function SiteHeader({ searchSlot }: { searchSlot?: React.ReactNode }) {
             aria-label="Основная навигация"
             className="flex items-center gap-3 max-[640px]:col-span-2 max-[640px]:grid max-[640px]:grid-cols-2"
           >
-          <Link
-            href="/favorites"
-            aria-current={pathname === "/favorites" ? "page" : undefined}
-            className={`${navigationLinkClass} ${
-              pathname === "/favorites"
-                ? "border-cyan-300 bg-white/[0.06]"
-                : "border-[var(--border)]"
-            }`}
-          >
-            <Heart size={18} strokeWidth={2} aria-hidden="true" />
-            <span data-site-navigation-label>Избранное</span>
-            <span
-              data-site-navigation-count
-              className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-cyan-300 px-1 text-xs font-bold text-black"
+            <Link
+              href="/favorites"
+              aria-current={pathname === "/favorites" ? "page" : undefined}
+              className={`${navigationLinkClass} ${
+                pathname === "/favorites"
+                  ? "border-cyan-300 bg-white/[0.06]"
+                  : "border-[var(--border)]"
+              }`}
             >
-              <span>{favoriteIds.length > 99 ? "99+" : favoriteIds.length}</span>
-            </span>
-          </Link>
+              <Heart size={18} strokeWidth={2} aria-hidden="true" />
+              <span data-site-navigation-label>Избранное</span>
+              <span
+                data-site-navigation-count
+                className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-cyan-300 px-1 text-xs font-bold text-black"
+              >
+                <span>
+                  {favoriteIds.length > 99 ? "99+" : favoriteIds.length}
+                </span>
+              </span>
+            </Link>
 
-          <Link
-            href="/cart"
-            aria-current={pathname === "/cart" ? "page" : undefined}
-            className={`${navigationLinkClass} ${
-              pathname === "/cart"
-                ? "border-cyan-300 bg-white/[0.06]"
-                : "border-[var(--border)]"
-            }`}
-          >
-            <ShoppingCart size={18} strokeWidth={2} aria-hidden="true" />
-            <span data-site-navigation-label>Корзина</span>
-            <span
-              data-site-navigation-count
-              className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-lime-300 px-1 text-xs font-bold text-black"
+            <Link
+              href="/cart"
+              aria-current={pathname === "/cart" ? "page" : undefined}
+              className={`${navigationLinkClass} ${
+                pathname === "/cart"
+                  ? "border-cyan-300 bg-white/[0.06]"
+                  : "border-[var(--border)]"
+              }`}
             >
-              <span>{totalCount > 99 ? "99+" : totalCount}</span>
-            </span>
-          </Link>
+              <ShoppingCart size={18} strokeWidth={2} aria-hidden="true" />
+              <span data-site-navigation-label>Корзина</span>
+              <span
+                data-site-navigation-count
+                className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-lime-300 px-1 text-xs font-bold text-black"
+              >
+                <span>{totalCount > 99 ? "99+" : totalCount}</span>
+              </span>
+            </Link>
           </nav>
         </div>
       </div>
