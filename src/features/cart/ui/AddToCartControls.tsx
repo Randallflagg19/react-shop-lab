@@ -18,9 +18,13 @@ export function AddToCartControls({ product }: { product: Product }) {
   }
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex w-fit  self-center overflow-hidden rounded-lg border border-[var(--border)] max-[1000px]:w-full">
+    <div className="flex flex-col gap-3" data-add-to-cart-controls>
+      <div
+        data-quantity-control
+        className="flex w-fit  self-center overflow-hidden rounded-lg border border-[var(--border)] max-[1000px]:w-full"
+      >
         <button
+          aria-label="Уменьшить количество"
           disabled={quantity === 1}
           onClick={decreaseQuantity}
           className="transition-colors hover:bg-white/[0.06] disabled:cursor-not-allowed
@@ -35,6 +39,7 @@ export function AddToCartControls({ product }: { product: Product }) {
           {quantity}
         </span>
         <button
+          aria-label="Увеличить количество"
           onClick={increaseQuantity}
           className="transition-colors hover:bg-white/[0.06]
           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/70 min-w-11 cursor-pointer border-0 bg-transparent p-3 text-center text-[var(--foreground)] max-[1000px]:min-w-0 max-[1000px]:flex-1 max-[760px]:p-[13px]"
@@ -44,6 +49,7 @@ export function AddToCartControls({ product }: { product: Product }) {
         </button>
       </div>
       <button
+        data-add-to-cart-button
         type="button"
         className="font-medium transition-colors hover:bg-[#348a58]
 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#65c98d] block w-full cursor-pointer rounded-md border-0 bg-[#3fa267] px-[18px] py-3.5 text-center text-white max-[760px]:min-h-12 max-[760px]:px-4"

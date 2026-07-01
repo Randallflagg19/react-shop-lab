@@ -1,0 +1,326 @@
+.arcanePage {
+  --arcane-gold: #c9a76a;
+  --arcane-gold-bright: #f1dfb1;
+  --arcane-gold-dim: #705733;
+  --arcane-purple: #7a36aa;
+  --arcane-purple-deep: #241126;
+  min-height: 100vh;
+  color: #eadfc9;
+  background:
+    linear-gradient(rgba(5, 4, 8, 0.18), rgba(5, 4, 8, 0.55)),
+    url("/images/product-detail-arcane-bg.jpg") center top / cover fixed,
+    #060509;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.main {
+  padding-top: 36px;
+}
+
+.arcanePage :global([data-site-header]) {
+  background: linear-gradient(180deg, rgba(5, 4, 8, 0.92), rgba(5, 4, 8, 0.55));
+}
+
+.arcanePage :global(.site-header-inner) {
+  position: relative;
+  border-color: rgba(181, 143, 75, 0.62);
+}
+
+.arcanePage :global(.site-header-inner)::after {
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  content: "";
+  background: #8a48bb;
+  border: 1px solid var(--arcane-gold-bright);
+  box-shadow: 0 0 16px rgba(155, 74, 216, 0.9);
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.arcanePage :global([data-site-brand]) {
+  color: var(--arcane-gold-bright);
+  text-shadow:
+    0 1px 0 #412f1b,
+    0 0 15px rgba(186, 116, 229, 0.25);
+}
+
+.arcanePage :global([data-site-brand] > span:first-child) {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.2rem, 4vw, 4rem);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.arcanePage :global([data-site-brand] > span:last-child) {
+  color: #c2ad88;
+  font-family: Georgia, "Times New Roman", serif;
+  letter-spacing: 0.27em;
+}
+
+.arcanePage :global([data-site-navigation] a) {
+  color: #e8d7b2;
+  background: linear-gradient(180deg, rgba(24, 17, 24, 0.96), rgba(7, 6, 10, 0.98));
+  border-color: rgba(199, 160, 91, 0.66);
+  border-radius: 2px;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 226, 164, 0.08),
+    0 0 0 1px rgba(57, 38, 20, 0.75);
+}
+
+.arcanePage :global([data-site-navigation] a:hover) {
+  color: #fff1cb;
+  border-color: var(--arcane-gold-bright);
+  background: linear-gradient(180deg, rgba(51, 27, 52, 0.98), rgba(10, 7, 14, 0.98));
+}
+
+.arcanePage :global([data-site-navigation] a span:last-child) {
+  color: #160d12;
+  background: linear-gradient(135deg, #d59bff, #8a45c2);
+}
+
+.arcanePage :global([data-product-details]) {
+  width: 100%;
+  max-width: 1460px;
+  margin: 0 auto;
+  align-items: stretch;
+  gap: clamp(2rem, 5vw, 5.5rem);
+}
+
+.arcanePage :global([data-product-image-frame]) {
+  max-width: 700px;
+  padding: 28px;
+  overflow: visible;
+  border: 1px solid var(--arcane-gold-bright);
+  border-radius: 2px;
+  background:
+    linear-gradient(135deg, rgba(245, 223, 181, 0.85), rgba(113, 78, 38, 0.9)) padding-box,
+    #130f12;
+  box-shadow:
+    0 0 0 5px #171117,
+    0 0 0 7px var(--arcane-gold-dim),
+    0 0 0 12px #09070a,
+    0 0 0 13px rgba(224, 186, 111, 0.48),
+    0 24px 70px rgba(0, 0, 0, 0.75),
+    0 0 42px rgba(99, 43, 128, 0.25);
+}
+
+.arcanePage :global([data-product-image-frame])::before,
+.arcanePage :global([data-product-image-frame])::after {
+  position: absolute;
+  z-index: 2;
+  width: 26px;
+  height: 26px;
+  content: "";
+  background: linear-gradient(135deg, #ad6ddd, #421353);
+  border: 2px solid var(--arcane-gold-bright);
+  box-shadow: 0 0 18px rgba(155, 72, 218, 0.8);
+  transform: rotate(45deg);
+}
+
+.arcanePage :global([data-product-image-frame])::before {
+  top: -13px;
+  left: calc(50% - 13px);
+}
+
+.arcanePage :global([data-product-image-frame])::after {
+  bottom: -13px;
+  left: calc(50% - 13px);
+}
+
+.arcanePage :global([data-product-image-frame] img) {
+  padding: 34px;
+  border-radius: 0;
+  background: #f4f0e7;
+  box-shadow: inset 0 0 42px rgba(93, 68, 35, 0.2);
+}
+
+.arcanePage :global([data-product-info]) {
+  max-width: 610px;
+  min-height: 0;
+  gap: 16px;
+}
+
+.arcanePage :global([data-product-category]) {
+  color: #ead7f6;
+  background: linear-gradient(180deg, rgba(77, 31, 91, 0.95), rgba(29, 13, 37, 0.96));
+  border: 1px solid rgba(209, 171, 102, 0.76);
+  border-radius: 2px;
+  box-shadow: inset 0 0 12px rgba(173, 77, 224, 0.15);
+  font-size: 0.82rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.arcanePage :global([data-product-title]) {
+  position: relative;
+  padding-bottom: 24px;
+  color: #f2e7d2;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.4rem, 3.6vw, 3.8rem);
+  font-weight: 400;
+  line-height: 1.03;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.9);
+}
+
+.arcanePage :global([data-product-title])::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  content: "";
+  background: linear-gradient(90deg, var(--arcane-gold-dim), var(--arcane-gold-bright), var(--arcane-gold-dim));
+  box-shadow: 0 0 8px rgba(198, 153, 84, 0.35);
+}
+
+.arcanePage :global([data-product-price]) {
+  color: var(--arcane-gold);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2rem, 3vw, 3.25rem);
+  font-weight: 400;
+  text-shadow: 0 0 12px rgba(201, 162, 95, 0.25);
+}
+
+.arcanePage :global([data-product-description]) {
+  max-height: 150px;
+  padding: 16px 20px;
+  color: #d2c6b7;
+  background: linear-gradient(145deg, rgba(24, 13, 28, 0.88), rgba(7, 6, 10, 0.94));
+  border-color: rgba(161, 100, 177, 0.58);
+  border-radius: 2px;
+  box-shadow:
+    inset 0 0 28px rgba(68, 25, 80, 0.18),
+    0 12px 32px rgba(0, 0, 0, 0.28);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.arcanePage :global([data-product-actions]) {
+  margin-top: auto;
+  gap: 14px;
+}
+
+.arcanePage :global([data-quantity-control]) {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: 190px;
+  min-width: 0;
+  max-width: 100%;
+  align-self: center;
+  border-color: rgba(198, 158, 87, 0.68);
+  border-radius: 2px;
+  background: rgba(8, 6, 10, 0.82);
+  box-shadow: inset 0 0 14px rgba(107, 49, 119, 0.12);
+}
+
+.arcanePage :global([data-quantity-control] button),
+.arcanePage :global([data-quantity-control] span) {
+  min-width: 0;
+  padding: 13px 10px;
+  color: #ead8b5;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.arcanePage :global([data-quantity-control] button:hover) {
+  color: white;
+  background: rgba(120, 55, 141, 0.26);
+}
+
+.arcanePage :global([data-add-to-cart-button]) {
+  min-height: 66px;
+  color: #f7e8bf;
+  background:
+    linear-gradient(180deg, rgba(100, 35, 126, 0.96), rgba(35, 13, 49, 0.98));
+  border: 1px solid var(--arcane-gold-bright);
+  border-radius: 2px;
+  box-shadow:
+    inset 0 0 0 2px rgba(208, 166, 86, 0.18),
+    inset 0 0 28px rgba(188, 77, 234, 0.2),
+    0 0 18px rgba(111, 45, 153, 0.48);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.35rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.arcanePage :global([data-add-to-cart-button]:hover) {
+  background: linear-gradient(180deg, rgba(128, 51, 157, 0.98), rgba(46, 16, 61, 0.98));
+  box-shadow:
+    inset 0 0 0 2px rgba(235, 193, 110, 0.22),
+    inset 0 0 32px rgba(207, 92, 255, 0.25),
+    0 0 28px rgba(135, 52, 184, 0.64);
+}
+
+.arcanePage :global([data-favorite-button="full"]) {
+  min-height: 50px;
+  color: #d9c5a1;
+  background: rgba(8, 6, 10, 0.74);
+  border-color: rgba(192, 151, 79, 0.58);
+  border-radius: 2px;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.arcanePage :global([data-favorite-button="full"]:hover) {
+  color: #f4dfb7;
+  background: rgba(64, 26, 74, 0.7);
+  border-color: var(--arcane-gold);
+}
+
+@media (max-width: 1000px) {
+  .arcanePage :global([data-product-details]) {
+    align-items: start;
+  }
+
+  .arcanePage :global([data-product-actions]) {
+    margin-top: 0;
+  }
+
+  .arcanePage :global([data-product-title]) {
+    font-size: clamp(2rem, 5vw, 3.4rem);
+  }
+}
+
+@media (max-width: 760px) {
+  .main {
+    padding-top: 34px;
+  }
+
+  .arcanePage {
+    background-attachment: scroll;
+  }
+
+  .arcanePage :global([data-product-image-frame]) {
+    width: calc(100% - 20px);
+    margin: 8px auto 20px;
+    padding: 14px;
+    box-shadow:
+      0 0 0 4px #171117,
+      0 0 0 5px var(--arcane-gold-dim),
+      0 15px 40px rgba(0, 0, 0, 0.72);
+  }
+
+  .arcanePage :global([data-product-image-frame] img) {
+    padding: 16px;
+  }
+
+  .arcanePage :global([data-product-info]) {
+    gap: 17px;
+  }
+
+  .arcanePage :global([data-product-title]) {
+    padding-bottom: 18px;
+    font-size: clamp(2.25rem, 11vw, 3.35rem);
+  }
+
+  .arcanePage :global([data-product-description]) {
+    padding: 17px;
+    font-size: 0.95rem;
+  }
+
+  .arcanePage :global([data-add-to-cart-button]) {
+    min-height: 58px;
+    font-size: 1.05rem;
+  }
+}

@@ -15,9 +15,10 @@ export function SiteHeader({ searchSlot }: { searchSlot?: React.ReactNode }) {
     "flex h-[46px] shrink-0 items-center gap-2 rounded-md border bg-[var(--card)] px-4 text-sm font-medium text-[var(--foreground)] no-underline transition-colors hover:border-cyan-300 hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/70 max-[640px]:px-3";
 
   return (
-    <header>
+    <header data-site-header>
       <div className="site-header-inner flex items-center justify-between gap-8 border-b border-[var(--border)] py-6 max-[760px]:gap-4 max-[640px]:flex-col max-[640px]:items-stretch">
         <Link
+          data-site-brand
           href="/"
           aria-current={pathname === "/" ? "page" : undefined}
           className="flex flex-col gap-1.5 text-inherit no-underline focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/70"
@@ -38,6 +39,7 @@ export function SiteHeader({ searchSlot }: { searchSlot?: React.ReactNode }) {
           )}
 
           <nav
+            data-site-navigation
             aria-label="Основная навигация"
             className="flex items-center gap-3 max-[640px]:col-span-2 max-[640px]:grid max-[640px]:grid-cols-2"
           >
