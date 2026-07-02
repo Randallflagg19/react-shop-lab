@@ -19,7 +19,7 @@ export function ProductDetails({
     >
       <div
         data-product-image-frame
-        className="relative aspect-square w-full max-w-[620px] flex-[0_1_620px] overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--card)] p-5 max-[1000px]:max-w-none max-[1000px]:p-3 max-[760px]:flex-none max-[760px]:p-0"
+        className="relative aspect-square w-full max-w-[620px] flex-[0_1_620px] overflow-hidden max-[1000px]:max-w-none max-[760px]:flex-none"
       >
         <Image
           loading="eager"
@@ -27,7 +27,7 @@ export function ProductDetails({
           alt={product.title}
           fill
           sizes="(max-width: 900px) 100vw, 50vw"
-          className="bg-white object-contain p-5 max-[1000px]:p-3 max-[760px]:p-0"
+          className="object-contain"
           unoptimized={process.env.NODE_ENV === "development"}
         />
       </div>
