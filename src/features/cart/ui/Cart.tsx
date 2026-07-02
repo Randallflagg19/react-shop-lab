@@ -43,7 +43,7 @@ export function Cart() {
       </header>
       <div
         data-cart-layout
-        className="grid grid-cols-[minmax(0,1fr)_320px] items-start gap-8 max-[900px]:grid-cols-1"
+        className="grid grid-cols-[minmax(0,1fr)_380px] items-start gap-8 max-[1100px]:grid-cols-[minmax(0,1fr)_340px] max-[900px]:grid-cols-1"
       >
         {cart.cartItems.length === 0 && (
           <p
@@ -54,7 +54,7 @@ export function Cart() {
           </p>
         )}
         {cart.cartItems.length > 0 && (
-          <div data-cart-list className="flex min-w-0 flex-col">
+          <div data-cart-list className="flex min-w-0 flex-col gap-4">
             {cart.cartItems.map((cartItem) => (
               <CartRow
                 key={cartItem.product.id}
