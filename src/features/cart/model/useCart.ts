@@ -2,7 +2,7 @@ import { useEffect, useReducer, useState } from "react";
 import type { CartItem } from "./types";
 import type { Product } from "@/entities/product/model/types";
 
-const CART_STORAGE_KEY = "react-shop-lab:cart";
+const CART_STORAGE_KEY = "ai-slop-shop:cart";
 const EMPTY_CART_ITEMS: CartItem[] = [];
 
 type CartAction =

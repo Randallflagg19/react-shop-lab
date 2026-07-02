@@ -1,4 +1,4 @@
-const STORAGE_KEY = "react-shop-lab:favorite-ids";
+const STORAGE_KEY = "ai-slop-shop:favorite-ids";
 const EMPTY_FAVORITE_IDS: number[] = [];
 let favoriteIds: number[] = readFavoriteIds();
 let listeners: (() => void)[] = [];

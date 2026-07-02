@@ -37,6 +37,7 @@ A compact storefront for impossible AI-generated goods, built with React, TypeSc
 - `/` - product catalog
 - `/products/[slug]` - product details
 - `/cart` - persistent shopping cart
+- `/favorites` - persistent favorites
 
 ## Backend
 
@@ -69,7 +70,6 @@ Product records store both an `image_key` and the public `image_url`. Image file
 | `useTransition` | Non-urgent category changes and pending UI |
 | `useImperativeHandle` | Restricted search input API such as `focus()` and `clear()` |
 | `useSyncExternalStore` | Favorites snapshots, subscriptions, SSR snapshot, and cross-tab updates |
-| `useOptimistic` | Learning experiment for optimistic favorite feedback; scheduled for removal because persistence is currently synchronous |
 
 Additional experiments:
 
@@ -85,6 +85,8 @@ The cart and favorites intentionally use different state models:
 - Favorites use a small external store connected through `useSyncExternalStore`. The store exposes snapshots, subscriptions, actions, and a stable server snapshot.
 
 Both features listen for the browser `storage` event so changes made in one tab appear in another tab on the same origin.
+
+Persisted data uses the branded keys `ai-slop-shop:cart` and `ai-slop-shop:favorite-ids`.
 
 ## Architecture
 
@@ -152,7 +154,7 @@ The application is deployed with Vercel. Add `NEXT_PUBLIC_INSFORGE_URL` and `NEX
 ## Limitations And Next Steps
 
 - Cart and favorites are browser-local and are not associated with an authenticated user.
-- The current optimistic favorite delay is an educational experiment and should be removed from the synchronous `localStorage` flow.
-- Image fallback, loading presentation, and delivery optimization still need refinement.
+- The `useOptimistic` favorites experiment was removed: updates only write to synchronous `localStorage`, so there is no remote request to hide and no failed request to roll back.
+- Image fallback and loading presentation still need refinement.
 - Anon permissions should be verified to allow catalog reads while rejecting public writes.
 - Automated component and end-to-end tests are not included yet.
