@@ -12,7 +12,7 @@ export function SiteHeader({ searchSlot }: { searchSlot?: React.ReactNode }) {
   const { favoriteIds } = useFavorites();
 
   const navigationLinkClass =
-    "flex h-[46px] shrink-0 items-center gap-2 rounded-md border bg-[var(--card)] px-4 text-sm font-medium text-[var(--foreground)] no-underline transition-colors hover:border-cyan-300 hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/70 max-[640px]:px-3 max-[420px]:gap-1.5 max-[420px]:px-2 max-[420px]:text-[13px]";
+    "flex h-[46px] w-[170px] shrink-0 items-center gap-2 rounded-md border bg-[var(--card)] px-4 text-sm font-medium text-[var(--foreground)] no-underline transition-colors hover:border-cyan-300 hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/70 max-[640px]:w-full max-[640px]:px-3 max-[420px]:gap-1.5 max-[420px]:px-2 max-[420px]:text-[13px]";
 
   return (
     <header data-site-header>

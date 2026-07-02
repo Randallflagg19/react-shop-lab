@@ -75,9 +75,9 @@ select
   seed.description,
   seed.price,
   categories.id,
-  seed.slug || '.jpg',
+  seed.slug || '-v2.jpg',
   'https://kmj65yri.eu-central.insforge.app/api/storage/buckets/product-photos/objects/'
-    || seed.slug || '.jpg'
+    || seed.slug || '-v2.jpg'
 from seed
 join public.categories
   on categories.slug = seed.category_slug
