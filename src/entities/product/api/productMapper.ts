@@ -18,7 +18,7 @@ export function mapProductRowToProduct(row: ProductRow): Product {
       slug: row.category.slug,
       image: "",
     },
-    images: [row.image_url],
+    images: [`/images/products/${row.image_key}`],
     creationAt: row.created_at,
     updatedAt: row.created_at,
   };

@@ -1,11 +1,23 @@
 import { Product } from "./types";
 
+const LOCAL_PRODUCT_IMAGE_PREFIX = "/images/products/";
+const INSFORGE_PRODUCT_IMAGE_PREFIX =
+  "https://kmj65yri.eu-central.insforge.app/api/storage/buckets/product-photos/objects/";
+
 export function getProductImageSrc(product: Product) {
-  const imageUrl = product.images[0];
+  const imageSrc = product.images[0];
 
-  const isAllowedImage = imageUrl?.startsWith(
-    "https://kmj65yri.eu-central.insforge.app/api/storage/buckets/product-photos/objects/",
-  );
+  if (imageSrc?.startsWith(LOCAL_PRODUCT_IMAGE_PREFIX)) {
+    return imageSrc;
+  }
 
-  return isAllowedImage ? imageUrl : "/placeholder-product.svg";
+  if (imageSrc?.startsWith(INSFORGE_PRODUCT_IMAGE_PREFIX)) {
+    const imageKey = imageSrc.slice(INSFORGE_PRODUCT_IMAGE_PREFIX.length);
+
+    if (/^[a-z0-9-]+-v\d+\.jpg$/.test(imageKey)) {
+      return `${LOCAL_PRODUCT_IMAGE_PREFIX}${imageKey}`;
+    }
+  }
+
+  return "/placeholder-product.jpeg";
 }
