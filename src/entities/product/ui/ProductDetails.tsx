@@ -1,7 +1,6 @@
-import Image from "next/image";
-import { getProductImageSrc } from "../model/getProductImageSrc";
 import { Product } from "../model/types";
 import { formatPrice } from "@/shared/lib/formatPrice";
+import { ProductImage } from "./ProductImage";
 
 export function ProductDetails({
   product,
@@ -10,8 +9,6 @@ export function ProductDetails({
   product: Product;
   actions?: React.ReactNode;
 }) {
-  const imageSrc = getProductImageSrc(product);
-
   return (
     <section
       data-product-details
@@ -21,14 +18,12 @@ export function ProductDetails({
         data-product-image-frame
         className="relative aspect-square w-full max-w-[620px] flex-[0_1_620px] overflow-hidden max-[1000px]:max-w-none max-[760px]:flex-none"
       >
-        <Image
+        <ProductImage
+          product={product}
           loading="eager"
-          src={imageSrc}
           alt={product.title}
-          fill
           sizes="(max-width: 900px) 100vw, 50vw"
           className="object-contain"
-          unoptimized={process.env.NODE_ENV === "development"}
         />
       </div>
 

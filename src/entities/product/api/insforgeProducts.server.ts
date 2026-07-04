@@ -34,3 +34,20 @@ export async function fetchProductsFromInsforgeServer(): Promise<Product[]> {
 
   return data.map(mapProductRowToProduct);
 }
+
+export async function fetchProductBySlugFromInsforgeServer(
+  slug: string,
+): Promise<Product | null> {
+  const { data, error } = await insforgeServer.database
+    .from("products")
+    .select(PRODUCT_SELECT)
+    .eq("slug", slug)
+    .maybeSingle()
+    .overrideTypes<ProductRow | null, { merge: false }>();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data ? mapProductRowToProduct(data) : null;
+}

@@ -1,5 +1,6 @@
 import { Product } from "./types";
 
+export const PRODUCT_IMAGE_FALLBACK_SRC = "/placeholder-product.jpeg";
 const LOCAL_PRODUCT_IMAGE_PREFIX = "/images/products/";
 const INSFORGE_PRODUCT_IMAGE_PREFIX =
   "https://kmj65yri.eu-central.insforge.app/api/storage/buckets/product-photos/objects/";
@@ -19,5 +20,5 @@ export function getProductImageSrc(product: Product) {
     }
   }
 
-  return "/placeholder-product.jpeg";
+  return PRODUCT_IMAGE_FALLBACK_SRC;
 }

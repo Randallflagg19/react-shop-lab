@@ -1,1 +1,1 @@
-export { fetchInsforgeProductBySlug as fetchProductBySlug } from "./insforgeProducts";
+export { fetchProductBySlugFromInsforgeServer as fetchProductBySlug } from "./insforgeProducts.server";

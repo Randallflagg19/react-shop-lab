@@ -1,9 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Trash2 } from "lucide-react";
-import { getProductImageSrc } from "@/entities/product/model/getProductImageSrc";
 import { formatPrice } from "@/shared/lib/formatPrice";
 import type { CartItem } from "../model/types";
+import { ProductImage } from "@/entities/product/ui/ProductImage";
 
 type CartRowProps = {
   item: CartItem;
@@ -31,13 +30,11 @@ export function CartRow({
         aria-label={`Открыть товар «${product.title}»`}
         className="relative aspect-square overflow-hidden rounded-lg border border-[var(--border)] bg-black/30"
       >
-        <Image
-          src={getProductImageSrc(product)}
+        <ProductImage
+          product={product}
           alt=""
-          fill
           sizes="(max-width: 640px) 88px, (max-width: 1200px) 112px, 128px"
           className="object-cover transition-transform duration-300 hover:scale-[1.03]"
-          unoptimized={process.env.NODE_ENV === "development"}
         />
       </Link>
 
@@ -53,7 +50,10 @@ export function CartRow({
         <p className="m-0 mt-1.5 text-xs uppercase tracking-[0.12em]">
           {product.category.name}
         </p>
-        <p data-cart-unit-price className="m-0 mt-6 text-lg max-[640px]:mt-3 max-[640px]:text-base">
+        <p
+          data-cart-unit-price
+          className="m-0 mt-6 text-lg max-[640px]:mt-3 max-[640px]:text-base"
+        >
           {formatPrice(product.price)}
         </p>
       </div>
@@ -86,7 +86,10 @@ export function CartRow({
       </div>
 
       <div className="flex min-w-[132px] flex-col items-end gap-4 max-[1200px]:col-start-3 max-[1200px]:row-span-2 max-[1200px]:row-start-1 max-[640px]:col-start-2 max-[640px]:row-start-2 max-[640px]:min-w-0 max-[640px]:gap-2">
-        <p data-cart-line-total className="m-0 text-xl font-bold max-[640px]:text-base">
+        <p
+          data-cart-line-total
+          className="m-0 text-xl font-bold max-[640px]:text-base"
+        >
           {formatPrice(product.price * quantity)}
         </p>
 

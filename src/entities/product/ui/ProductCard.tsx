@@ -1,7 +1,6 @@
 "use client";
 
-import Image from "next/image";
-import { getProductImageSrc } from "../model/getProductImageSrc";
+import { ProductImage } from "./ProductImage";
 import { Product } from "../model/types";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -16,7 +15,6 @@ export function ProductCard({
   topRightSlot?: React.ReactNode;
   eager?: boolean;
 }) {
-  const imageSrc = getProductImageSrc(product);
   const [isImageLoading, setIsImageLoading] = useState(true);
 
   return (
@@ -37,17 +35,15 @@ export function ProductCard({
             data-loading={isImageLoading}
             aria-hidden="true"
           />
-          <Image
+          <ProductImage
+            product={product}
             loading={eager ? "eager" : "lazy"}
-            src={imageSrc}
             alt={product.title}
-            fill
             sizes="(max-width: 640px) 50vw, (max-width: 900px) 33vw, (max-width: 1200px) 25vw, 20vw"
             className={`rounded-md object-contain transition-[opacity,filter] duration-250 ease-out ${
               isImageLoading ? "opacity-0 blur-[2px]" : "opacity-100 blur-0"
             }`}
             onLoad={() => setIsImageLoading(false)}
-            unoptimized={process.env.NODE_ENV === "development"}
           />
         </div>
         <p
