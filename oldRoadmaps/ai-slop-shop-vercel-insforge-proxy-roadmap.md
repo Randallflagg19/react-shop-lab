@@ -1,6 +1,6 @@
 # AI Slop Shop — Vercel → InsForge Proxy Learning Roadmap
 
-Статус: **новый активный учебный roadmap**.
+Статус: **завершён**. Все 11 этапов выполнены: production работает без VPN через server-only Vercel proxy, локальные изображения и CDN-кэш; решение покрыто минимальными тестами и описано в README.
 
 Цель: убрать прямое обращение браузера к InsForge, чтобы каталог работал без VPN, и на настоящей задаче изучить серверную часть Next.js 16.
 
@@ -418,16 +418,21 @@ Vercel-CDN-Cache-Control: public, s-maxage=259200, stale-while-revalidate=86400
 
 ## Этап 11. Тесты и портфолио
 
+**Статус: выполнено.**
+
 ### Минимальные тесты
 
-- mapper строит правильный локальный путь изображения;
-- client transport обрабатывает `200`, `502` и abort;
-- Route Handler возвращает `200` при успехе и безопасную ошибку при сбое repository;
-- server-only слой не импортируется из client-модулей.
+- `productMapper.test.ts`: 2 теста маппинга и проверки обязательной категории;
+- `products.test.ts`: 4 теста успешного ответа, HTTP-ошибки, неверного формата и abort;
+- `route.test.ts`: 2 теста ответа `200` и безопасного `502` при сбое repository;
+- `ProductImage.test.tsx`: 3 теста исходного изображения и fallback-поведения;
+- production build подтверждает, что `server-only` слой не попадает в клиентский граф импортов.
+
+Итого: 4 test suites, 11 тестов. `npm run test:run`, `npm run lint` и `npm run build` проходят.
 
 ### README
 
-Добавить раздел:
+В README зафиксированы:
 
 - какая production-проблема возникла;
 - почему одного переноса изображений оказалось недостаточно;
@@ -436,7 +441,7 @@ Vercel-CDN-Cache-Control: public, s-maxage=259200, stale-while-revalidate=86400
 - как обеспечены безопасность и read-only доступ;
 - как решение проверено без VPN.
 
-Это хороший портфолио-кейс: здесь есть диагностика реальной сетевой проблемы, Next.js backend, границы модулей, безопасность, graceful errors и production verification.
+Это портфолио-кейс с диагностикой реальной сетевой проблемы, Next.js backend, границами модулей, безопасностью, graceful errors, CDN-кэшированием, тестами и production verification.
 
 ---
 

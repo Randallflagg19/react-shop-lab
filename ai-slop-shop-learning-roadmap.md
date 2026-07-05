@@ -9,7 +9,7 @@
 - оставлять проверяемый результат для портфолио;
 - не добавлять фальшивую функцию без данных, backend или понятного сценария.
 
-Этот roadmap продолжает завершённый `react-shop-lab-roadmap-utf8-bom.md` и забирает полезные незакрытые задачи из `ai-slope-shop-frontend-roadmap.md`.
+Этот roadmap продолжает завершённый `oldRoadmaps/react-shop-lab-roadmap-utf8-bom.md` и забирает полезные незакрытые задачи из `oldRoadmaps/ai-slope-shop-frontend-roadmap.md`.
 
 ## Текущая точка проекта
 

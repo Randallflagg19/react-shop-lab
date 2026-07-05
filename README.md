@@ -14,13 +14,14 @@ A compact storefront for impossible AI-generated goods, built with React, TypeSc
 - React 19
 - TypeScript
 - Tailwind CSS 4
-- InsForge Database, Storage, and TypeScript SDK
+- InsForge Database and TypeScript SDK
 - Vercel
+- Vitest and Testing Library
 
 ## Features
 
-- Product catalog loaded from InsForge Database
-- Product images served from a public InsForge Storage bucket
+- Product catalog loaded from InsForge Database through a server-only Vercel API
+- Product images served locally from `public/images/products`
 - Debounced product search
 - Category filtering and price/title sorting
 - Responsive product grid
@@ -41,20 +42,34 @@ A compact storefront for impossible AI-generated goods, built with React, TypeSc
 
 ## Backend
 
-InsForge replaces the original public fake-store API and owns the catalog data and product images.
+InsForge replaces the original public fake-store API and owns the catalog data. Product images are deployed with the application so they remain available without a direct browser connection to InsForge.
 
 ```text
 InsForge Database
   categories
   products
-
-InsForge Storage
-  product-photos
 ```
 
-The application reads the public catalog through `@insforge/sdk`. Database rows are mapped to the frontend `Product` model inside `src/entities/product/api`, so UI components do not depend directly on the backend schema.
+The Vercel server reads the public catalog through `@insforge/sdk`. Database rows are mapped to the frontend `Product` model inside `src/entities/product/api`, so UI components do not depend directly on the backend schema.
 
-Product records store both an `image_key` and the public `image_url`. Image files themselves remain in Storage rather than the database.
+Product records retain `image_key` and `image_url`, while the mapper converts known storage URLs into local paths such as `/images/products/example-v2.jpg`. A reusable product image component switches to a local placeholder if a file cannot be loaded.
+
+## Production Data Flow
+
+Direct browser requests to the InsForge domain timed out for users in Russia without a VPN. Moving only the images into `public` did not solve the catalog failure because the browser still needed InsForge Database to discover the products.
+
+The project now uses a small Backend for Frontend layer:
+
+```text
+Browser → GET /api/products on Vercel → server-only InsForge SDK → InsForge Database
+        ← JSON with local image paths ← mapped product rows ←
+```
+
+The browser talks only to the application origin. The Route Handler converts upstream failures into a safe `502` response, and successful catalog responses are cached by the Vercel CDN for three days with one day of stale-while-revalidate.
+
+This approach kept InsForge as the existing database instead of introducing a second PostgreSQL provider. The server uses only the anonymous key; database grants and RLS remain the security boundary, and public access is limited to `SELECT` on `categories` and `products`.
+
+The result was verified on the production deployment without a VPN over desktop Wi-Fi, mobile Wi-Fi, and mobile internet. Browser Network showed requests to `/api/products`, no direct requests to `insforge.app`, and a Vercel CDN cache `HIT`.
 
 ## Hooks Practised
 
@@ -95,11 +110,11 @@ The source tree follows an FSD-inspired separation of responsibilities:
 ```text
 src/
   app/                       routes, layout, and providers
-  entities/product/          product model, InsForge API, mapper, and reusable UI
+  entities/product/          product model, server repository, mapper, transport, and reusable UI
   features/cart/             cart model, context, and UI
   features/favorites/        external favorites store and favorite action
   features/products-catalog/ catalog state, derived data, and UI
-  shared/api/                configured InsForge client
+  shared/api/                server-only configured InsForge client
 ```
 
 Product entities do not import cart or favorites features. Route and feature-level components compose entity UI with feature actions through props and slots.
@@ -109,22 +124,22 @@ Product entities do not import cart or favorites features. Route and feature-lev
 Install dependencies:
 
 ```bash
-pnpm install
+npm install
 ```
 
 Create `.env.local`:
 
 ```bash
-NEXT_PUBLIC_INSFORGE_URL=https://your-project.insforge.app
-NEXT_PUBLIC_INSFORGE_ANON_KEY=your-public-anon-key
+INSFORGE_URL=https://your-project.insforge.app
+INSFORGE_ANON_KEY=your-public-anon-key
 ```
 
-The anon key is intended for browser use. Database permissions remain the actual security boundary; never expose an InsForge admin key through a `NEXT_PUBLIC_*` variable.
+These variables have no `NEXT_PUBLIC_` prefix and are available only to server code. The anon key is intentionally low-privilege; database permissions remain the actual security boundary. Never use an InsForge admin key in the application.
 
 Start the development server:
 
 ```bash
-pnpm dev
+npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
@@ -132,14 +147,25 @@ Open [http://localhost:3000](http://localhost:3000).
 Useful checks:
 
 ```bash
-pnpm lint
-pnpm exec tsc --noEmit
-pnpm build
+npm run test:run
+npm run lint
+npm run build
 ```
 
 ## Deployment
 
-The application is deployed with Vercel. Add `NEXT_PUBLIC_INSFORGE_URL` and `NEXT_PUBLIC_INSFORGE_ANON_KEY` to the Vercel project environment before deploying.
+The application is deployed with Vercel. Add `INSFORGE_URL` and `INSFORGE_ANON_KEY` to the Vercel project environment before deploying.
+
+## Tests
+
+The project contains 11 focused tests across four suites:
+
+- database-row mapping and category validation;
+- browser transport success, HTTP errors, malformed data, and abort handling;
+- Route Handler success and safe upstream failure responses;
+- product image rendering and fallback behavior.
+
+Next.js production compilation additionally verifies that the server-only modules do not leak into the client bundle.
 
 ## What I Learned
 
@@ -149,12 +175,14 @@ The application is deployed with Vercel. Add `NEXT_PUBLIC_INSFORGE_URL` and `NEX
 - How to persist state without replacing the existing cart architecture
 - How Server and Client Components can be composed without turning an entire route into a Client Component
 - How to map database rows into an application-owned entity model
-- How to connect Next.js to InsForge Database and Storage without maintaining a separate Nest.js backend
+- How to separate client transport, an HTTP Route Handler, and a server-only repository
+- How to keep an external database while proxying inaccessible browser traffic through Vercel
+- How to test a mapper, browser fetch wrapper, Route Handler, and image fallback with Vitest
 
 ## Limitations And Next Steps
 
 - Cart and favorites are browser-local and are not associated with an authenticated user.
 - The `useOptimistic` favorites experiment was removed: updates only write to synchronous `localStorage`, so there is no remote request to hide and no failed request to roll back.
-- Image fallback and loading presentation still need refinement.
-- Anon permissions should be verified to allow catalog reads while rejecting public writes.
-- Automated component and end-to-end tests are not included yet.
+- Authentication and server-side user persistence are intentionally outside the current scope.
+- The current suite covers critical units and integration boundaries; end-to-end browser tests are not included yet.
+- Catalog cache invalidation is time-based rather than triggered immediately after database edits.
