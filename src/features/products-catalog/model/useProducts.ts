@@ -1,33 +1,38 @@
-import { Product } from "@/entities/product/model/types";
 import { fetchProducts } from "@/entities/product/api/products";
-import { useEffect, useState } from "react";
+import { useEffect, useReducer } from "react";
+import {
+  initialProductsRequestState,
+  productsRequestReducer,
+} from "./productsRequestReducer";
 
 export function useProducts() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [state, dispatch] = useReducer(
+    productsRequestReducer,
+    initialProductsRequestState,
+  );
+
+  const { products, status, error } = state;
 
   useEffect(() => {
     const controller = new AbortController();
 
     const loadProducts = async () => {
-      setIsLoading(true);
-      setError(null);
+      dispatch({ type: "load" });
 
       try {
         const result = await fetchProducts(controller.signal);
-        setProducts(result);
-      } catch (error) {
+        dispatch({ type: "success", products: result });
+      } catch (caughtError) {
         if (controller.signal.aborted) {
           return;
         }
 
-        console.error(error);
-        setError("Ошибка при получении списка товаров");
-      } finally {
-        if (!controller.signal.aborted) {
-          setIsLoading(false);
-        }
+        console.error(caughtError);
+
+        dispatch({
+          type: "error",
+          error: "Ошибка при получении списка товаров",
+        });
       }
     };
 
@@ -40,7 +45,7 @@ export function useProducts() {
 
   return {
     products,
-    isLoading,
+    isLoading: status === "idle" || status === "loading",
     error,
   };
 }
