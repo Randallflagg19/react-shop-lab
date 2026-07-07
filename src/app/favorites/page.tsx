@@ -22,7 +22,7 @@ export default function FavoritesPage() {
           data-page-heading
           className="mb-7 border-b border-[var(--border)] pb-5"
         >
-          <h1 className="m-0 text-3xl">Избранное</h1>
+          <h1 className="m-0">Избранное</h1>
           <p className="m-0 mt-2 text-sm text-[var(--muted)]">
             Сохранённые товары: {favoriteProducts.length}
           </p>

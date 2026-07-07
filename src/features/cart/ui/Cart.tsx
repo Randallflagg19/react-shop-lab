@@ -31,7 +31,7 @@ export function Cart() {
     <section data-cart>
       <header
         data-page-heading
-        className="mb-6 border-b border-[var(--border)] pb-5"
+        className="mb-7 border-b border-[var(--border)] pb-5"
       >
         <h1 className="m-0">Корзина</h1>
         <p className="m-0 mt-2 text-sm text-[var(--muted)]">
@@ -46,10 +46,7 @@ export function Cart() {
         className="grid grid-cols-[minmax(0,1fr)_380px] items-start gap-8 max-[1100px]:grid-cols-[minmax(0,1fr)_340px] max-[900px]:grid-cols-1"
       >
         {cart.cartItems.length === 0 && (
-          <p
-            data-empty-state
-            className="m-0 mt-2 text-sm text-[var(--muted)]"
-          >
+          <p data-empty-state>
             Корзина пуста
           </p>
         )}

@@ -152,19 +152,27 @@
   font-size: clamp(2.1rem, 4vw, 3.6rem);
   font-weight: 400;
   letter-spacing: 0.035em;
+  line-height: 1.1;
   text-shadow: 0 0 18px rgba(123, 53, 153, 0.35);
 }
 
 [data-arcane-app] [data-page-heading] p {
   color: #bcae99;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.875rem;
   letter-spacing: 0.05em;
+  line-height: 1.5;
 }
 
 [data-arcane-app] [data-page-status],
 [data-arcane-app] [data-empty-state] {
   grid-column: 1 / -1;
+  margin: 0;
   padding: 22px;
   color: #cbbba3;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1rem;
+  line-height: 1.5;
   background:
     radial-gradient(circle at 15% 0, rgba(108, 40, 127, 0.16), transparent 42%),
     linear-gradient(145deg, rgba(24, 13, 28, 0.94), rgba(7, 6, 10, 0.97));
@@ -174,10 +182,6 @@
     inset 0 0 0 1px rgba(239, 210, 151, 0.05),
     inset 0 0 30px rgba(76, 27, 91, 0.2),
     0 12px 28px rgba(0, 0, 0, 0.2);
-}
-
-[data-arcane-app] [data-page-status] {
-  margin: 0;
 }
 
 [data-arcane-app] [data-page-status="error"] {
