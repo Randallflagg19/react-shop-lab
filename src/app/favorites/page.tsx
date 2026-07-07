@@ -5,9 +5,10 @@ import { useFavorites } from "@/features/favorites/model/useFavorites";
 import { useProducts } from "@/features/products-catalog/model/useProducts";
 import { CatalogProductList } from "@/features/products-catalog/ui/CatalogProductList";
 import { SiteHeader } from "@/widgets/site-header/ui/SiteHeader";
+import { ProductsLoadError } from "@/features/products-catalog/ui/ProductsLoadError";
 
 export default function FavoritesPage() {
-  const { products, isLoading, error } = useProducts();
+  const { products, isLoading, error, retry } = useProducts();
   const { favoriteIds, toggleFavorite } = useFavorites();
   const favoriteProducts = products.filter((product) =>
     favoriteIds.includes(product.id),
@@ -29,13 +30,11 @@ export default function FavoritesPage() {
 
         {isLoading && (
           <p data-page-status className="text-[var(--muted)]">
-            Загрузка...
+            Загрузка товаров…
           </p>
         )}
         {error && (
-          <p data-page-status="error" className="text-rose-400">
-            {error}
-          </p>
+          <ProductsLoadError message={error} onRetry={() => void retry()} />
         )}
 
         {!isLoading && !error && favoriteProducts.length === 0 && (
@@ -55,7 +54,7 @@ export default function FavoritesPage() {
           </div>
         )}
 
-        {!isLoading && !error && favoriteProducts.length > 0 && (
+        {favoriteProducts.length > 0 && (
           <CatalogProductList
             products={favoriteProducts}
             favoriteIds={favoriteIds}

@@ -1,51 +1,64 @@
 import { fetchProducts } from "@/entities/product/api/products";
-import { useEffect, useReducer } from "react";
+import { useCallback, useEffect, useReducer, useRef } from "react";
 import {
   initialProductsRequestState,
   productsRequestReducer,
 } from "./productsRequestReducer";
 
 export function useProducts() {
-  const [state, dispatch] = useReducer(
+  const [productsState, dispatch] = useReducer(
     productsRequestReducer,
     initialProductsRequestState,
   );
 
-  const { products, status, error } = state;
+  const { products, status, error } = productsState;
+
+  const controllerRef = useRef<AbortController | null>(null);
+
+  const loadProducts = useCallback(async () => {
+    controllerRef.current?.abort();
+
+    const controller = new AbortController();
+    controllerRef.current = controller;
+
+    dispatch({ type: "load" });
+
+    try {
+      const result = await fetchProducts(controller.signal);
+
+      if (controller.signal.aborted) {
+        return;
+      }
+
+      dispatch({ type: "success", products: result });
+    } catch {
+      if (controller.signal.aborted) {
+        return;
+      }
+
+      dispatch({
+        type: "error",
+        error: "Ошибка при получении списка товаров",
+      });
+    } finally {
+      if (controllerRef.current === controller) {
+        controllerRef.current = null;
+      }
+    }
+  }, []);
 
   useEffect(() => {
-    const controller = new AbortController();
-
-    const loadProducts = async () => {
-      dispatch({ type: "load" });
-
-      try {
-        const result = await fetchProducts(controller.signal);
-        dispatch({ type: "success", products: result });
-      } catch (caughtError) {
-        if (controller.signal.aborted) {
-          return;
-        }
-
-        console.error(caughtError);
-
-        dispatch({
-          type: "error",
-          error: "Ошибка при получении списка товаров",
-        });
-      }
-    };
-
     loadProducts();
 
     return () => {
-      controller.abort();
+      controllerRef.current?.abort();
     };
-  }, []);
+  }, [loadProducts]);
 
   return {
     products,
     isLoading: status === "idle" || status === "loading",
     error,
+    retry: loadProducts,
   };
 }

@@ -9,9 +9,10 @@ import type { SortBy } from "../model/types";
 import { useDebounce } from "../model/useDebounce";
 import { useFavorites } from "@/features/favorites/model/useFavorites";
 import { SiteHeader } from "@/widgets/site-header/ui/SiteHeader";
+import { ProductsLoadError } from "./ProductsLoadError";
 
 export function Catalog() {
-  const { products, isLoading, error } = useProducts();
+  const { products, isLoading, error, retry } = useProducts();
   const [search, setSearch] = useState("");
   const [currentCategory, setCurrentCategory] = useState("all");
   const [sortBy, setSortBy] = useState<SortBy>("default");
@@ -68,10 +69,7 @@ export function Catalog() {
     <>
       <SiteHeader
         searchSlot={
-          <CatalogSearchSlot
-            search={search}
-            onSearchChange={setSearch}
-          />
+          <CatalogSearchSlot search={search} onSearchChange={setSearch} />
         }
       />
       <main className="page" data-page="catalog">
@@ -88,14 +86,19 @@ export function Catalog() {
             isPending={isPending}
           />
         )}
-        {isLoading && <div data-page-status>Loading...</div>}
-        {error && <div data-page-status="error">{error}</div>}
+        {isLoading && <div data-page-status>Загрузка товаров…</div>}
+        {error && (
+          <ProductsLoadError message={error} onRetry={() => void retry()} />
+        )}
         {!isLoading && !error && products.length === 0 && (
           <p data-page-status>Товары не найдены</p>
         )}
-        {!isLoading && products.length > 0 && visibleProducts.length === 0 && (
-          <p data-page-status>{"По выбранным фильтрам ничего не найдено"}</p>
-        )}
+        {!isLoading &&
+          !error &&
+          products.length > 0 &&
+          visibleProducts.length === 0 && (
+            <p data-page-status>{"По выбранным фильтрам ничего не найдено"}</p>
+          )}
 
         {visibleProducts.length > 0 && (
           <CatalogProductList
