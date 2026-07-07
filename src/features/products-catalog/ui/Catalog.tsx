@@ -2,7 +2,7 @@
 
 import { CatalogProductList } from "@/features/products-catalog/ui/CatalogProductList";
 import { useProducts } from "../model/useProducts";
-import { useMemo, useState, useTransition } from "react";
+import { useMemo, useTransition } from "react";
 import { CatalogSearchSlot } from "./CatalogSearchSlot";
 import { CatalogMeta } from "./CatalogMeta";
 import type { SortBy } from "../model/types";
@@ -10,12 +10,26 @@ import { useDebounce } from "../model/useDebounce";
 import { useFavorites } from "@/features/favorites/model/useFavorites";
 import { SiteHeader } from "@/widgets/site-header/ui/SiteHeader";
 import { ProductsLoadError } from "./ProductsLoadError";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import {
+  parseCatalogCategory,
+  parseCatalogSearchParams,
+  serializeCatalogSearchParams,
+} from "../model/catalogSearchParams";
+
+import type { CatalogCategory } from "../model/catalogSearchParams";
 
 export function Catalog() {
   const { products, isLoading, error, retry } = useProducts();
-  const [search, setSearch] = useState("");
-  const [currentCategory, setCurrentCategory] = useState("all");
-  const [sortBy, setSortBy] = useState<SortBy>("default");
+
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const urlFilters = parseCatalogSearchParams(searchParams);
+
+  const search = urlFilters.query;
+  const currentCategory = urlFilters.category;
+  const sortBy = urlFilters.sort;
 
   const debouncedSearch = useDebounce(search);
   const [isPending, startTransition] = useTransition();
@@ -51,17 +65,64 @@ export function Catalog() {
     }
   }, [products, debouncedSearch, currentCategory, sortBy]);
 
-  function handleCategoryChange(category: string) {
+  function handleCategoryChange(category: CatalogCategory) {
+    const nextFilters = {
+      ...urlFilters,
+      category,
+    };
+
+    const nextSearchParams = serializeCatalogSearchParams(nextFilters);
+
+    const queryString = nextSearchParams.toString();
+
+    const href = queryString ? `${pathname}?${queryString}` : pathname;
+
     startTransition(() => {
-      setCurrentCategory(category);
+      router.push(href, { scroll: false });
     });
   }
 
+  function handleSortChange(sort: SortBy) {
+    const nextFilters = {
+      ...urlFilters,
+      sort,
+    };
+
+    const nextSearchParams = serializeCatalogSearchParams(nextFilters);
+
+    const queryString = nextSearchParams.toString();
+
+    const href = queryString ? `${pathname}?${queryString}` : pathname;
+
+    startTransition(() => {
+      router.push(href, { scroll: false });
+    });
+  }
+
+  function handleSearchChange(query: string) {
+    const nextFilters = {
+      ...urlFilters,
+      query,
+    };
+
+    const nextSearchParams = serializeCatalogSearchParams(nextFilters);
+
+    const queryString = nextSearchParams.toString();
+
+    const href = queryString ? `${pathname}?${queryString}` : pathname;
+
+    window.history.replaceState(null, "", href);
+  }
+
   const categories = useMemo(() => {
-    return products.reduce<string[]>((currentArray, currentEl) => {
-      return currentArray.includes(currentEl.category.slug)
-        ? currentArray
-        : [...currentArray, currentEl.category.slug];
+    return products.reduce<CatalogCategory[]>((currentArray, product) => {
+      const category = parseCatalogCategory(product.category.slug);
+
+      if (category === "all" || currentArray.includes(category)) {
+        return currentArray;
+      }
+
+      return [...currentArray, category];
     }, []);
   }, [products]);
 
@@ -69,7 +130,10 @@ export function Catalog() {
     <>
       <SiteHeader
         searchSlot={
-          <CatalogSearchSlot search={search} onSearchChange={setSearch} />
+          <CatalogSearchSlot
+            search={search}
+            onSearchChange={handleSearchChange}
+          />
         }
       />
       <main className="page" data-page="catalog">
@@ -82,7 +146,7 @@ export function Catalog() {
             currentCategory={currentCategory}
             onCategoryChange={handleCategoryChange}
             sortBy={sortBy}
-            onSortChange={setSortBy}
+            onSortChange={handleSortChange}
             isPending={isPending}
           />
         )}

@@ -17,17 +17,16 @@ export function SiteHeader({ searchSlot }: { searchSlot?: React.ReactNode }) {
   return (
     <header data-site-header>
       <div className="site-header-inner flex items-center justify-between gap-8 border-b border-[var(--border)] py-6 max-[1100px]:flex-col max-[1100px]:items-stretch max-[1100px]:gap-4">
-        {" "}
         <Link
           data-site-brand
           href="/"
           aria-current={pathname === "/" ? "page" : undefined}
           className="flex flex-col gap-1.5 text-inherit no-underline focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/70"
         >
-          <span className="text-[42px] font-bold uppercase leading-none [font-family:var(--font-display)] max-[760px]:text-[34px]">
+          <span className="text-[42px] font-bold uppercase leading-none max-[760px]:text-[34px]">
             AI Slop Shop
           </span>
-          <span className="text-[12px] font-medium uppercase leading-[1.4] text-[var(--muted)] [font-family:var(--font-display)]">
+          <span className="text-[12px] font-medium uppercase leading-[1.4] text-[var(--muted)]">
             Невозможные товары для сомнительной реальности
           </span>
         </Link>

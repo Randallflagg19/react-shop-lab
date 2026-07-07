@@ -1,5 +1,6 @@
 import { useId } from "react";
 import type { SortBy } from "../model/types";
+import type { CatalogCategory } from "../model/catalogSearchParams";
 
 const CATEGORY_LABELS: Record<string, string> = {
   footwear: "Обувь",
@@ -42,9 +43,9 @@ export function CatalogMeta({
   totalCount: number;
   visibleCount: number;
   isFiltered: boolean;
-  categories: string[];
-  currentCategory: string;
-  onCategoryChange: (category: string) => void;
+  categories: CatalogCategory[];
+  currentCategory: CatalogCategory;
+  onCategoryChange: (category: CatalogCategory) => void;
   sortBy: SortBy;
   onSortChange: (sort: SortBy) => void;
   isPending: boolean;
@@ -54,7 +55,7 @@ export function CatalogMeta({
   const categoryBaseClass =
     "shrink-0 cursor-pointer rounded-full border px-3 py-[7px] text-[13px] leading-none disabled:cursor-not-allowed";
 
-  function getCategoryClass(category: string) {
+  function getCategoryClass(category: CatalogCategory) {
     return currentCategory === category
       ? `${categoryBaseClass} border-[#2d8998] bg-[#164e5a] text-[#d9fbff]`
       : `${categoryBaseClass} border-[var(--border)] bg-[var(--card)] text-[var(--muted)] hover:border-[#3f6670] hover:text-[var(--foreground)]`;

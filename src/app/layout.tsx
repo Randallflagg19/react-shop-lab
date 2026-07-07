@@ -1,4 +1,3 @@
-import { Oswald } from "next/font/google";
 import type { Metadata } from "next";
 import "./globals.css";
 import "./arcane-theme.css";
@@ -13,19 +12,13 @@ export const metadata: Metadata = {
   applicationName: "AI Slop Shop",
 };
 
-const oswald = Oswald({
-  subsets: ["latin", "cyrillic"],
-  display: "swap",
-  variable: "--font-display",
-});
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru" className={`h-full antialiased ${oswald.variable}`}>
+    <html lang="ru" className="h-full antialiased">
       <body className="min-h-full flex flex-col" data-arcane-app>
         <Providers>{children}</Providers>
       </body>
