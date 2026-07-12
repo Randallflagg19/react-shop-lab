@@ -877,6 +877,21 @@
     min-width: 0;
   }
 
+  [data-arcane-app] [data-category-list] {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  [data-arcane-app] [data-category-list] button {
+    flex: 0 1 auto;
+    min-width: 0;
+    padding: 7px 8px;
+    font-size: 0.7rem;
+    letter-spacing: 0;
+    white-space: nowrap;
+  }
+
   [data-arcane-app] [data-product-card] {
     box-shadow: 0 10px 24px rgba(0, 0, 0, 0.34);
   }
