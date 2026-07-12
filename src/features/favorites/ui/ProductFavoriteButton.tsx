@@ -3,7 +3,13 @@
 import { useFavorites } from "../model/useFavorites";
 import { FavoriteButton } from "./FavoriteButton";
 
-export function ProductFavoriteButton({ productId }: { productId: number }) {
+export function ProductFavoriteButton({
+  productId,
+  productTitle,
+}: {
+  productId: number;
+  productTitle: string;
+}) {
   const { favoriteIds, toggleFavorite } = useFavorites();
   const isFavorite = favoriteIds.includes(productId);
 
@@ -11,6 +17,7 @@ export function ProductFavoriteButton({ productId }: { productId: number }) {
     <FavoriteButton
       variant="full"
       isFavorite={isFavorite}
+      productTitle={productTitle}
       onToggle={() => toggleFavorite(productId)}
     />
   );

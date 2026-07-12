@@ -1,6 +1,6 @@
 "use client";
 
-import { ShoppingCart } from "lucide-react";
+import { AlertTriangle, Heart, ShoppingCart } from "lucide-react";
 import type { Toast } from "./types";
 
 type ToastViewportProps = {
@@ -13,6 +13,17 @@ export function ToastViewport({ toasts, onDismiss }: ToastViewportProps) {
     return null;
   }
 
+  function getToastIcon(variant: Toast["variant"]) {
+    switch (variant) {
+      case "error":
+        return <AlertTriangle size={22} strokeWidth={1.7} />;
+      case "info":
+        return <Heart size={22} strokeWidth={1.7} />;
+      case "success":
+        return <ShoppingCart size={24} strokeWidth={1.6} />;
+    }
+  }
+
   return (
     <div data-toast-viewport aria-live="polite" aria-atomic="false">
       {toasts.map((toast, index) => (
@@ -23,7 +34,7 @@ export function ToastViewport({ toasts, onDismiss }: ToastViewportProps) {
           data-toast-variant={toast.variant}
         >
           <div data-toast-icon aria-hidden="true">
-            <ShoppingCart size={24} strokeWidth={1.6} />
+            {getToastIcon(toast.variant)}
           </div>
 
           <div data-toast-content>

@@ -27,7 +27,10 @@ export default async function ProductPage({
           actions={
             <div className="flex flex-col gap-3" data-product-actions>
               <AddToCartControls product={product} />
-              <ProductFavoriteButton productId={product.id} />
+              <ProductFavoriteButton
+                productId={product.id}
+                productTitle={product.title}
+              />
             </div>
           }
         />

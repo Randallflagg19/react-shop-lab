@@ -1,14 +1,20 @@
+"use client";
+
 import { Heart } from "lucide-react";
+import { useToast } from "@/shared/ui/toast";
 
 export function FavoriteButton({
   isFavorite,
   onToggle,
+  productTitle,
   variant = "icon",
 }: {
   isFavorite: boolean;
   onToggle: () => void;
+  productTitle?: string;
   variant?: "icon" | "full";
 }) {
+  const { showToast } = useToast();
   const label = isFavorite ? "Удалить из избранного" : "Добавить в избранное";
   const iconClass = `absolute right-6 top-6 z-[1] grid h-9 w-9 place-items-center rounded-full border border-[var(--border)] bg-[#0a0a0a]/[0.78] p-0 text-[24px] leading-none ${
     isFavorite ? "text-[#fb7185]" : "text-[var(--muted)]"
@@ -28,7 +34,15 @@ export function FavoriteButton({
       type="button"
       aria-pressed={isFavorite}
       aria-label={label}
-      onClick={onToggle}
+      onClick={() => {
+        onToggle();
+
+        showToast({
+          title: isFavorite ? "Удалено из избранного" : "Добавлено в избранное",
+          description: productTitle,
+          variant: "info",
+        });
+      }}
     >
       <Heart
         aria-hidden="true"

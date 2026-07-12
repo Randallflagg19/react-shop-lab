@@ -24,6 +24,7 @@ export function CatalogProductList({
             topRightSlot={
               <FavoriteButton
                 isFavorite={favoriteIds.includes(product.id)}
+                productTitle={product.title}
                 onToggle={() => toggleFavorite(product.id)}
               />
             }
