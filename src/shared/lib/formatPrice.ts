@@ -1,7 +1,7 @@
-const priceFormatter = new Intl.NumberFormat("en-US", {
+const priceFormatter = new Intl.NumberFormat("ru-RU", {
   style: "currency",
-  currency: "USD",
-  minimumFractionDigits: 2,
+  currency: "RUB",
+  maximumFractionDigits: 0,
 });
 
 export function formatPrice(price: number) {
