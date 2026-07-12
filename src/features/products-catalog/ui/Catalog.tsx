@@ -2,7 +2,7 @@
 
 import { CatalogProductList } from "@/features/products-catalog/ui/CatalogProductList";
 import { useProducts } from "../model/useProducts";
-import { useMemo, useTransition } from "react";
+import { useMemo, useOptimistic, useTransition } from "react";
 import { CatalogSearchSlot } from "./CatalogSearchSlot";
 import { CatalogMeta } from "./CatalogMeta";
 import type { SortBy } from "../model/types";
@@ -17,7 +17,10 @@ import {
   serializeCatalogSearchParams,
 } from "../model/catalogSearchParams";
 
-import type { CatalogCategory } from "../model/catalogSearchParams";
+import type {
+  CatalogCategory,
+  CatalogFilters,
+} from "../model/catalogSearchParams";
 
 export function Catalog() {
   const { products, isLoading, error, retry } = useProducts();
@@ -26,10 +29,15 @@ export function Catalog() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const urlFilters = parseCatalogSearchParams(searchParams);
+  const [filters, setOptimisticFilters] = useOptimistic(
+    urlFilters,
+    (_currentFilters: CatalogFilters, nextFilters: CatalogFilters) =>
+      nextFilters,
+  );
 
-  const search = urlFilters.query;
-  const currentCategory = urlFilters.category;
-  const sortBy = urlFilters.sort;
+  const search = filters.query;
+  const currentCategory = filters.category;
+  const sortBy = filters.sort;
 
   const debouncedSearch = useDebounce(search);
   const [isPending, startTransition] = useTransition();
@@ -65,53 +73,47 @@ export function Catalog() {
     }
   }, [products, debouncedSearch, currentCategory, sortBy]);
 
+  function getCatalogHref(nextFilters: CatalogFilters) {
+    const nextSearchParams = serializeCatalogSearchParams(nextFilters);
+    const queryString = nextSearchParams.toString();
+
+    return queryString ? `${pathname}?${queryString}` : pathname;
+  }
+
   function handleCategoryChange(category: CatalogCategory) {
     const nextFilters = {
-      ...urlFilters,
+      ...filters,
       category,
     };
 
-    const nextSearchParams = serializeCatalogSearchParams(nextFilters);
-
-    const queryString = nextSearchParams.toString();
-
-    const href = queryString ? `${pathname}?${queryString}` : pathname;
-
     startTransition(() => {
-      router.push(href, { scroll: false });
+      setOptimisticFilters(nextFilters);
+      router.push(getCatalogHref(nextFilters), { scroll: false });
     });
   }
 
   function handleSortChange(sort: SortBy) {
     const nextFilters = {
-      ...urlFilters,
+      ...filters,
       sort,
     };
 
-    const nextSearchParams = serializeCatalogSearchParams(nextFilters);
-
-    const queryString = nextSearchParams.toString();
-
-    const href = queryString ? `${pathname}?${queryString}` : pathname;
-
     startTransition(() => {
-      router.push(href, { scroll: false });
+      setOptimisticFilters(nextFilters);
+      router.push(getCatalogHref(nextFilters), { scroll: false });
     });
   }
 
   function handleSearchChange(query: string) {
     const nextFilters = {
-      ...urlFilters,
+      ...filters,
       query,
     };
 
-    const nextSearchParams = serializeCatalogSearchParams(nextFilters);
-
-    const queryString = nextSearchParams.toString();
-
-    const href = queryString ? `${pathname}?${queryString}` : pathname;
-
-    window.history.replaceState(null, "", href);
+    startTransition(() => {
+      setOptimisticFilters(nextFilters);
+      window.history.replaceState(null, "", getCatalogHref(nextFilters));
+    });
   }
 
   const categories = useMemo(() => {
