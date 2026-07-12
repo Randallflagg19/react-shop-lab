@@ -1,8 +1,15 @@
 "use client";
 
-import { createContext, useContext, useReducer } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useReducer,
+} from "react";
 import type { Toast, ToastVariant } from "./types";
 import { initialToastState, toastReducer } from "./toastReducer";
+import { ToastViewport } from "./ToastViewport";
 
 type ShowToastInput = {
   title: string;
@@ -33,12 +40,28 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
       },
     });
   }
-  function dismissToast(toastId: string) {
+  const dismissToast = useCallback((toastId: string) => {
     dispatch({ type: "dismiss", toastId });
-  }
+  }, []);
   function clearToasts() {
     dispatch({ type: "clear" });
   }
+
+  useEffect(() => {
+    if (state.toasts.length === 0) {
+      return;
+    }
+
+    const timers = state.toasts.map((toast) =>
+      window.setTimeout(() => {
+        dismissToast(toast.id);
+      }, 2000),
+    );
+
+    return () => {
+      timers.forEach(window.clearTimeout);
+    };
+  }, [dismissToast, state.toasts]);
 
   const contextValue: ToastContextValue = {
     toasts: state.toasts,
@@ -50,6 +73,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   return (
     <ToastContext.Provider value={contextValue}>
       {children}
+      <ToastViewport toasts={state.toasts} onDismiss={dismissToast} />
     </ToastContext.Provider>
   );
 }

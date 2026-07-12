@@ -2,10 +2,12 @@
 
 import type { Product } from "@/entities/product/model/types";
 import { useCartContext } from "@/features/cart/model/CartContext";
+import { useToast } from "@/shared/ui/toast";
 import { useState } from "react";
 
 export function AddToCartControls({ product }: { product: Product }) {
   const { addToCart } = useCartContext();
+  const { showToast } = useToast();
 
   const [quantity, setQuantity] = useState(1);
 
@@ -15,6 +17,16 @@ export function AddToCartControls({ product }: { product: Product }) {
 
   function decreaseQuantity() {
     setQuantity((currentQuantity) => Math.max(1, currentQuantity - 1));
+  }
+
+  function handleAddToCart() {
+    addToCart(product, quantity);
+
+    showToast({
+      title: "Добавлено в корзину",
+      description: `${product.title} × ${quantity}`,
+      variant: "success",
+    });
   }
 
   return (
@@ -53,7 +65,7 @@ export function AddToCartControls({ product }: { product: Product }) {
         type="button"
         className="font-medium transition-colors hover:bg-[#348a58]
 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#65c98d] block w-full cursor-pointer rounded-md border-0 bg-[#3fa267] px-[18px] py-3.5 text-center text-white max-[760px]:min-h-12 max-[760px]:px-4"
-        onClick={() => addToCart(product, quantity)}
+        onClick={handleAddToCart}
       >
         Добавить в корзину
       </button>

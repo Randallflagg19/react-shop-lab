@@ -4,7 +4,7 @@ export const initialToastState: ToastState = {
   toasts: [],
 };
 
-const MAX_TOASTS = 3;
+const MAX_TOASTS = 2;
 
 export function toastReducer(
   state: ToastState,
