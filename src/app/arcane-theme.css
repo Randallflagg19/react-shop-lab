@@ -1286,6 +1286,12 @@
     height: 104px;
   }
 
+  [data-arcane-app]:has([data-page="catalog"]) [data-toast-viewport],
+  [data-arcane-app]:has([data-page="cart"]) [data-toast-viewport],
+  [data-arcane-app]:has([data-page="favorites"]) [data-toast-viewport] {
+    bottom: calc(env(safe-area-inset-bottom) + 24px);
+  }
+
   [data-arcane-app] [data-toast] {
     min-height: 56px;
     gap: 10px;
