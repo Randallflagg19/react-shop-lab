@@ -8,6 +8,7 @@ const EMPTY_CART_ITEMS: CartItem[] = [];
 type CartAction =
   | { type: "add"; product: Product; quantity: number }
   | { type: "remove"; productId: number }
+  | { type: "restore"; item: CartItem; index: number }
   | { type: "increase"; productId: number }
   | { type: "decrease"; productId: number }
   | { type: "clear" }
@@ -94,7 +95,19 @@ export function useCart(initialItems: CartItem[] = []) {
 
       case "remove":
         return state.filter((item) => item.product.id !== action.productId);
+      case "restore": {
+        const alreadyExists = state.some(
+          (item) => item.product.id === action.item.product.id,
+        );
 
+        if (alreadyExists) return state;
+
+        return [
+          ...state.slice(0, action.index),
+          action.item,
+          ...state.slice(action.index),
+        ];
+      }
       case "increase":
         return state.map((item) =>
           item.product.id === action.productId
@@ -136,6 +149,10 @@ export function useCart(initialItems: CartItem[] = []) {
     dispatch({ type: "remove", productId });
   }
 
+  function restoreCartItem(item: CartItem, index: number) {
+    dispatch({ type: "restore", item, index });
+  }
+
   function increaseQuantity(productId: number) {
     dispatch({ type: "increase", productId });
   }
@@ -160,6 +177,7 @@ export function useCart(initialItems: CartItem[] = []) {
     totalCount,
     addToCart,
     removeFromCart,
+    restoreCartItem,
     increaseQuantity,
     decreaseQuantity,
     clearCart,

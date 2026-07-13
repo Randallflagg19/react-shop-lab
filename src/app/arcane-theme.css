@@ -168,10 +168,11 @@
 [data-arcane-app] [data-empty-state] {
   grid-column: 1 / -1;
   margin: 0;
-  padding: 22px;
+  padding: clamp(28px, 5vw, 48px);
   color: #cbbba3;
   font-family: Georgia, "Times New Roman", serif;
   font-size: 1rem;
+  text-align: center;
   line-height: 1.5;
   background:
     radial-gradient(circle at 15% 0, rgba(108, 40, 127, 0.16), transparent 42%),
@@ -184,6 +185,57 @@
     0 12px 28px rgba(0, 0, 0, 0.2);
 }
 
+[data-arcane-app] [data-empty-state] {
+  display: grid;
+  min-height: clamp(180px, 20vw, 245px);
+  place-items: center;
+  align-content: center;
+  gap: 14px;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      ellipse at 50% 48%,
+      rgba(83, 29, 99, 0.24),
+      rgba(22, 10, 28, 0.12) 36%,
+      transparent 68%
+    ),
+    radial-gradient(
+      ellipse at 8% 50%,
+      rgba(111, 43, 131, 0.16),
+      transparent 36%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(18, 10, 22, 0.96),
+      rgba(6, 5, 9, 0.98) 58%,
+      rgba(12, 7, 15, 0.96)
+    );
+  border-color: rgba(199, 153, 77, 0.74);
+  border-radius: 10px;
+  box-shadow:
+    inset 0 0 0 1px rgba(239, 210, 151, 0.06),
+    inset 0 0 42px rgba(74, 28, 88, 0.22),
+    0 16px 40px rgba(0, 0, 0, 0.28);
+}
+
+[data-arcane-app] [data-empty-state] h2 {
+  margin: 0;
+  color: #f3e8d5;
+  font-size: clamp(1.35rem, 2.15vw, 1.85rem);
+  font-weight: 700;
+  line-height: 1.15;
+  text-shadow:
+    0 2px 18px rgba(0, 0, 0, 0.9),
+    0 0 18px rgba(137, 62, 162, 0.18);
+}
+
+[data-arcane-app] [data-empty-state] p {
+  margin: 0;
+  color: #aa9f91;
+  font-size: clamp(0.95rem, 1.25vw, 1.05rem);
+  line-height: 1.45;
+}
+
 [data-arcane-app] [data-page-status="error"] {
   color: #f0a2ad;
   border-color: rgba(213, 92, 111, 0.62);
@@ -191,16 +243,29 @@
 
 [data-arcane-app] [data-empty-state] a {
   display: inline-flex;
-  padding: 9px 13px;
-  color: #e1bd78;
-  background: linear-gradient(
-    180deg,
-    rgba(39, 19, 44, 0.94),
-    rgba(9, 7, 12, 0.98)
-  );
-  border: 1px solid rgba(194, 151, 79, 0.68);
-  border-radius: 2px;
+  justify-content: center;
+  min-width: min(280px, 100%);
+  margin-top: 8px;
+  padding: 13px 24px;
+  color: #dcc080;
+  background:
+    radial-gradient(circle at 50% 0, rgba(148, 64, 174, 0.3), transparent 62%),
+    linear-gradient(180deg, rgba(55, 23, 68, 0.96), rgba(19, 10, 27, 0.98));
+  border: 1px solid rgba(204, 159, 86, 0.76);
+  border-radius: 5px;
+  font-size: 0.86rem;
+  letter-spacing: 0.16em;
   text-decoration: none;
+  text-transform: uppercase;
+  box-shadow:
+    inset 0 0 0 1px rgba(239, 210, 151, 0.05),
+    inset 0 0 22px rgba(137, 52, 160, 0.24),
+    0 0 20px rgba(111, 45, 153, 0.2);
+  transition:
+    color 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease,
+    box-shadow 160ms ease;
 }
 
 [data-arcane-app] [data-empty-state] a:hover {
@@ -799,6 +864,82 @@
   color: #c89bd6;
   background: transparent;
   box-shadow: none;
+}
+
+[data-arcane-app] [data-cart-clear-area] {
+  display: grid;
+  min-height: 86px;
+  align-items: center;
+}
+
+[data-arcane-app] [data-cart-clear-confirm] {
+  display: grid;
+  gap: 14px;
+  justify-items: center;
+  color: #d9b9e4;
+}
+
+[data-arcane-app] [data-cart-clear-confirm] p {
+  margin: 0;
+  color: #d9b9e4;
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+[data-arcane-app] [data-cart-clear-actions] {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+[data-arcane-app] [data-cart-clear-confirm-button],
+[data-arcane-app] [data-cart-clear-cancel] {
+  min-height: 40px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  background: transparent;
+  color: #d9cbb3;
+  font: inherit;
+  transition:
+    color 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease,
+    box-shadow 160ms ease;
+}
+
+[data-arcane-app] [data-cart-clear-confirm-button] {
+  border-color: rgba(202, 160, 86, 0.76);
+  background: linear-gradient(
+    180deg,
+    rgba(31, 18, 34, 0.96),
+    rgba(7, 6, 9, 0.98)
+  );
+  color: #e7d1a9;
+  box-shadow:
+    inset 0 0 14px rgba(91, 34, 108, 0.16),
+    0 0 14px rgba(111, 45, 153, 0.12);
+}
+
+[data-arcane-app] [data-cart-clear-cancel] {
+  color: #c89bd6;
+}
+
+[data-arcane-app] [data-cart-clear-confirm-button]:hover,
+[data-arcane-app] [data-cart-clear-cancel]:hover {
+  color: #f4dfb7;
+  background: rgba(64, 26, 74, 0.7);
+  border-color: var(--arcane-gold-bright);
+  box-shadow:
+    inset 0 0 16px rgba(121, 45, 143, 0.2),
+    0 0 12px rgba(111, 45, 153, 0.2);
+}
+
+[data-arcane-app] [data-cart-clear-confirm-button]:focus-visible,
+[data-arcane-app] [data-cart-clear-cancel]:focus-visible {
+  outline: 2px solid rgba(214, 171, 87, 0.9);
+  outline-offset: 2px;
 }
 
 [data-arcane-app] [data-cart-clear]:hover {

@@ -7,7 +7,7 @@ import {
   useEffect,
   useReducer,
 } from "react";
-import type { Toast, ToastVariant } from "./types";
+import type { Toast, ToastActionButton, ToastIcon, ToastVariant } from "./types";
 import { initialToastState, toastReducer } from "./toastReducer";
 import { ToastViewport } from "./ToastViewport";
 
@@ -15,6 +15,8 @@ type ShowToastInput = {
   title: string;
   description?: string;
   variant?: ToastVariant;
+  icon?: ToastIcon;
+  action?: ToastActionButton;
 };
 
 type ToastContextValue = {
@@ -37,6 +39,8 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
         title: toast.title,
         description: toast.description,
         variant: toast.variant ?? "info",
+        icon: toast.icon,
+        action: toast.action,
       },
     });
   }

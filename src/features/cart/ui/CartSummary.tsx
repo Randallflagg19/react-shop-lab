@@ -1,4 +1,5 @@
 import { LockKeyhole } from "lucide-react";
+import { useState } from "react";
 import { formatPrice } from "@/shared/lib/formatPrice";
 
 export function CartSummary({
@@ -12,8 +13,18 @@ export function CartSummary({
   totalPrice: number;
   onClear: () => void;
 }) {
+  const [isConfirmingClear, setIsConfirmingClear] = useState(false);
+
+  function handleConfirmClear() {
+    onClear();
+    setIsConfirmingClear(false);
+  }
+
   return (
-    <aside data-cart-summary className="sticky top-6 flex flex-col gap-5 rounded-xl border border-[var(--border)] bg-[var(--card)] p-8 max-[1100px]:p-6 max-[900px]:static">
+    <aside
+      data-cart-summary
+      className="sticky top-6 flex flex-col gap-5 rounded-xl border border-[var(--border)] bg-[var(--card)] p-8 max-[1100px]:p-6 max-[900px]:static"
+    >
       <h2 className="m-0 mb-2 text-2xl">Итого в корзине</h2>
 
       <div className="flex items-center justify-between gap-5 text-sm text-[var(--muted)]">
@@ -45,14 +56,38 @@ export function CartSummary({
         Перейти к оформлению
       </button>
 
-      <button
-        data-cart-clear
-        className="w-full cursor-pointer border-0 bg-transparent px-4 py-2 text-[var(--foreground)]"
-        type="button"
-        onClick={onClear}
-      >
-        Очистить корзину
-      </button>
+      <div data-cart-clear-area>
+        {isConfirmingClear ? (
+          <div data-cart-clear-confirm role="group" aria-label="Очистить корзину">
+            <p>Очистить корзину?</p>
+            <div data-cart-clear-actions>
+              <button
+                data-cart-clear-confirm-button
+                type="button"
+                onClick={handleConfirmClear}
+              >
+                Да, очистить
+              </button>
+              <button
+                data-cart-clear-cancel
+                type="button"
+                onClick={() => setIsConfirmingClear(false)}
+              >
+                Отмена
+              </button>
+            </div>
+          </div>
+        ) : (
+          <button
+            data-cart-clear
+            className="w-full cursor-pointer border-0 bg-transparent px-4 py-2 text-[var(--foreground)]"
+            type="button"
+            onClick={() => setIsConfirmingClear(true)}
+          >
+            Очистить корзину
+          </button>
+        )}
+      </div>
 
       <p
         id="cart-checkout-note"

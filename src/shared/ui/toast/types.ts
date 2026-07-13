@@ -1,10 +1,18 @@
 export type ToastVariant = "success" | "info" | "error";
+export type ToastIcon = "cart" | "heart" | "error";
+
+export type ToastActionButton = {
+  label: string;
+  onClick: () => void;
+};
 
 export type Toast = {
   id: string;
   title: string;
   description?: string;
   variant: ToastVariant;
+  icon?: ToastIcon;
+  action?: ToastActionButton;
 };
 
 export type ToastState = {

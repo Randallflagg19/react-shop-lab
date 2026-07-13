@@ -13,7 +13,20 @@ export function ToastViewport({ toasts, onDismiss }: ToastViewportProps) {
     return null;
   }
 
-  function getToastIcon(variant: Toast["variant"]) {
+  function getToastIcon(toast: Toast) {
+    switch (toast.icon) {
+      case "cart":
+        return <ShoppingCart size={24} strokeWidth={1.6} />;
+      case "heart":
+        return <Heart size={22} strokeWidth={1.7} />;
+      case "error":
+        return <AlertTriangle size={22} strokeWidth={1.7} />;
+      default:
+        return getToastFallbackIcon(toast.variant);
+    }
+  }
+
+  function getToastFallbackIcon(variant: Toast["variant"]) {
     switch (variant) {
       case "error":
         return <AlertTriangle size={22} strokeWidth={1.7} />;
@@ -34,7 +47,7 @@ export function ToastViewport({ toasts, onDismiss }: ToastViewportProps) {
           data-toast-variant={toast.variant}
         >
           <div data-toast-icon aria-hidden="true">
-            {getToastIcon(toast.variant)}
+            {getToastIcon(toast)}
           </div>
 
           <div data-toast-content>
@@ -42,6 +55,18 @@ export function ToastViewport({ toasts, onDismiss }: ToastViewportProps) {
 
             {toast.description && (
               <p data-toast-description>{toast.description}</p>
+            )}
+            {toast.action && (
+              <button
+                type="button"
+                data-toast-action
+                onClick={() => {
+                  toast.action?.onClick();
+                  onDismiss(toast.id);
+                }}
+              >
+                {toast.action.label}
+              </button>
             )}
           </div>
 

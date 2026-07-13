@@ -8,7 +8,7 @@ type CartRowProps = {
   item: CartItem;
   onIncrease: (productId: number) => void;
   onDecrease: (productId: number) => void;
-  onRemove: (productId: number) => void;
+  onRemove: () => void;
 };
 
 export function CartRow({
@@ -97,7 +97,7 @@ export function CartRow({
           data-cart-remove
           className="inline-flex cursor-pointer items-center gap-2 border-0 bg-transparent p-1 text-sm text-[var(--muted)]"
           type="button"
-          onClick={() => onRemove(product.id)}
+          onClick={onRemove}
         >
           <Trash2 size={16} strokeWidth={1.7} aria-hidden="true" />
           Удалить
