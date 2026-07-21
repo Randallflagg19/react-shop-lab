@@ -2,7 +2,7 @@
 
 import { CatalogProductList } from "@/features/products-catalog/ui/CatalogProductList";
 import { useProducts } from "../model/useProducts";
-import { useMemo, useTransition } from "react";
+import { useMemo } from "react";
 import { CatalogSearchSlot } from "./CatalogSearchSlot";
 import { CatalogMeta } from "./CatalogMeta";
 import type { SortBy } from "../model/types";
@@ -10,7 +10,7 @@ import { useDebounce } from "../model/useDebounce";
 import { useFavorites } from "@/features/favorites/model/useFavorites";
 import { SiteHeader } from "@/widgets/site-header/ui/SiteHeader";
 import { ProductsLoadError } from "./ProductsLoadError";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import {
   parseCatalogCategory,
   parseCatalogSearchParams,
@@ -25,7 +25,6 @@ import type {
 export function Catalog() {
   const { products, isLoading, error, retry } = useProducts();
 
-  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const urlFilters = parseCatalogSearchParams(searchParams);
@@ -35,7 +34,6 @@ export function Catalog() {
   const sortBy = urlFilters.sort;
 
   const debouncedSearch = useDebounce(search);
-  const [isPending, startTransition] = useTransition();
 
   const { favoriteIds, toggleFavorite } = useFavorites();
 
@@ -81,9 +79,7 @@ export function Catalog() {
       category,
     };
 
-    startTransition(() => {
-      router.push(getCatalogHref(nextFilters), { scroll: false });
-    });
+    window.history.pushState(null, "", getCatalogHref(nextFilters));
   }
 
   function handleSortChange(sort: SortBy) {
@@ -92,9 +88,7 @@ export function Catalog() {
       sort,
     };
 
-    startTransition(() => {
-      router.push(getCatalogHref(nextFilters), { scroll: false });
-    });
+    window.history.pushState(null, "", getCatalogHref(nextFilters));
   }
 
   function handleSearchChange(query: string) {
@@ -139,7 +133,7 @@ export function Catalog() {
             onCategoryChange={handleCategoryChange}
             sortBy={sortBy}
             onSortChange={handleSortChange}
-            isPending={isPending}
+            isPending={false}
           />
         )}
         {isLoading && <div data-page-status>Загрузка товаров…</div>}
