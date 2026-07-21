@@ -2,7 +2,7 @@
 
 import { CatalogProductList } from "@/features/products-catalog/ui/CatalogProductList";
 import { useProducts } from "../model/useProducts";
-import { useMemo, useOptimistic, useTransition } from "react";
+import { useMemo, useTransition } from "react";
 import { CatalogSearchSlot } from "./CatalogSearchSlot";
 import { CatalogMeta } from "./CatalogMeta";
 import type { SortBy } from "../model/types";
@@ -29,15 +29,10 @@ export function Catalog() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const urlFilters = parseCatalogSearchParams(searchParams);
-  const [filters, setOptimisticFilters] = useOptimistic(
-    urlFilters,
-    (_currentFilters: CatalogFilters, nextFilters: CatalogFilters) =>
-      nextFilters,
-  );
 
-  const search = filters.query;
-  const currentCategory = filters.category;
-  const sortBy = filters.sort;
+  const search = urlFilters.query;
+  const currentCategory = urlFilters.category;
+  const sortBy = urlFilters.sort;
 
   const debouncedSearch = useDebounce(search);
   const [isPending, startTransition] = useTransition();
@@ -82,38 +77,33 @@ export function Catalog() {
 
   function handleCategoryChange(category: CatalogCategory) {
     const nextFilters = {
-      ...filters,
+      ...urlFilters,
       category,
     };
 
     startTransition(() => {
-      setOptimisticFilters(nextFilters);
       router.push(getCatalogHref(nextFilters), { scroll: false });
     });
   }
 
   function handleSortChange(sort: SortBy) {
     const nextFilters = {
-      ...filters,
+      ...urlFilters,
       sort,
     };
 
     startTransition(() => {
-      setOptimisticFilters(nextFilters);
       router.push(getCatalogHref(nextFilters), { scroll: false });
     });
   }
 
   function handleSearchChange(query: string) {
     const nextFilters = {
-      ...filters,
+      ...urlFilters,
       query,
     };
 
-    startTransition(() => {
-      setOptimisticFilters(nextFilters);
-      window.history.replaceState(null, "", getCatalogHref(nextFilters));
-    });
+    window.history.replaceState(null, "", getCatalogHref(nextFilters));
   }
 
   const categories = useMemo(() => {
