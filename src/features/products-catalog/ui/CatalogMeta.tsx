@@ -38,7 +38,6 @@ export function CatalogMeta({
   onCategoryChange,
   sortBy,
   onSortChange,
-  isPending,
 }: {
   totalCount: number;
   visibleCount: number;
@@ -48,7 +47,6 @@ export function CatalogMeta({
   onCategoryChange: (category: CatalogCategory) => void;
   sortBy: SortBy;
   onSortChange: (sort: SortBy) => void;
-  isPending: boolean;
 }) {
   const sortId = useId();
 
@@ -82,14 +80,11 @@ export function CatalogMeta({
         </p>
         <div
           data-category-list
-          className={`flex min-w-0 flex-wrap gap-2 transition-opacity ${
-            isPending ? "opacity-60" : "opacity-100"
-          }`}
+          className={"flex min-w-0 flex-wrap gap-2 transition-opacity"}
         >
           <button
             aria-pressed={currentCategory === "all"}
             data-active={currentCategory === "all"}
-            disabled={isPending}
             onClick={() => onCategoryChange("all")}
             className={getCategoryClass("all")}
             type="button"
@@ -100,7 +95,6 @@ export function CatalogMeta({
             <button
               aria-pressed={currentCategory === category}
               data-active={currentCategory === category}
-              disabled={isPending}
               onClick={() => onCategoryChange(category)}
               className={getCategoryClass(category)}
               type="button"

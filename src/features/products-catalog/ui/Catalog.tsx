@@ -133,7 +133,6 @@ export function Catalog() {
             onCategoryChange={handleCategoryChange}
             sortBy={sortBy}
             onSortChange={handleSortChange}
-            isPending={false}
           />
         )}
         {isLoading && <div data-page-status>Загрузка товаров…</div>}
