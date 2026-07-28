@@ -70,15 +70,14 @@ export function ProductCard({
         >
           {product.description}
         </p>
+        <span
+          data-product-card-action
+          className="mt-auto block w-full text-center no-underline"
+        >
+          Осмотреть артефакт
+        </span>
       </Link>
       {topRightSlot}
-      <Link
-        data-product-card-action
-        href={`/products/${product.slug}`}
-        className="mt-auto block w-full text-center no-underline"
-      >
-        Осмотреть артефакт
-      </Link>
     </article>
   );
 }
