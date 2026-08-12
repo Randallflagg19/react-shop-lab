@@ -4,9 +4,17 @@ A compact storefront for impossible AI-generated goods, built with React, TypeSc
 
 ## Screenshots
 
+### Product catalog
+
 ![Product catalog](docs/screenshots/catalog.png)
 
-![Catalog filters and sorting](docs/screenshots/catalog-filters.png)
+### Product page
+
+![Product page](docs/screenshots/product-page.png)
+
+### Cart
+
+![Cart](docs/screenshots/cart.png)
 
 ## Stack
 
@@ -73,18 +81,18 @@ The result was verified on the production deployment without a VPN over desktop 
 
 ## Hooks Practised
 
-| Hook | Use in the project |
-| --- | --- |
-| `useState` | Search, category, sorting, loading, errors, and cart restoration status |
-| `useEffect` | Product requests, debounce cleanup, autofocus, and `localStorage` synchronization |
-| `useRef` | Search input access and stable mutable values inside custom hooks |
-| `useMemo` | Derived categories and filtered/sorted products |
-| `useReducer` | Cart add, remove, increase, decrease, clear, and hydrate actions |
-| `useContext` | Shared cart access through `CartProvider` |
-| `useId` | Accessible relationships between labels and controls |
-| `useTransition` | Non-urgent category changes and pending UI |
-| `useImperativeHandle` | Restricted search input API such as `focus()` and `clear()` |
-| `useSyncExternalStore` | Favorites snapshots, subscriptions, SSR snapshot, and cross-tab updates |
+| Hook                   | Use in the project                                                                |
+| ---------------------- | --------------------------------------------------------------------------------- |
+| `useState`             | Search, category, sorting, loading, errors, and cart restoration status           |
+| `useEffect`            | Product requests, debounce cleanup, autofocus, and `localStorage` synchronization |
+| `useRef`               | Search input access and stable mutable values inside custom hooks                 |
+| `useMemo`              | Derived categories and filtered/sorted products                                   |
+| `useReducer`           | Cart add, remove, increase, decrease, clear, and hydrate actions                  |
+| `useContext`           | Shared cart access through `CartProvider`                                         |
+| `useId`                | Accessible relationships between labels and controls                              |
+| `useTransition`        | Non-urgent category changes and pending UI                                        |
+| `useImperativeHandle`  | Restricted search input API such as `focus()` and `clear()`                       |
+| `useSyncExternalStore` | Favorites snapshots, subscriptions, SSR snapshot, and cross-tab updates           |
 
 Additional experiments:
 
